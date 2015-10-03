@@ -5,8 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExpertSystem"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="MainWindow" Height="438.158" Width="747.368" Background="Black">
+    <Grid Background="#33FFFFFF">
+        <RichTextBox x:Name="richTextBox" IsReadOnly="True" HorizontalAlignment="Left" Height="181" Margin="151,90,0,0" VerticalAlignment="Top" Width="376" Background="#FF1F1E1E" BorderBrush="{x:Null}" Foreground="White" FontSize="26.667">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="add" Foreground="#FF8888D1" />
+                    <Run Text="rule" Foreground="#FFCBC4C4" />
+                    <Run Text="isHuman"/>
+                    <Run Text="( )" Foreground="#FFCBC4C4"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
     </Grid>
 </Window>
