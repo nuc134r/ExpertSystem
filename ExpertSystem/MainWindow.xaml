@@ -5,17 +5,71 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExpertSystem"
         mc:Ignorable="d"
-        Title="MainWindow" Height="438.158" Width="747.368" Background="Black">
-    <Grid Background="#33FFFFFF">
-        <RichTextBox x:Name="richTextBox" IsReadOnly="True" HorizontalAlignment="Left" Height="181" Margin="151,90,0,0" VerticalAlignment="Top" Width="376" Background="#FF1F1E1E" BorderBrush="{x:Null}" Foreground="White" FontSize="26.667">
-            <FlowDocument>
-                <Paragraph>
-                    <Run Text="add" Foreground="#FF8888D1" />
-                    <Run Text="rule" Foreground="#FFCBC4C4" />
-                    <Run Text="isHuman"/>
-                    <Run Text="( )" Foreground="#FFCBC4C4"/>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
+        Title="MainWindow" Height="599" Width="800" Background="Black" MinWidth="800" MinHeight="600">
+    <Grid Background="#FF303030">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="26"/>
+        </Grid.RowDefinitions>
+        <StatusBar Background="#FF171717" Foreground="White" Height="25" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="3">
+            <StatusBarItem Content="Ready"/>
+        </StatusBar>
+        <Grid Background="#FF404040" Margin="0,0,0,157" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="27"/>
+                <RowDefinition Height="43*"/>
+            </Grid.RowDefinitions>
+            <RichTextBox x:Name="richTextBox" Background="#FF1F1E1E" BorderBrush="{x:Null}" 
+				Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0" Grid.Row="1" VerticalScrollBarVisibility="Auto" >
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="add" Foreground="#FF8888D1" />
+                        <Run Text="rule" Foreground="#FFCBC4C4" />
+                        <Run Text="isHuman"/>
+                        <Run Text="( )" Foreground="#FFCBC4C4"/>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="FlowDocument"/>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+            <Label x:Name="label" Content="Код программы" Foreground="White" HorizontalAlignment="Left" Width="228"/>
+        </Grid>
+        <Grid Background="#FF404040" Height="157" VerticalAlignment="Bottom" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="27"/>
+                <RowDefinition Height="43*"/>
+            </Grid.RowDefinitions>
+            <RichTextBox x:Name="richTextBox1" Background="#FF1F1E1E" BorderBrush="{x:Null}" 
+				Foreground="White" FontSize="13.333" BorderThickness="0" Grid.Row="1" 
+                VerticalScrollBarVisibility="Auto" IsReadOnly="True" IsReadOnlyCaretVisible="True" >
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="Это окно вывода."/>
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Результаты исполнения программы будут отображаться здесь."/>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+            <Label x:Name="label1" Content="Вывод" Foreground="White" HorizontalAlignment="Left" Width="228"/>
+        </Grid>
+        <Label x:Name="label2" Content="Файл" VerticalAlignment="Top" Foreground="#7FFFFFFF" Background="{x:Null}"/>
+        <Label x:Name="label2_Copy" Content="test.log" VerticalAlignment="Top" Foreground="White" Background="{x:Null}" Margin="10,20,0,0"/>
     </Grid>
 </Window>
