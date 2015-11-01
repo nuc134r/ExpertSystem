@@ -24,5 +24,11 @@ namespace ExpertSystem
         {
             InitializeComponent();
         }
+
+        private void richTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            //e.Handled = true;
+            //richTextBox.
+        }
     }
 }
