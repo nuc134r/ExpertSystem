@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ExpertSystem
+namespace UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,12 +23,6 @@ namespace ExpertSystem
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void richTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            //e.Handled = true;
-            //richTextBox.
         }
     }
 }
