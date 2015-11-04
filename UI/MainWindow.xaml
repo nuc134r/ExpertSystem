@@ -5,28 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="599" Width="800" Background="Black" MinWidth="800" MinHeight="600">
+        Title="MainWindow" Height="601.5" Width="602" Background="Black" MinWidth="800" MinHeight="600">
     <Grid Background="#FF303030">
+        <Grid.Resources>
+            <Style TargetType="{x:Type GridSplitter}">
+                <Setter Property="Background" Value="#FF515050"/>
+            </Style>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="213"/>
+            <ColumnDefinition Width="206"/>
+            <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="26"/>
+            <RowDefinition Height="193*"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="155"/>
+            <RowDefinition Height="23"/>
         </Grid.RowDefinitions>
-        <StatusBar Background="#FF171717" Foreground="White" Height="25" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="3">
+        <StatusBar Foreground="White" Height="23" VerticalAlignment="Bottom" Grid.Row="3" Grid.ColumnSpan="5" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
             <StatusBarItem Content="Ready"/>
         </StatusBar>
-        <Grid Background="#FF404040" Margin="0,0,0,157" Grid.Column="1" Grid.ColumnSpan="2">
+        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" Grid.RowSpan="3" />
+        <Grid x:Name="SourceCodeWindow" Background="#FF404040" Grid.Column="2" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="27"/>
                 <RowDefinition Height="43*"/>
             </Grid.RowDefinitions>
             <RichTextBox x:Name="SourceCodeBox" Background="#FF1F1E1E" BorderBrush="{x:Null}" 
-				Foreground="White" FontSize="1" FontFamily="Consolas" BorderThickness="0" Grid.Row="1" 
-                VerticalScrollBarVisibility="Auto" KeyDown="richTextBox_KeyDown" AcceptsTab="True" >
+				Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0" Grid.Row="1" 
+                VerticalScrollBarVisibility="Auto" AcceptsTab="True" >
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0"/>
@@ -34,26 +44,13 @@
                 </RichTextBox.Resources>
                 <FlowDocument>
                     <Paragraph>
-                        <Run Text="Приятели" Foreground="#FFA0A0DA" FontSize="14" />
-                        <Run Text="(" Foreground="#FFCBC4C4" FontSize="14" />
-                        <Run Text="X, Y" FontSize="14" />
-                        <Run Text=")" Foreground="#FFCBC4C4" FontSize="14" />
-                        <Run Text=" : " Foreground="#FFCBC4C4" FontSize="14" />
-                        <Run Text="Знакомы" Foreground="#FFA0A0DA" FontSize="14" />
-                        <Run Text="(" Foreground="#FFCBC4C4" FontSize="14" />
-                        <Run Text="X, Y" FontSize="14" />
-                        <Run Text=")" Foreground="#FFCBC4C4" FontSize="14" />
-                        <Run Text=" И " FontSize="14" />
-                        <Run Text="Собеседники" Foreground="#FFA0A0DA" FontSize="14" />
-                        <Run Text="(" Foreground="#FFCBC4C4" FontSize="14" />
-                        <Run Text="X, Y" FontSize="14" />
-                        <Run Text=")" Foreground="#FFCBC4C4" FontSize="14" />
+                        <Run Text="Sampel Text" />
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
-            <Label x:Name="SourceCodeHeader" Content="lorem.log" Foreground="White"/>
+            <Label x:Name="SourceCodeHeader" Content="lorem.log - Исходный код" Foreground="White"/>
         </Grid>
-        <Grid Background="#FF404040" Height="157" VerticalAlignment="Bottom" Grid.Column="1">
+        <Grid x:Name="OutputWindow" Background="#FF404040" Grid.Column="2" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="27"/>
                 <RowDefinition Height="43*"/>
@@ -77,12 +74,13 @@
             </RichTextBox>
             <Label x:Name="OutputHeader" Content="Вывод" Foreground="White"/>
         </Grid>
-        <Grid Background="#FF404040" Height="157" VerticalAlignment="Bottom" Grid.Column="2">
+        <GridSplitter Grid.Column="3" Width="3" HorizontalAlignment="Stretch" Grid.Row="2" />
+        <Grid x:Name="InterpreterWindow" Background="#FF404040" Grid.Column="4" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="27"/>
                 <RowDefinition Height="43*"/>
             </Grid.RowDefinitions>
-            <RichTextBox x:Name="OutputBox1" Background="#FF1F1E1E" BorderBrush="{x:Null}" 
+            <RichTextBox x:Name="InterpreterOutBox" Background="#FF1F1E1E" BorderBrush="{x:Null}" 
         		Foreground="White" FontSize="13.333" BorderThickness="0" Grid.Row="1" 
         		VerticalScrollBarVisibility="Auto" IsReadOnly="True" IsReadOnlyCaretVisible="True" Margin="0,0,0,26" >
                 <RichTextBox.Resources>
@@ -96,11 +94,15 @@
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
-            <Label x:Name="OutputHeader1" Content="Интерпретатор" Foreground="White" BorderThickness="1,0,0,0" BorderBrush="#FF3A3A3A"/>
-            <TextBox x:Name="textBox" Height="26" Margin="16,104,0,0" Grid.Row="1" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" Background="#FF0F0F0F" BorderThickness="0" Foreground="White" VerticalAlignment="Top" FontFamily="Consolas" Text="Приятели(Саша, Женя)?"/>
-            <Border HorizontalAlignment="Left" Grid.Row="1" Width="16" Height="26" VerticalAlignment="Bottom" Background="#FF0F0F0F">
-                <TextBlock x:Name="textBlock" TextWrapping="Wrap" Text="&gt;" FontSize="13.333" Foreground="White" Margin="0,4,0,0" HorizontalAlignment="Right" Width="12"/>
+            <Label x:Name="InterpreterHeader" Content="Интерпретатор" Foreground="White" BorderThickness="1,0,0,0" BorderBrush="#FF3A3A3A"/>
+            <Border HorizontalAlignment="Left" Grid.Row="1" Width="17" Height="26" VerticalAlignment="Bottom" Background="#FF0F0F0F">
+                <TextBlock TextWrapping="Wrap" Text="&gt;" FontSize="13.333" Foreground="White" Margin="0,4,0,0" HorizontalAlignment="Right" Width="12"/>
             </Border>
+            <TextBox x:Name="InterpreterInBox" Height="26" Margin="16,0,0,0" Grid.Row="1" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" Background="#FF0F0F0F" BorderThickness="0" Foreground="White" VerticalAlignment="Bottom" FontFamily="Consolas" Text="Приятели(Саша, Женя)?"/>
+        </Grid>
+        <GridSplitter HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Grid.Row="1" Grid.Column="2" />
+        <Grid HorizontalAlignment="Left" Height="548" VerticalAlignment="Top" Width="206" Grid.RowSpan="3">
+            <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="24,114,0,0" VerticalAlignment="Top" Width="74" Click="button_Click"/>
         </Grid>
     </Grid>
 </Window>

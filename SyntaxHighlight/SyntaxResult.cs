@@ -2,6 +2,6 @@
 {
     public class SyntaxResult
     {
-        public CodeOperand Errors;
+        //public CodeOperand Errors;
     }
 }
