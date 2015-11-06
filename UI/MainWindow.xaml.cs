@@ -25,9 +25,29 @@ namespace UI
             InitializeComponent();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void SourceCodeBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            LineNumbersBox.ScrollToVerticalOffset(e.VerticalOffset);
+        }
 
+        private void SourceCodeBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var codeText = new TextRange(SourceCodeBox.Document.ContentStart, SourceCodeBox.Document.ContentEnd).Text;
+                var linesCount = codeText.Split('\n').Length;
+
+                LineNumbersBox.Document.Blocks.Clear();
+
+                for (var i = 0; i < linesCount - 1; i++)
+                {
+                    LineNumbersBox.Document.Blocks.Add(new Paragraph(new Run((i + 1).ToString())));
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 }

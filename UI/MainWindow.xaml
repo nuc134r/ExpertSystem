@@ -5,38 +5,59 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="601.5" Width="602" Background="Black" MinWidth="800" MinHeight="600">
+        Title="MainWindow" Height="489.5" Width="782.5" Background="Black" MinWidth="400" MinHeight="300">
+    <Window.Resources>
+        <Style x:Key="MenuLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="Black"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF3E3E3E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="LaunchButtonLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="Black"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5D5DCA"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid Background="#FF303030">
         <Grid.Resources>
             <Style TargetType="{x:Type GridSplitter}">
-                <Setter Property="Background" Value="#FF515050"/>
+                <Setter Property="Background" Value="#FF303030"/>
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="206"/>
-            <ColumnDefinition Width="3"/>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="193*"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
             <RowDefinition Height="3"/>
             <RowDefinition Height="155"/>
             <RowDefinition Height="23"/>
         </Grid.RowDefinitions>
-        <StatusBar Foreground="White" Height="23" VerticalAlignment="Bottom" Grid.Row="3" Grid.ColumnSpan="5" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
-            <StatusBarItem Content="Ready"/>
+        <StatusBar Foreground="White" Height="23" VerticalAlignment="Bottom" Grid.Row="4" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
+            <StatusBarItem Content="Готов к запуску, капитан"/>
         </StatusBar>
-        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" Grid.RowSpan="3" />
-        <Grid x:Name="SourceCodeWindow" Background="#FF404040" Grid.Column="2" Grid.ColumnSpan="3">
+        <Grid x:Name="SourceCodeWindow" Background="#FF1F1E1E" Grid.ColumnSpan="3" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="34"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="27"/>
                 <RowDefinition Height="43*"/>
             </Grid.RowDefinitions>
             <RichTextBox x:Name="SourceCodeBox" Background="#FF1F1E1E" BorderBrush="{x:Null}" 
 				Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0" Grid.Row="1" 
-                VerticalScrollBarVisibility="Auto" AcceptsTab="True" >
+                VerticalScrollBarVisibility="Auto" AcceptsTab="True" 
+                ScrollViewer.ScrollChanged="SourceCodeBox_OnScrollChanged" TextChanged="SourceCodeBox_TextChanged" Grid.Column="1">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0"/>
@@ -44,13 +65,51 @@
                 </RichTextBox.Resources>
                 <FlowDocument>
                     <Paragraph>
-                        <Run Text="Sampel Text" />
+                        <Run Text="Кот(X) : Усатый(X) И Пушистый(X);" />
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Усатый(Василий);" />
+                        <LineBreak/>
+                        <Run Text="Пушистый(Василий);" />
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Кот(Василий)?" />
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
-            <Label x:Name="SourceCodeHeader" Content="lorem.log - Исходный код" Foreground="White"/>
+            <RichTextBox x:Name="LineNumbersBox" Background="{x:Null}" BorderBrush="{x:Null}" 
+				Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0" 
+                Grid.Row="1" FlowDirection="RightToLeft" IsReadOnly="True" IsEnabled="False" >
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="1" />
+                        <LineBreak/>
+                        <Run Text="2" />
+                        <LineBreak/>
+                        <Run Text="3" />
+                        <LineBreak/>
+                        <Run Text="4" />
+                        <LineBreak/>
+                        <Run Text="5" Foreground="Red" TextDecorations="{x:Null}" />
+                        <LineBreak/>
+                        <Run Text="6" />
+                        <LineBreak/>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+            <Grid x:Name="SourceCodeHeader" Grid.ColumnSpan="2" Background="#FF404040">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="774"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="SourceCodeHeaderLabel" Content="Исходный код" Foreground="White" Background="{x:Null}"/>
+            </Grid>
         </Grid>
-        <Grid x:Name="OutputWindow" Background="#FF404040" Grid.Column="2" Grid.Row="2">
+        <Grid x:Name="OutputWindow" Background="#FF404040" Grid.Row="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="27"/>
                 <RowDefinition Height="43*"/>
@@ -74,8 +133,8 @@
             </RichTextBox>
             <Label x:Name="OutputHeader" Content="Вывод" Foreground="White"/>
         </Grid>
-        <GridSplitter Grid.Column="3" Width="3" HorizontalAlignment="Stretch" Grid.Row="2" />
-        <Grid x:Name="InterpreterWindow" Background="#FF404040" Grid.Column="4" Grid.Row="2">
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="3" />
+        <Grid x:Name="InterpreterWindow" Background="#FF404040" Grid.Column="2" Grid.Row="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="27"/>
                 <RowDefinition Height="43*"/>
@@ -100,9 +159,29 @@
             </Border>
             <TextBox x:Name="InterpreterInBox" Height="26" Margin="16,0,0,0" Grid.Row="1" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" Background="#FF0F0F0F" BorderThickness="0" Foreground="White" VerticalAlignment="Bottom" FontFamily="Consolas" Text="Приятели(Саша, Женя)?"/>
         </Grid>
-        <GridSplitter HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Grid.Row="1" Grid.Column="2" />
-        <Grid HorizontalAlignment="Left" Height="548" VerticalAlignment="Top" Width="206" Grid.RowSpan="3">
-            <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="24,114,0,0" VerticalAlignment="Top" Width="74" Click="button_Click"/>
+        <GridSplitter HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Grid.Row="2" />
+        <Grid x:Name="Menu" Grid.ColumnSpan="3" Background="#FF2B2B2B">
+            <Grid.Resources>
+                <Style x:Key="MenuLabelStyle" TargetType="{x:Type Label}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FF3E3E3E"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Width="38" Height="25" VerticalAlignment="Top">
+                <Label Content="Файл" Foreground="White" Style="{StaticResource MenuLabelStyle}"/>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Width="31" Height="25" VerticalAlignment="Top" Margin="38,0,0,0">
+                <Label Content="Вид" Foreground="White" Style="{StaticResource MenuLabelStyle}"/>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="0" Height="25" VerticalAlignment="Top" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" HorizontalAlignment="Right" Width="48">
+                <Label Content="Запуск" Foreground="White" Style="{StaticResource LaunchButtonLabelStyle}" />
+            </Border>
         </Grid>
     </Grid>
 </Window>
