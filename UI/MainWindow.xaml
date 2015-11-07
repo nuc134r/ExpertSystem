@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         mc:Ignorable="d"
-        Title="Logikek" Height="504" Width="724.5" Background="Black" MinWidth="400" MinHeight="300">
+        Title="Logikek" Height="552" Width="722.5" Background="Black" MinWidth="400" MinHeight="300">
     <Window.Resources>
         <Style x:Key="LaunchButtonLabelStyle" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="Black" />
@@ -16,7 +16,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <Grid Background="#FF303030">
+    <Grid Background="#FF303030" Margin="0,0,0,0">
         <Grid.Resources>
             <Style TargetType="{x:Type GridSplitter}">
                 <Setter Property="Background" Value="#FF303030" />
@@ -29,20 +29,16 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
-            <RowDefinition Height="267" />
+            <RowDefinition Height="267*" />
             <RowDefinition Height="3" />
-            <RowDefinition Height="155" />
-            <RowDefinition Height="23" />
+            <RowDefinition Height="217*" />
+            <RowDefinition Height="24" />
         </Grid.RowDefinitions>
-        <StatusBar x:Name="statusBar" Foreground="White" Height="23" VerticalAlignment="Bottom" Grid.Row="4"
-                   Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
-            <StatusBarItem x:Name="statusBarInfo" Content="Готов" Background="{x:Null}" />
-        </StatusBar>
         <GridSplitter HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Grid.Row="2" />
         <Grid x:Name="OutputWindow" Background="#FF404040" Grid.Row="3">
             <RichTextBox x:Name="OutputBox" Background="#FF1F1E1E" BorderBrush="{x:Null}"
                          Foreground="White" FontSize="13.333" BorderThickness="0"
-                         VerticalScrollBarVisibility="Auto" IsReadOnly="True" IsReadOnlyCaretVisible="True">
+                         VerticalScrollBarVisibility="Auto" IsReadOnly="True">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0" />
@@ -91,7 +87,7 @@
         <Grid x:Name="InterpreterWindow" Grid.Row="3" Background="#FF404040" Grid.Column="2">
             <RichTextBox x:Name="InterpreterOutBox" Background="#FF1F1E1E" BorderBrush="{x:Null}"
         		Foreground="White" FontSize="13.333" BorderThickness="0"
-        		VerticalScrollBarVisibility="Auto" IsReadOnly="True" IsReadOnlyCaretVisible="True" Margin="0,0,0,26">
+        		VerticalScrollBarVisibility="Auto" IsReadOnly="True" Margin="0,0,0,26">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0" />
@@ -165,5 +161,9 @@
                 </FlowDocument>
             </RichTextBox>
         </Grid>
+        <StatusBar x:Name="statusBar" Foreground="White" Grid.Row="4"
+        	Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" Height="24" VerticalAlignment="Top">
+            <StatusBarItem x:Name="statusBarInfo" Content="Готов" Background="{x:Null}" />
+        </StatusBar>
     </Grid>
 </Window>
