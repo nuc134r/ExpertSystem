@@ -1,34 +1,24 @@
-﻿using Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Core;
 
 namespace UI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isRunning;
-        private SolidColorBrush brush;
-
         // ReSharper disable once PossibleNullReferenceException
-        private static readonly Color RunningColor = (Color)ColorConverter.ConvertFromString("#CA5100");
+        private static readonly Color RunningColor = (Color) ColorConverter.ConvertFromString("#CA5100");
         private static readonly Color ReadyColor = SystemColors.MenuHighlightColor;
+        private SolidColorBrush brush;
+        private bool isRunning;
 
         public MainWindow()
         {
@@ -57,8 +47,9 @@ namespace UI
         {
             try
             {
-                var codeText = new TextRange(SourceCodeBox.Document.ContentStart, SourceCodeBox.Document.ContentEnd).Text;
-                var linesCount = codeText.Split('\n').Length;
+                var codeText = new TextRange(SourceCodeBox.Document.ContentStart, 
+                                             SourceCodeBox.Document.ContentEnd).Text;
+                var linesCount = codeText.Lines();
 
                 LineNumbersBox.Document.Blocks.Clear();
 
