@@ -7,14 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="489.5" Width="782.5" Background="Black" MinWidth="400" MinHeight="300">
     <Window.Resources>
-        <Style x:Key="MenuLabelStyle" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="Black"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#FF3E3E3E"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
         <Style x:Key="LaunchButtonLabelStyle" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="Black"/>
             <Style.Triggers>
@@ -165,7 +157,7 @@
                 <Style x:Key="MenuLabelStyle" TargetType="{x:Type Label}">
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#FF3E3E3E"/>
+                            <Setter Property="Background" Value="#4CFFFFFF"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -180,7 +172,7 @@
                 <Label Content="Вид" Foreground="White" Style="{StaticResource MenuLabelStyle}"/>
             </Border>
             <Border BorderBrush="Black" BorderThickness="0" Height="25" VerticalAlignment="Top" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" HorizontalAlignment="Right" Width="48">
-                <Label Content="Запуск" Foreground="White" Style="{StaticResource LaunchButtonLabelStyle}" />
+                <Label Content="Запуск" Foreground="White" Style="{StaticResource MenuLabelStyle}" />
             </Border>
         </Grid>
     </Grid>
