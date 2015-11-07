@@ -20,6 +20,11 @@ namespace UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool isRunning;
+
+        private static readonly Color RunningColor = (Color)ColorConverter.ConvertFromString("#CA5100");
+        private static readonly Color ReadyColor = SystemColors.MenuHighlightColor;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -47,6 +52,24 @@ namespace UI
             catch (Exception)
             {
                 // ignored
+            }
+        }
+
+        private void LaunchStopButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            isRunning = !isRunning;
+
+            if (isRunning)
+            {
+                statusBar.Background = LaunchStopBox.Background = new SolidColorBrush(RunningColor);
+                LaunchStopButton.Content = "  Стоп";
+                statusBarInfo.Content = "Отладка";
+            }
+            else
+            {
+                statusBar.Background = LaunchStopBox.Background = new SolidColorBrush(ReadyColor);
+                LaunchStopButton.Content = "Запуск";
+                statusBarInfo.Content = "Готов";
             }
         }
     }

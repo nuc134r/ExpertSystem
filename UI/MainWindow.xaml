@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="489.5" Width="782.5" Background="Black" MinWidth="400" MinHeight="300">
+        Title="Logeeca" Height="489.5" Width="782.5" Background="Black" MinWidth="400" MinHeight="300" Topmost="True">
     <Window.Resources>
         <Style x:Key="LaunchButtonLabelStyle" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="Black"/>
@@ -34,8 +34,8 @@
             <RowDefinition Height="155"/>
             <RowDefinition Height="23"/>
         </Grid.RowDefinitions>
-        <StatusBar Foreground="White" Height="23" VerticalAlignment="Bottom" Grid.Row="4" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
-            <StatusBarItem Content="Готов к запуску, капитан"/>
+        <StatusBar x:Name="statusBar" Foreground="White" Height="23" VerticalAlignment="Bottom" Grid.Row="4" Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
+            <StatusBarItem x:Name="statusBarInfo" Content="Готов"/>
         </StatusBar>
         <Grid x:Name="SourceCodeWindow" Background="#FF1F1E1E" Grid.ColumnSpan="3" Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -87,7 +87,7 @@
                         <LineBreak/>
                         <Run Text="4" />
                         <LineBreak/>
-                        <Run Text="5" Foreground="Red" TextDecorations="{x:Null}" />
+                        <Run Text="5" />
                         <LineBreak/>
                         <Run Text="6" />
                         <LineBreak/>
@@ -171,8 +171,8 @@
             <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Width="31" Height="25" VerticalAlignment="Top" Margin="38,0,0,0">
                 <Label Content="Вид" Foreground="White" Style="{StaticResource MenuLabelStyle}"/>
             </Border>
-            <Border BorderBrush="Black" BorderThickness="0" Height="25" VerticalAlignment="Top" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" HorizontalAlignment="Right" Width="48">
-                <Label Content="Запуск" Foreground="White" Style="{StaticResource MenuLabelStyle}" />
+            <Border x:Name="LaunchStopBox" BorderBrush="Black" BorderThickness="0" Height="25" VerticalAlignment="Top" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" HorizontalAlignment="Right" Width="48">
+                <Label x:Name="LaunchStopButton" Content="Запуск" Foreground="White" Style="{StaticResource MenuLabelStyle}" MouseDown="LaunchStopButton_MouseDown" VerticalAlignment="Center" HorizontalAlignment="Center" Width="48" />
             </Border>
         </Grid>
     </Grid>
