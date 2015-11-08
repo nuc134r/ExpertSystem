@@ -52,11 +52,11 @@ namespace UI
                                              SourceCodeBox.Document.ContentEnd).Text;
                 var linesCount = codeText.Lines();
 
-                LineNumbersBox.Document.Blocks.Clear();
+                LineNumbersBox.Text = "";
 
                 for (var i = 0; i < linesCount - 1; i++)
                 {
-                    LineNumbersBox.Document.Blocks.Add(new Paragraph(new Run((i + 1).ToString())));
+                    LineNumbersBox.Text += (i + 1) + "\n";
                 }
             }
             catch (Exception)

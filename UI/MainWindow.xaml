@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         mc:Ignorable="d"
-        Title="Logikek" Height="552" Width="722.5" Background="Black" MinWidth="400" MinHeight="300">
+        Title="Logikek" Height="450" Width="700" Background="Black" MinWidth="400" MinHeight="300">
     <Window.Resources>
         <Style x:Key="LaunchButtonLabelStyle" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="Black" />
@@ -31,7 +31,7 @@
             <RowDefinition Height="25" />
             <RowDefinition Height="267*" />
             <RowDefinition Height="3" />
-            <RowDefinition Height="217*" />
+            <RowDefinition Height="180*" />
             <RowDefinition Height="24" />
         </Grid.RowDefinitions>
         <GridSplitter HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Grid.Row="2" />
@@ -86,8 +86,8 @@
         </Grid>
         <Grid x:Name="InterpreterWindow" Grid.Row="3" Background="#FF404040" Grid.Column="2">
             <RichTextBox x:Name="InterpreterOutBox" Background="#FF1F1E1E" BorderBrush="{x:Null}"
-        		Foreground="White" FontSize="13.333" BorderThickness="0"
-        		VerticalScrollBarVisibility="Auto" IsReadOnly="True" Margin="0,0,0,26">
+                         Foreground="White" FontSize="13.333" BorderThickness="0"
+                         VerticalScrollBarVisibility="Auto" IsReadOnly="True" Margin="0,0,0,26">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0" />
@@ -98,49 +98,27 @@
                         <Run Text="Это окно интерпретатора." />
                     </Paragraph>
                     <Paragraph Foreground="#3FFFFFFF">
-                        <Run Text="Во время выполнения программы тут можно вводить команды для моментального исполнения." />
+                        <Run
+                            Text="Во время выполнения программы тут можно вводить команды для моментального исполнения." />
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
             <TextBox x:Name="InterpreterInBox" Margin="15,0,0,0" TextWrapping="Wrap"
-            	FontSize="14" VerticalContentAlignment="Center" Background="#FF0F0F0F" BorderThickness="0"
-            	Foreground="White" FontFamily="Consolas" Text="Усатый(Василий)?" RenderTransformOrigin="0.647,1.894" Height="26" VerticalAlignment="Bottom" />
+                     FontSize="14" VerticalContentAlignment="Center" Background="#FF0F0F0F" BorderThickness="0"
+                     Foreground="White" FontFamily="Consolas" Text="Усатый(Василий)?"
+                     RenderTransformOrigin="0.647,1.894" Height="26" VerticalAlignment="Bottom" />
             <Border HorizontalAlignment="Left" Width="17" Height="26" VerticalAlignment="Bottom"
-            	Background="#FF0F0F0F">
+                    Background="#FF0F0F0F">
                 <TextBlock TextWrapping="Wrap" Text="&gt;" FontSize="13.333" Foreground="White" Margin="0,4,0,0"
-            		HorizontalAlignment="Right" Width="12" />
+                           HorizontalAlignment="Right" Width="12" />
             </Border>
         </Grid>
         <Grid x:Name="SourceCodeWindow" Grid.Row="1" Background="#FF1F1E1E" Grid.ColumnSpan="3">
-            <RichTextBox x:Name="LineNumbersBox" Background="{x:Null}" BorderBrush="{x:Null}"
-        		Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0" FlowDirection="RightToLeft" IsReadOnly="True" IsEnabled="False" HorizontalAlignment="Left" Width="34">
-                <RichTextBox.Resources>
-                    <Style TargetType="{x:Type Paragraph}">
-                        <Setter Property="Margin" Value="0" />
-                    </Style>
-                </RichTextBox.Resources>
-                <FlowDocument>
-                    <Paragraph>
-                        <Run Text="1" />
-                        <LineBreak />
-                        <Run Text="2" />
-                        <LineBreak />
-                        <Run Text="3" />
-                        <LineBreak />
-                        <Run Text="4" />
-                        <LineBreak />
-                        <Run Text="5" />
-                        <LineBreak />
-                        <Run Text="6" />
-                        <LineBreak />
-                    </Paragraph>
-                </FlowDocument>
-            </RichTextBox>
             <RichTextBox x:Name="SourceCodeBox" Background="#FF1F1E1E" BorderBrush="{x:Null}"
-            	Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0"
-            	VerticalScrollBarVisibility="Auto" AcceptsTab="True"
-            	ScrollViewer.ScrollChanged="SourceCodeBox_OnScrollChanged"
-            	TextChanged="SourceCodeBox_TextChanged" Margin="34,0,0,0">
+                         Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0"
+                         VerticalScrollBarVisibility="Auto" AcceptsTab="True"
+                         ScrollViewer.ScrollChanged="SourceCodeBox_OnScrollChanged"
+                         TextChanged="SourceCodeBox_TextChanged" Margin="25,0,0,0">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0" />
@@ -160,9 +138,13 @@
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
+            <TextBox x:Name="LineNumbersBox" HorizontalAlignment="Left" TextAlignment="Right" TextWrapping="NoWrap" 
+                     Text="1&#x0a;2&#x0a;3&#x0a;4&#x0a;5&#x0a;6&#x0a;" Width="25" 
+                     BorderThickness="0" Foreground="White" Background="{x:Null}" FontFamily="Consolas" FontSize="14" IsEnabled="False"/>
         </Grid>
         <StatusBar x:Name="statusBar" Foreground="White" Grid.Row="4"
-        	Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" Height="24" VerticalAlignment="Top">
+                   Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}"
+                   Height="24" VerticalAlignment="Top">
             <StatusBarItem x:Name="statusBarInfo" Content="Готов" Background="{x:Null}" />
         </StatusBar>
     </Grid>
