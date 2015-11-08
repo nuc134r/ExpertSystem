@@ -48,9 +48,12 @@ namespace UI
         {
             try
             {
-                var codeText = new TextRange(SourceCodeBox.Document.ContentStart, 
-                                             SourceCodeBox.Document.ContentEnd).Text;
-                var linesCount = codeText.Lines();
+                var document = SourceCodeBox.Document;
+
+                var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
+                var linesCount = code.Lines();
+
+                if (LineNumbersBox.Text.Lines() == linesCount) return;
 
                 LineNumbersBox.Text = "";
 

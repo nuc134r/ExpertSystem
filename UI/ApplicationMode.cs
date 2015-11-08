@@ -1,4 +1,4 @@
-﻿namespace Core
+﻿namespace UI
 {
     public enum ApplicationMode
     {

@@ -1,3 +1,5 @@
+using System;
+
 namespace Core
 {
     public static class ExtensionMethods
@@ -19,6 +21,18 @@ namespace Core
                 position++;         // Skip this occurrence!
             }
             return count;
+        }
+
+        public static string RemoveAllEntriesOf(this string s, string value)
+        {
+            var result = s;
+
+            while (result.IndexOf(value, StringComparison.Ordinal) != -1)
+            {
+                result = result.Replace(value, "");
+            }
+
+            return result;
         }
     }
 }
