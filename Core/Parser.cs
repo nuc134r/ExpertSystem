@@ -1,5 +1,3 @@
-using System;
-
 namespace Core
 {
     public class Parser : IParser
@@ -7,10 +5,9 @@ namespace Core
         public ParseResult Do(string code)
         {
             var optimizedCode = PreprocessCode(code);
-
             var result = new ParseResult(code, optimizedCode);
 
-            // ...
+            // TODO Surprisingly, parsing 
 
             return result;
         }

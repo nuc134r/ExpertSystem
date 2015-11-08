@@ -1,24 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core;
 using NUnit.Framework;
-
-using Core;
 
 namespace Tests
 {
     [TestFixture]
     public class WhenParsing
     {
-        private Parser parser;
-
         [SetUp]
         public void Initialize()
         {
             parser = new Parser();
         }
+
+        private Parser parser;
 
         [Test]
         public void WhitespaceIsDeleted()
