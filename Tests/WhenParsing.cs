@@ -19,9 +19,28 @@ namespace Tests
         {
             const string code = "  Fluffy(X); \n\r  Skinny(X);  ";
 
-            var result = parser.Do(code);
+            var result = parser.Do(code, new RunContext());
 
             Assert.AreEqual("Fluffy(X);Skinny(X);", result.OptimizedCode);
+        }
+
+        [Test]
+        public void StopwatchWorks()
+        {
+            string code = "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r"
+                        + "Monster(X); \n\r\n\r\n\r\n\r\n\r\n\r"
+                        + "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r"
+                        + "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r"
+                        + "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r";
+
+            for (int i = 0; i < 20; i++)
+            {
+                code += code;
+            }
+
+            var result = parser.Do(code, new RunContext());
+
+            Assert.Pass($"Deleted some spaces in {result.ElapsedTime} ms");
         }
     }
 }

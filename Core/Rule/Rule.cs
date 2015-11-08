@@ -10,5 +10,6 @@ namespace Core
 
         public string Name { get; }
         public int Arguments { get; }
+        public RuleCondition Condition { get; set; } 
     }
 }

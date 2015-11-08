@@ -4,16 +4,15 @@ namespace Core
 {
     public class ParseResult
     {
+        public readonly double ElapsedTime;
         public readonly string OptimizedCode;
         public readonly string OriginalCode;
 
-        public List<Rule> Rules;
-        //TODO public List<Fact> Facts;
-
-        public ParseResult(string originalCode, string optimizedCode)
+        public ParseResult(string originalCode, string optimizedCode, double elapsedTime)
         {
             OriginalCode = originalCode;
             OptimizedCode = optimizedCode;
+            ElapsedTime = elapsedTime;
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IParser
     {
-        ParseResult Do(string code);
+        ParseResult Do(string code, RunContext context);
     }
 }
