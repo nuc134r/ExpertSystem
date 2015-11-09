@@ -25,6 +25,7 @@ namespace Tests
         }
 
         [Test]
+        [Ignore]
         public void StopwatchWorks()
         {
             string code = "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r"

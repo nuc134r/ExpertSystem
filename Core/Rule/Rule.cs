@@ -2,14 +2,13 @@ namespace Core
 {
     public class Rule
     {
-        public Rule(string name, int arguments)
+        public Rule(string name)
         {
             Name = name;
-            Arguments = arguments;
         }
 
         public string Name { get; }
-        public int Arguments { get; }
+        public int Arguments { get; set; }
         public RuleCondition Condition { get; set; } 
     }
 }

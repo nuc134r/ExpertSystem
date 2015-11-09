@@ -60,7 +60,7 @@
                 <Style x:Key="MenuLabelStyle" TargetType="{x:Type Label}">
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#4CFFFFFF" />
+                            <Setter Property="Background" Value="#26FFFFFF" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
