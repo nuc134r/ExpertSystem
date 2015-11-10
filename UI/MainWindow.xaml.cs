@@ -105,5 +105,19 @@ namespace UI
                 statusBarInfo.Content = "Готов";
             }
         }
+
+        private void Label_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //var animation = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(200)));
+            FileMenuBox.Visibility = Visibility.Visible;
+            //FileMenuBox.BeginAnimation(OpacityProperty, animation);
+
+            FileMenuBox.Focus();
+        }
+
+        private void Label_MouseDown_1(object sender, MouseButtonEventArgs e)
+        {
+            FileMenuBox.Visibility = Visibility.Collapsed;
+        }
     }
 }

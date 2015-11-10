@@ -15,6 +15,13 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="MenuLabelStyle" TargetType="{x:Type Label}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#26FFFFFF" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid Background="#FF303030" Margin="0,0,0,0">
         <Grid.Resources>
@@ -55,7 +62,7 @@
             </RichTextBox>
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="3" />
-        <Grid x:Name="Menu" Grid.ColumnSpan="3" Background="#FF2B2B2B">
+        <Grid x:Name="Menu" Grid.ColumnSpan="3" Background="#FF404040">
             <Grid.Resources>
                 <Style x:Key="MenuLabelStyle" TargetType="{x:Type Label}">
                     <Style.Triggers>
@@ -70,7 +77,8 @@
             </Grid.ColumnDefinitions>
             <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Width="38" Height="25"
                     VerticalAlignment="Top">
-                <Label Content="Файл" Foreground="White" Style="{StaticResource MenuLabelStyle}" />
+                <Label Content="Файл" Foreground="White" Style="{StaticResource MenuLabelStyle}"
+                       MouseDown="Label_MouseDown" />
             </Border>
             <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Width="31" Height="25"
                     VerticalAlignment="Top" Margin="38,0,0,0">
@@ -138,14 +146,32 @@
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
-            <TextBox x:Name="LineNumbersBox" HorizontalAlignment="Left" TextAlignment="Right" TextWrapping="NoWrap" 
-                     Text="1&#x0a;2&#x0a;3&#x0a;4&#x0a;5&#x0a;6&#x0a;" Width="25" 
-                     BorderThickness="0" Foreground="White" Background="{x:Null}" FontFamily="Consolas" FontSize="14" IsEnabled="False"/>
+            <TextBox x:Name="LineNumbersBox" HorizontalAlignment="Left" TextAlignment="Right" TextWrapping="NoWrap"
+                     Text="1&#x0a;2&#x0a;3&#x0a;4&#x0a;5&#x0a;6&#x0a;" Width="25" ContextMenu="{x:Null}"
+                     BorderThickness="0" Foreground="White" Background="{x:Null}" FontFamily="Consolas" FontSize="14" 
+                     IsEnabled="False" />
         </Grid>
         <StatusBar x:Name="statusBar" Foreground="White" Grid.Row="4"
                    Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}"
                    Height="24" VerticalAlignment="Top">
             <StatusBarItem x:Name="statusBarInfo" Content="Готов" Background="{x:Null}" />
         </StatusBar>
+        <Grid x:Name="FileMenuBox" Visibility="Visible" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top"
+              Width="120" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="10"/>
+            </Grid.RowDefinitions>
+            <Label Content="Файл" Foreground="#FFFFFFFF" Background="#FF343434" HorizontalAlignment="Left" Height="25"
+                   VerticalAlignment="Top" MouseDown="Label_MouseDown_1" />
+            <StackPanel Margin="0,25,0,0" Background="#FF343434" Grid.RowSpan="2">
+                <Label Content="Новый" Foreground="White" Style="{StaticResource MenuLabelStyle}"
+                       MouseDown="Label_MouseDown" Height="25" />
+                <Label Content="Открыть" Foreground="White" Style="{StaticResource MenuLabelStyle}"
+                       MouseDown="Label_MouseDown" Height="25" />
+                <Label Content="Сохранить" Foreground="White" Style="{StaticResource MenuLabelStyle}"
+                       MouseDown="Label_MouseDown" Height="25" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
