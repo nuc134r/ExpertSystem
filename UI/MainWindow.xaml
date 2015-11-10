@@ -26,7 +26,7 @@
     <Grid Background="#FF303030" Margin="0,0,0,0">
         <Grid.Resources>
             <Style TargetType="{x:Type GridSplitter}">
-                <Setter Property="Background" Value="#FF303030" />
+                <Setter Property="Background" Value="#FF3A3A3A" />
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
@@ -43,8 +43,8 @@
         </Grid.RowDefinitions>
         <GridSplitter HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Grid.Row="2" />
         <Grid x:Name="OutputWindow" Background="#FF404040" Grid.Row="3">
-            <RichTextBox x:Name="OutputBox" Background="#FF1F1E1E" BorderBrush="{x:Null}"
-                         Foreground="White" FontSize="13.333" BorderThickness="0"
+            <RichTextBox x:Name="OutputBox" Background="#FF1D1D1D" BorderBrush="{x:Null}"
+                         Foreground="#FF595959" FontSize="13.333" BorderThickness="0"
                          VerticalScrollBarVisibility="Auto" IsReadOnly="True">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
@@ -52,10 +52,10 @@
                     </Style>
                 </RichTextBox.Resources>
                 <FlowDocument>
-                    <Paragraph Foreground="#3FFFFFFF">
+                    <Paragraph>
                         <Run Text="Это окно вывода." />
                     </Paragraph>
-                    <Paragraph Foreground="#3FFFFFFF">
+                    <Paragraph>
                         <Run Text="Тут будут отображаться результаты исполнения программы." />
                     </Paragraph>
                 </FlowDocument>
@@ -85,7 +85,7 @@
                 <Label Content="Вид" Foreground="White" Style="{StaticResource MenuLabelStyle}" />
             </Border>
             <Border x:Name="LaunchStopBox" BorderBrush="Black" BorderThickness="0" Height="25" VerticalAlignment="Top"
-                    Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                    Background="#007ACC"
                     HorizontalAlignment="Right" Width="48">
                 <Label x:Name="LaunchStopButton" Content="Запуск" Foreground="White"
                        Style="{StaticResource MenuLabelStyle}" MouseDown="LaunchStopButton_MouseDown"
@@ -93,8 +93,8 @@
             </Border>
         </Grid>
         <Grid x:Name="InterpreterWindow" Grid.Row="3" Background="#FF404040" Grid.Column="2">
-            <RichTextBox x:Name="InterpreterOutBox" Background="#FF1F1E1E" BorderBrush="{x:Null}"
-                         Foreground="White" FontSize="13.333" BorderThickness="0"
+            <RichTextBox x:Name="InterpreterOutBox" Background="#FF1D1D1D" BorderBrush="{x:Null}"
+                         Foreground="#FF595959" FontSize="13.333" BorderThickness="0"
                          VerticalScrollBarVisibility="Auto" IsReadOnly="True" Margin="0,0,0,26">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
@@ -102,10 +102,10 @@
                     </Style>
                 </RichTextBox.Resources>
                 <FlowDocument>
-                    <Paragraph Foreground="#3FFFFFFF">
+                    <Paragraph>
                         <Run Text="Это окно интерпретатора." />
                     </Paragraph>
-                    <Paragraph Foreground="#3FFFFFFF">
+                    <Paragraph>
                         <Run
                             Text="Во время выполнения программы тут можно вводить команды для моментального исполнения." />
                     </Paragraph>
@@ -121,12 +121,12 @@
                            HorizontalAlignment="Right" Width="12" />
             </Border>
         </Grid>
-        <Grid x:Name="SourceCodeWindow" Grid.Row="1" Background="#FF1F1E1E" Grid.ColumnSpan="3">
-            <RichTextBox x:Name="SourceCodeBox" Background="#FF1F1E1E" BorderBrush="{x:Null}"
+        <Grid x:Name="SourceCodeWindow" Grid.Row="1" Background="#FF2B2B2B" Grid.ColumnSpan="3">
+            <RichTextBox x:Name="SourceCodeBox" Background="{x:Null}" BorderBrush="{x:Null}"
                          Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0"
                          VerticalScrollBarVisibility="Auto" AcceptsTab="True"
                          ScrollViewer.ScrollChanged="SourceCodeBox_OnScrollChanged"
-                         TextChanged="SourceCodeBox_TextChanged" Margin="25,0,0,0">
+                         TextChanged="SourceCodeBox_TextChanged" Margin="35,0,0,0" CaretBrush="White">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0" />
@@ -147,16 +147,16 @@
                 </FlowDocument>
             </RichTextBox>
             <TextBox x:Name="LineNumbersBox" HorizontalAlignment="Left" TextAlignment="Right" TextWrapping="NoWrap"
-                     Text="1&#x0a;2&#x0a;3&#x0a;4&#x0a;5&#x0a;6&#x0a;" Width="25" ContextMenu="{x:Null}"
-                     BorderThickness="0" Foreground="White" Background="{x:Null}" FontFamily="Consolas" FontSize="14" 
-                     IsEnabled="False" />
+                     Text="1&#x0a;2&#x0a;3&#x0a;4&#x0a;5&#x0a;6&#x0a;" Width="30" ContextMenu="{x:Null}"
+                     BorderThickness="0" Background="{x:Null}" FontFamily="Consolas" FontSize="14" TextDecorations="{x:Null}" 
+                     Foreground="#FF6280B4" SelectionOpacity="0" IsReadOnly="True" Cursor="Arrow" />
         </Grid>
-        <StatusBar x:Name="statusBar" Foreground="White" Grid.Row="4"
-                   Grid.ColumnSpan="3" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}"
+        <StatusBar x:Name="StatusBar" Foreground="White" Grid.Row="4"
+                   Grid.ColumnSpan="3" Background="#007ACC"
                    Height="24" VerticalAlignment="Top">
             <StatusBarItem x:Name="statusBarInfo" Content="Готов" Background="{x:Null}" />
         </StatusBar>
-        <Grid x:Name="FileMenuBox" Visibility="Visible" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top"
+        <Grid x:Name="FileMenuBox" Visibility="Collapsed" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top"
               Width="120" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition/>

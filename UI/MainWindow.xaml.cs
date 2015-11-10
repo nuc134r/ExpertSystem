@@ -14,28 +14,37 @@ namespace UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        // ReSharper disable once PossibleNullReferenceException
-        private static readonly Color RunningColor = (Color) ColorConverter.ConvertFromString("#CA5100");
-        private static readonly Color ReadyColor = SystemColors.MenuHighlightColor;
-        private SolidColorBrush brush;
+        private SolidColorBrush accentBrush;
+        private SolidColorBrush sourceBrush;
+        private SolidColorBrush outputBrush;
         private bool isRunning;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            InitailizeAnimationBrush();
+            InitailizeBrushes();
         }
 
-        private void InitailizeAnimationBrush()
+        private void InitailizeBrushes()
         {
-            brush = new SolidColorBrush();
+            accentBrush = new SolidColorBrush();
+            sourceBrush = new SolidColorBrush();
+            outputBrush = new SolidColorBrush();
 
-            statusBar.Background = brush;
-            LaunchStopBox.Background = brush;
+            accentBrush.Color = AppColors.ReadyAccent;
+            sourceBrush.Color = AppColors.ActiveBoxBackground;
+            outputBrush.Color = AppColors.InactiveBoxBackground;
 
-            brush.Color = ReadyColor;
-            RegisterName("brush", brush);
+            StatusBar.Background = accentBrush;
+            LaunchStopBox.Background = accentBrush;
+            SourceCodeWindow.Background = sourceBrush;
+            OutputBox.Background = outputBrush;
+            InterpreterOutBox.Background = outputBrush;
+
+            RegisterName("accentBrush", accentBrush);
+            RegisterName("sourceBrush", sourceBrush);
+            RegisterName("outputBrush", outputBrush);
         }
 
         private void SourceCodeBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -69,21 +78,38 @@ namespace UI
 
         private void AnimateModeChange(ApplicationMode mode)
         {
-            var fromColor = mode == ApplicationMode.Ready ? ReadyColor : RunningColor;
-            var toColor = mode == ApplicationMode.Ready ? RunningColor : ReadyColor;
+            ColorAnimation accentAnimation;
+            ColorAnimation sourceAnimation;
+            ColorAnimation outputAnimation;
 
-            var animation = new ColorAnimation
+            var duration = TimeSpan.FromMilliseconds(175);
+
+            if (mode == ApplicationMode.Ready)
             {
-                From = fromColor,
-                To = toColor,
-                Duration = TimeSpan.FromMilliseconds(175)
-            };
+                accentAnimation = new ColorAnimation { From = AppColors.ReadyAccent, To = AppColors.RunningAccent, Duration = duration };
+                sourceAnimation = new ColorAnimation { From = AppColors.ActiveBoxBackground, To = AppColors.InactiveBoxBackground, Duration = duration };
+                outputAnimation = new ColorAnimation { From = AppColors.InactiveBoxBackground, To = AppColors.ActiveBoxBackground, Duration = duration };
+            }
+            else
+            {
+                accentAnimation = new ColorAnimation { From = AppColors.RunningAccent, To = AppColors.ReadyAccent, Duration = duration };
+                sourceAnimation = new ColorAnimation { From = AppColors.InactiveBoxBackground, To = AppColors.ActiveBoxBackground, Duration = duration };
+                outputAnimation = new ColorAnimation { From = AppColors.ActiveBoxBackground, To = AppColors.InactiveBoxBackground, Duration = duration };
+            }
+            
+            Storyboard.SetTargetName(accentAnimation, "accentBrush");
+            Storyboard.SetTargetProperty(accentAnimation, new PropertyPath(SolidColorBrush.ColorProperty));
 
-            Storyboard.SetTargetName(animation, "brush");
-            Storyboard.SetTargetProperty(animation, new PropertyPath(SolidColorBrush.ColorProperty));
+            Storyboard.SetTargetName(sourceAnimation, "sourceBrush");
+            Storyboard.SetTargetProperty(sourceAnimation, new PropertyPath(SolidColorBrush.ColorProperty));
+
+            Storyboard.SetTargetName(outputAnimation, "outputBrush");
+            Storyboard.SetTargetProperty(outputAnimation, new PropertyPath(SolidColorBrush.ColorProperty));
 
             var sb = new Storyboard();
-            sb.Children.Add(animation);
+            sb.Children.Add(accentAnimation);
+            sb.Children.Add(sourceAnimation);
+            sb.Children.Add(outputAnimation);
 
             sb.Begin(this);
         }
@@ -95,12 +121,14 @@ namespace UI
             if (isRunning)
             {
                 AnimateModeChange(ApplicationMode.Ready);
+                SourceCodeBox.IsReadOnly = true;
                 LaunchStopButton.Content = "  Стоп";
                 statusBarInfo.Content = "Отладка";
             }
             else
             {
                 AnimateModeChange(ApplicationMode.Running);
+                SourceCodeBox.IsReadOnly = false;
                 LaunchStopButton.Content = "Запуск";
                 statusBarInfo.Content = "Готов";
             }
@@ -108,11 +136,7 @@ namespace UI
 
         private void Label_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //var animation = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(200)));
             FileMenuBox.Visibility = Visibility.Visible;
-            //FileMenuBox.BeginAnimation(OpacityProperty, animation);
-
-            FileMenuBox.Focus();
         }
 
         private void Label_MouseDown_1(object sender, MouseButtonEventArgs e)
