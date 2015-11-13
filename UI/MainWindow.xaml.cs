@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Drawing.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -23,10 +25,10 @@ namespace UI
         {
             InitializeComponent();
 
-            InitailizeBrushes();
+            InitailizeAnimationVars();
         }
 
-        private void InitailizeBrushes()
+        private void InitailizeAnimationVars()
         {
             accentBrush = new SolidColorBrush();
             sourceBrush = new SolidColorBrush();
@@ -76,40 +78,23 @@ namespace UI
             }
         }
 
+        private ColorAnimation GetColorAnimation(Color from, Color to, string targetName, bool reversed)
+        {
+            var duration = TimeSpan.FromMilliseconds(175);
+            var animation = new ColorAnimation(reversed ? from : to, reversed ? to : from, duration);
+            Storyboard.SetTargetName(animation, targetName);
+            Storyboard.SetTargetProperty(animation, new PropertyPath(SolidColorBrush.ColorProperty));
+            return animation;
+        }
+
         private void AnimateModeChange(ApplicationMode mode)
         {
-            ColorAnimation accentAnimation;
-            ColorAnimation sourceAnimation;
-            ColorAnimation outputAnimation;
-
-            var duration = TimeSpan.FromMilliseconds(175);
-
-            if (mode == ApplicationMode.Ready)
-            {
-                accentAnimation = new ColorAnimation { From = AppColors.ReadyAccent, To = AppColors.RunningAccent, Duration = duration };
-                sourceAnimation = new ColorAnimation { From = AppColors.ActiveBoxBackground, To = AppColors.InactiveBoxBackground, Duration = duration };
-                outputAnimation = new ColorAnimation { From = AppColors.InactiveBoxBackground, To = AppColors.ActiveBoxBackground, Duration = duration };
-            }
-            else
-            {
-                accentAnimation = new ColorAnimation { From = AppColors.RunningAccent, To = AppColors.ReadyAccent, Duration = duration };
-                sourceAnimation = new ColorAnimation { From = AppColors.InactiveBoxBackground, To = AppColors.ActiveBoxBackground, Duration = duration };
-                outputAnimation = new ColorAnimation { From = AppColors.ActiveBoxBackground, To = AppColors.InactiveBoxBackground, Duration = duration };
-            }
-            
-            Storyboard.SetTargetName(accentAnimation, "accentBrush");
-            Storyboard.SetTargetProperty(accentAnimation, new PropertyPath(SolidColorBrush.ColorProperty));
-
-            Storyboard.SetTargetName(sourceAnimation, "sourceBrush");
-            Storyboard.SetTargetProperty(sourceAnimation, new PropertyPath(SolidColorBrush.ColorProperty));
-
-            Storyboard.SetTargetName(outputAnimation, "outputBrush");
-            Storyboard.SetTargetProperty(outputAnimation, new PropertyPath(SolidColorBrush.ColorProperty));
+            var isReversed = (mode == ApplicationMode.Ready);
 
             var sb = new Storyboard();
-            sb.Children.Add(accentAnimation);
-            sb.Children.Add(sourceAnimation);
-            sb.Children.Add(outputAnimation);
+            sb.Children.Add(GetColorAnimation(AppColors.ReadyAccent, AppColors.RunningAccent, "accentBrush", isReversed));
+            sb.Children.Add(GetColorAnimation(AppColors.ActiveBoxBackground, AppColors.InactiveBoxBackground, "sourceBrush", isReversed));
+            sb.Children.Add(GetColorAnimation(AppColors.InactiveBoxBackground, AppColors.ActiveBoxBackground, "outputBrush", isReversed));
 
             sb.Begin(this);
         }
