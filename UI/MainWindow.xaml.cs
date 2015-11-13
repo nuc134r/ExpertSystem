@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Drawing.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -16,27 +14,28 @@ namespace UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SolidColorBrush accentBrush;
-        private SolidColorBrush sourceBrush;
-        private SolidColorBrush outputBrush;
         private bool isRunning;
+
+        private SolidColorBrush accentBrush;
+        private SolidColorBrush outputBrush;
+        private SolidColorBrush sourceBrush;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            InitailizeAnimationVars();
+            InitailizeAnimationBrushes();
         }
 
-        private void InitailizeAnimationVars()
+        private void InitailizeAnimationBrushes()
         {
             accentBrush = new SolidColorBrush();
             sourceBrush = new SolidColorBrush();
             outputBrush = new SolidColorBrush();
 
             accentBrush.Color = AppColors.ReadyAccent;
-            sourceBrush.Color = AppColors.ActiveBoxBackground;
-            outputBrush.Color = AppColors.InactiveBoxBackground;
+            sourceBrush.Color = AppColors.ActiveBoxBG;
+            outputBrush.Color = AppColors.InactiveBoxBG;
 
             StatusBar.Background = accentBrush;
             LaunchStopBox.Background = accentBrush;
@@ -78,23 +77,18 @@ namespace UI
             }
         }
 
-        private ColorAnimation GetColorAnimation(Color from, Color to, string targetName, bool reversed)
-        {
-            var duration = TimeSpan.FromMilliseconds(175);
-            var animation = new ColorAnimation(reversed ? from : to, reversed ? to : from, duration);
-            Storyboard.SetTargetName(animation, targetName);
-            Storyboard.SetTargetProperty(animation, new PropertyPath(SolidColorBrush.ColorProperty));
-            return animation;
-        }
-
         private void AnimateModeChange(ApplicationMode mode)
         {
             var isReversed = (mode == ApplicationMode.Ready);
 
+            var accentAnimation = ColorUtils.CreateColorAnimation(AppColors.ReadyAccent, AppColors.RunningAccent, "accentBrush", isReversed);
+            var sourceAnimation = ColorUtils.CreateColorAnimation(AppColors.ActiveBoxBG, AppColors.InactiveBoxBG, "sourceBrush", isReversed);
+            var outputAnimation = ColorUtils.CreateColorAnimation(AppColors.InactiveBoxBG, AppColors.ActiveBoxBG, "outputBrush", isReversed);
+
             var sb = new Storyboard();
-            sb.Children.Add(GetColorAnimation(AppColors.ReadyAccent, AppColors.RunningAccent, "accentBrush", isReversed));
-            sb.Children.Add(GetColorAnimation(AppColors.ActiveBoxBackground, AppColors.InactiveBoxBackground, "sourceBrush", isReversed));
-            sb.Children.Add(GetColorAnimation(AppColors.InactiveBoxBackground, AppColors.ActiveBoxBackground, "outputBrush", isReversed));
+            sb.Children.Add(accentAnimation);
+            sb.Children.Add(sourceAnimation);
+            sb.Children.Add(outputAnimation);
 
             sb.Begin(this);
         }
