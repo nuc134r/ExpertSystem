@@ -23,7 +23,6 @@ namespace UI
         public MainWindow()
         {
             InitializeComponent();
-
             InitailizeAnimationBrushes();
         }
 
@@ -46,11 +45,6 @@ namespace UI
             RegisterName("accentBrush", accentBrush);
             RegisterName("sourceBrush", sourceBrush);
             RegisterName("outputBrush", outputBrush);
-        }
-
-        private void SourceCodeBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            LineNumbersBox.ScrollToVerticalOffset(e.VerticalOffset);
         }
 
         private void SourceCodeBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -111,16 +105,6 @@ namespace UI
                 LaunchStopButton.Content = "Запуск";
                 statusBarInfo.Content = "Готов";
             }
-        }
-
-        private void Label_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FileMenuBox.Visibility = Visibility.Visible;
-        }
-
-        private void Label_MouseDown_1(object sender, MouseButtonEventArgs e)
-        {
-            FileMenuBox.Visibility = Visibility.Collapsed;
         }
     }
 }

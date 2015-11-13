@@ -58,7 +58,7 @@
             <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Width="38" Height="25"
                     VerticalAlignment="Top">
                 <Label Content="Файл" Foreground="White" Style="{StaticResource MenuLabelStyle}"
-                       MouseDown="Label_MouseDown" />
+                       MouseDown="FileMenuLabel_MouseDown" />
             </Border>
             <Border BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Left" Width="31" Height="25"
                     VerticalAlignment="Top" Margin="38,0,0,0">
@@ -170,14 +170,14 @@
                 <RowDefinition Height="10"/>
             </Grid.RowDefinitions>
             <Label Content="Файл" Foreground="#FFFFFFFF" Background="#FF343434" HorizontalAlignment="Left" Height="25"
-                   VerticalAlignment="Top" MouseDown="Label_MouseDown_1" />
+                   VerticalAlignment="Top" MouseDown="FileMenuInnerLabel_MouseDown" />
             <StackPanel Margin="0,25,0,0" Background="#FF343434" Grid.RowSpan="2">
                 <Label Content="Новый" Foreground="White" Style="{StaticResource MenuLabelStyle}"
-                       MouseDown="Label_MouseDown" Height="25" />
+                       MouseDown="FileMenuLabel_MouseDown" Height="25" />
                 <Label Content="Открыть" Foreground="White" Style="{StaticResource MenuLabelStyle}"
-                       MouseDown="Label_MouseDown" Height="25" />
+                       MouseDown="FileMenuLabel_MouseDown" Height="25" />
                 <Label Content="Сохранить" Foreground="White" Style="{StaticResource MenuLabelStyle}"
-                       MouseDown="Label_MouseDown" Height="25" />
+                       MouseDown="FileMenuLabel_MouseDown" Height="25" />
             </StackPanel>
         </Grid>
     </Grid>
