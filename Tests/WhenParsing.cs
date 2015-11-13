@@ -1,4 +1,5 @@
 ﻿using Core;
+using Core.Exceptions;
 using NUnit.Framework;
 
 namespace Tests
@@ -15,33 +16,31 @@ namespace Tests
         private Parser parser;
 
         [Test]
-        public void WhitespaceIsDeleted()
+        public void EverythingIsOk()
         {
-            const string code = "  Fluffy(X); \n\r  Skinny(X);  ";
+            const string code = "Human(X) : Minded(X)";
 
             var result = parser.Do(code, new RunContext());
 
-            Assert.AreEqual("Fluffy(X);Skinny(X);", result.OptimizedCode);
+            Assert.Pass($"{result.ElapsedTime} ms");
         }
 
         [Test]
-        [Ignore]
-        public void StopwatchWorks()
+        public void ThrowsUnexpectedTokenException()
         {
-            string code = "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r"
-                        + "Monster(X); \n\r\n\r\n\r\n\r\n\r\n\r"
-                        + "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r"
-                        + "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r"
-                        + "\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r";
+            const string code = "Hum;an(X) : Minded(X)";
 
-            for (int i = 0; i < 20; i++)
-            {
-                code += code;
-            }
+            Assert.Throws<UnexpectedTokenException>(() => { parser.Do(code, new RunContext()); });
+        }
+
+        [Test]
+        public void WhitespaceIsDeleted()
+        {
+            const string code = "  Human(X) : \n\r Minded(X)   \n\r ;  ";
 
             var result = parser.Do(code, new RunContext());
 
-            Assert.Pass($"Deleted some spaces in {result.ElapsedTime} ms");
+            Assert.AreEqual("Human(X):Minded(X);", result.OptimizedCode);
         }
     }
 }

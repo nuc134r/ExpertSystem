@@ -1,22 +1,18 @@
 using System;
 using System.Diagnostics;
+using Core.Exceptions;
 using static System.Char;
 
 namespace Core
 {
     public class Parser : IParser
     {
-        private string _code;
-        private RunContext _context;
-
         public ParseResult Do(string code, RunContext context)
         {
             var stopwatch = Stopwatch.StartNew();
             var optimizedCode = PreprocessCode(code);
-            _context = context;
-            _code = optimizedCode;
 
-            // TODO Surprisingly parsing 
+            Parse(optimizedCode, context);
 
             stopwatch.Stop();
             return new ParseResult(code, optimizedCode, stopwatch.ElapsedMilliseconds);
@@ -31,38 +27,45 @@ namespace Core
             return code;
         }
 
-        private void Parse()
+        private static void Parse(string code, RunContext context)
         {
             var temp = "";
             var position = 0;
-            var state = ParseState.Start;
+            var state = ParseState.Name;
 
             Rule ruleTmp;
             //Fact factTmp;
 
-            while (position != _code.Length)
+            while (position != code.Length)
             {
                 switch (state)
                 {
                     case ParseState.Start:
-                        temp += _code[position];
-                        position++;
-                        state = ParseState.Name;
-                        break;
-                    case ParseState.Name:
-                        if (IsLetterOrDigit(_code[position]))
+                        if (IsLetterOrDigit(code[position]))
                         {
-                            temp += _code[position];
-                            position++;
+                            temp += code[position++];
+                            state = ParseState.Name;
+                            break;
                         }
-                        else if (_code[position] == '(')
+                        throw new UnexpectedTokenException(code, position);
+                    case ParseState.Name:
+                        if (IsLetterOrDigit(code[position]))
+                        {
+                            temp += code[position++];
+                            break;
+                        }
+                        if (code[position] == '(')
                         {
                             state = ParseState.OpenBracket;
                             position++;
+                            break;
                         }
-                        break;
+                        throw new UnexpectedTokenException(code, position);
                     case ParseState.OpenBracket:
                         ruleTmp = new Rule(name: temp);
+
+                        position = code.Length; //Escaping 
+
                         break;
                     case ParseState.RuleArgumentName:
                         break;
@@ -70,7 +73,9 @@ namespace Core
                         break;
                     case ParseState.CloseBracket:
                         break;
-                    case ParseState.Semicolon:
+                    case ParseState.RuleSemicolon:
+                        break;
+                    case ParseState.FactSemicolon:
                         break;
                     case ParseState.Colon:
                         break;

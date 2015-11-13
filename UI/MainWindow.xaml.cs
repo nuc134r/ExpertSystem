@@ -34,8 +34,8 @@ namespace UI
             outputBrush = new SolidColorBrush();
 
             accentBrush.Color = AppColors.ReadyAccent;
-            sourceBrush.Color = AppColors.ActiveBoxBG;
-            outputBrush.Color = AppColors.InactiveBoxBG;
+            sourceBrush.Color = AppColors.ActiveBoxBg;
+            outputBrush.Color = AppColors.InactiveBoxBg;
 
             StatusBar.Background = accentBrush;
             LaunchStopBox.Background = accentBrush;
@@ -82,8 +82,8 @@ namespace UI
             var isReversed = (mode == ApplicationMode.Ready);
 
             var accentAnimation = ColorUtils.CreateColorAnimation(AppColors.ReadyAccent, AppColors.RunningAccent, "accentBrush", isReversed);
-            var sourceAnimation = ColorUtils.CreateColorAnimation(AppColors.ActiveBoxBG, AppColors.InactiveBoxBG, "sourceBrush", isReversed);
-            var outputAnimation = ColorUtils.CreateColorAnimation(AppColors.InactiveBoxBG, AppColors.ActiveBoxBG, "outputBrush", isReversed);
+            var sourceAnimation = ColorUtils.CreateColorAnimation(AppColors.ActiveBoxBg, AppColors.InactiveBoxBg, "sourceBrush", isReversed);
+            var outputAnimation = ColorUtils.CreateColorAnimation(AppColors.InactiveBoxBg, AppColors.ActiveBoxBg, "outputBrush", isReversed);
 
             var sb = new Storyboard();
             sb.Children.Add(accentAnimation);

@@ -52,6 +52,7 @@
     <Compile Include="Rule\RuleCondition.cs" />
     <Compile Include="Rule\RuleOperator.cs" />
     <Compile Include="RunContext.cs" />
+    <Compile Include="Exceptions\UnexpectedTokenException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
