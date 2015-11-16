@@ -4,15 +4,15 @@ namespace Core.Exceptions
 {
     public class UnexpectedTokenException : Exception
     {
-        private readonly string code;
-        private readonly int position;
-
         public UnexpectedTokenException(string code, int position)
         {
-            this.code = code;
-            this.position = position;
+            Code = code;
+            Position = position;
         }
 
-        public override string Message => $"Unexpected token '{code[position]}' at {position}";
+        public string Code { get; }
+        public int Position { get; }
+
+        public override string Message => $"Unexpected token '{Code[Position]}' at {Position}";
     }
 }

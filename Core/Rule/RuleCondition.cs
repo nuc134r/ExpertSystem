@@ -1,10 +1,11 @@
+using Core;
 using System.Collections.Generic;
 
 namespace Core
 {
     public class RuleCondition
     {
-        public bool IsNot;
+        public bool IsNegated { get; set; }
     }
 
     public class SimpleCondition : RuleCondition
@@ -14,7 +15,7 @@ namespace Core
             Name = name;
         }
 
-        public string Name { get; }
+        public string Name { get; private set; }
         public List<RuleArgument> Arguments { get; set; }
     }
 

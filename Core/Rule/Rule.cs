@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Core
 {
     public class Rule
@@ -7,8 +9,8 @@ namespace Core
             Name = name;
         }
 
-        public string Name { get; }
-        public int Arguments { get; set; }
-        public RuleCondition Condition { get; set; } 
+        public string Name { get; private set; }
+        public List<RuleArgument> Arguments { get; set; }
+        public RuleCondition Condition { get; set; }
     }
 }

@@ -5,17 +5,17 @@ namespace Core
         Start,
         Name,
         OpenBracket,
-        RuleArgumentName,
-        RuleComma,
+        ArgumentName,
+        Comma,
         CloseBracket,
-        RuleSemicolon,
-        FactSemicolon,
+        Semicolon,
         Colon,
         ConditionName,
         ConditionOpenBracket,
         ConditionArgument,
         ConditionComma,
         ConditionCloseBracket,
-        Operator
+        Operator,
+        QuestionMark
     }
 }

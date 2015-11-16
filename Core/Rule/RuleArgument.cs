@@ -2,10 +2,10 @@ namespace Core
 {
     public class RuleArgument
     {
-        public RuleArgument(string name, bool isAtom)
+        public RuleArgument(string name)
         {
             Name = name;
-            IsAtom = isAtom;
+            IsAtom = (name.Length == 1);
         }
 
         public string Name { get; }

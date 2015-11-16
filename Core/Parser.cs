@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Core.Interfaces;
 using Core.Exceptions;
 using static System.Char;
 
@@ -27,17 +28,24 @@ namespace Core
             return code;
         }
 
+        /*  
+        **  Kitty(X) : Soft(X) and Warm(X);
+        **  
+        **  Soft(Tom);
+        **  Warm(Tom);
+        **
+        **  Black(Tail, Tom);
+        **  
+        **  Kitty(Tom)?
+        */
+
         private static void Parse(string code, RunContext context)
         {
             var temp = "";
             var position = 0;
             var state = ParseState.Name;
 
-            Rule ruleTmp;
-            //Fact factTmp;
-
             while (position != code.Length)
-            {
                 switch (state)
                 {
                     case ParseState.Start:
@@ -49,7 +57,7 @@ namespace Core
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.Name:
-                        if (IsLetterOrDigit(code[position]))
+                        if (IsLetter(code[position]))
                         {
                             temp += code[position++];
                             break;
@@ -62,20 +70,39 @@ namespace Core
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.OpenBracket:
-                        ruleTmp = new Rule(name: temp);
-
-                        position = code.Length; //Escaping 
-
+                        var rule = new Rule(name: temp);
+                        context.Rules.Add(rule);
+                        temp = "";
+                        state = ParseState.ArgumentName;
                         break;
-                    case ParseState.RuleArgumentName:
-                        break;
-                    case ParseState.RuleComma:
+                    case ParseState.ArgumentName:
+                        if (IsLetter(code[position]))
+                        {
+                            temp += code[position++];
+                            break;
+                        }
+                        if (code[position] == ')')
+                        {
+                            if (temp == "") throw new ArgumentNameExpectedException();
+                            state = ParseState.CloseBracket;
+                            position++;
+                            break;
+                        }
+                        if (code[position] == ',')
+                        {
+                            if (temp == "") throw new ArgumentNameExpectedException();
+                            state = ParseState.Comma;
+                            position++;
+                            break;
+                        }
+                        throw new UnexpectedTokenException(code, position);
+                    case ParseState.Comma:
+                        position++;
                         break;
                     case ParseState.CloseBracket:
+                        position++;
                         break;
-                    case ParseState.RuleSemicolon:
-                        break;
-                    case ParseState.FactSemicolon:
+                    case ParseState.Semicolon:
                         break;
                     case ParseState.Colon:
                         break;
@@ -91,10 +118,12 @@ namespace Core
                         break;
                     case ParseState.Operator:
                         break;
+                    case ParseState.QuestionMark:
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
+            if (state != ParseState.Semicolon || state != ParseState.QuestionMark) throw new UnexpectedLineEndException();
         }
 
         private void ParseRule()
