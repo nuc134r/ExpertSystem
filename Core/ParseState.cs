@@ -3,12 +3,11 @@ namespace Core
     public enum ParseState
     {
         Start,
-        Name,
+        ClauseName,
         OpenBracket,
         ArgumentName,
         Comma,
         CloseBracket,
-        Semicolon,
         Colon,
         ConditionName,
         ConditionOpenBracket,

@@ -1,17 +1,10 @@
-using System;
-
 namespace Core.Exceptions
 {
-    public class UnexpectedTokenException : Exception
+    public class UnexpectedTokenException : ParsingException
     {
-        public UnexpectedTokenException(string code, int position)
+        public UnexpectedTokenException(string code, int position) : base(code, position)
         {
-            Code = code;
-            Position = position;
         }
-
-        public string Code { get; }
-        public int Position { get; }
 
         public override string Message => $"Unexpected token '{Code[Position]}' at {Position}";
     }

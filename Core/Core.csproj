@@ -42,9 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ArgumentNameExpectedException.cs" />
+    <Compile Include="Exceptions\MissingSemicolonException.cs" />
+    <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="Exceptions\UnexpectedLineEndException.cs" />
     <Compile Include="Exceptions\UnexpectedTokenException.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Exceptions\FactAtomException.cs" />
     <Compile Include="Interfaces\IParser.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ParseResult.cs" />
