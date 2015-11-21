@@ -53,10 +53,12 @@
     <Compile Include="ParseResult.cs" />
     <Compile Include="ParseState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rule\Rule.cs" />
-    <Compile Include="Rule\RuleArgument.cs" />
-    <Compile Include="Rule\RuleCondition.cs" />
-    <Compile Include="Rule\RuleOperator.cs" />
+    <Compile Include="Language\Clause.cs" />
+    <Compile Include="Language\Fact.cs" />
+    <Compile Include="Language\Rule.cs" />
+    <Compile Include="Language\ClauseArgument.cs" />
+    <Compile Include="Language\RuleCondition.cs" />
+    <Compile Include="Language\RuleOperator.cs" />
     <Compile Include="RunContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,7 +1,6 @@
-using Core;
 using System.Collections.Generic;
 
-namespace Core
+namespace Core.Language
 {
     public class RuleCondition
     {
@@ -16,7 +15,7 @@ namespace Core
         }
 
         public string Name { get; private set; }
-        public List<RuleArgument> Arguments { get; set; }
+        public List<ClauseArgument> Arguments { get; set; }
     }
 
     public class ComplexCondition : RuleCondition

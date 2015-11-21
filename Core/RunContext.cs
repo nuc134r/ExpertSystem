@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Language;
 
 namespace Core
 {
@@ -7,10 +8,10 @@ namespace Core
         public RunContext()
         {
             Rules = new List<Rule>();
-            //Facts = new List<Fact>();
+            Facts = new List<Fact>();
         }
 
         public List<Rule> Rules;
-        //TODO public List<Fact> Facts;
+        public List<Fact> Facts;
     }
 }

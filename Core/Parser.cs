@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Core.Exceptions;
 using Core.Interfaces;
+using Core.Language;
 using static System.Char;
 
 namespace Core
@@ -39,8 +40,8 @@ namespace Core
 
         private void Parse(RunContext context)
         {
-            var clauseName = "";
-            var clauseArguments = new List<string>();
+            var name = "";
+            var arguments = new List<ClauseArgument>();
 
             while (position != code.Length)
             {
@@ -67,7 +68,7 @@ namespace Core
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.OpenBracket:
-                        clauseName = temp;
+                        name = temp;
                         temp = "";
                         position++;
                         state = ParseState.ArgumentName;
@@ -92,31 +93,32 @@ namespace Core
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.Comma:
-                        clauseArguments.Add(temp);
+                        arguments.Add(new ClauseArgument(temp));
                         temp = "";
                         position++;
                         state = ParseState.ArgumentName;
                         break;
                     case ParseState.CloseBracket:
+                        arguments.Add(new ClauseArgument(temp));
+                        temp = "";
                         position++;
                         state = ParseState.Colon;
                         break;
                     case ParseState.Colon:
                         if (code[position] == ';')
                         {
-                            //var fact = new Fact(clauseName);
-                            if (clauseArguments.Any(_ => _.Length == 1))
+                            if (arguments.Any(arg => arg.IsAtom))
                                 throw new FactAtomException(code, position);
+                            var fact = new Fact(name) { Arguments = arguments };
+                            context.Facts.Add(fact);
                             position++;
                             state = ParseState.ClauseName;
                             break;
                         }
                         if (code[position] == ':')
                         {
-                            var rule = new Rule(clauseName);
-                            clauseArguments.ForEach(arg => rule.Arguments.Add(new RuleArgument(arg)));
+                            var rule = new Rule(name) {Arguments = arguments};
                             context.Rules.Add(rule);
-
                             position++;
                             state = ParseState.ConditionName;
                             break;
