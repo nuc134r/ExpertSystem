@@ -44,12 +44,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WhenParsing\SuccessfullyParsesFact.cs" />
     <Compile Include="WhenParsing\ThrowsMissingSemicolonException.cs" />
     <Compile Include="WhenParsing\ThrowsUnexpectedLineEndException.cs" />
     <Compile Include="WhenParsing\ThrowsFactAtomException.cs" />
     <Compile Include="WhenParsing\ThrowsUnexpectedTokenException.cs" />
     <Compile Include="WhenParsing\ThrowsArgumentNameException.cs" />
-    <Compile Include="WhenParsing\ResultsAreCorrect.cs" />
+    <Compile Include="WhenParsing\DoesNotThrow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
