@@ -15,7 +15,9 @@ namespace Core
     **  Soft(Tom);
     **  Warm(Tom);
     **
-    **  Black(Tail, Tom);
+    **  Tail(Tom, TomsTail);
+    **  
+    **  Black(TomsTail);
     **  
     **  Kitty(Tom)?
     */
@@ -35,7 +37,7 @@ namespace Core
             Parse(context);
             stopwatch.Stop();
 
-            return new ParseResult(code, stopwatch.ElapsedMilliseconds);
+            return new ParseResult(stopwatch.ElapsedMilliseconds);
         }
 
         private void Parse(RunContext context)
@@ -70,6 +72,7 @@ namespace Core
                     case ParseState.OpenBracket:
                         name = temp;
                         temp = "";
+                        arguments = new List<ClauseArgument>();
                         position++;
                         state = ParseState.ArgumentName;
                         break;
