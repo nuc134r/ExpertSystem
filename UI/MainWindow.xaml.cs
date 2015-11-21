@@ -36,11 +36,9 @@ namespace UI
             sourceBrush.Color = AppColors.ActiveBoxBg;
             outputBrush.Color = AppColors.InactiveBoxBg;
 
-            StatusBar.Background = accentBrush;
             LaunchStopBox.Background = accentBrush;
             SourceCodeWindow.Background = sourceBrush;
-            OutputBox.Background = outputBrush;
-            InterpreterOutBox.Background = outputBrush;
+            OutputWindow.Background = outputBrush;
 
             RegisterName("accentBrush", accentBrush);
             RegisterName("sourceBrush", sourceBrush);
@@ -91,19 +89,22 @@ namespace UI
         {
             isRunning = !isRunning;
 
+            SourceCodeBox.IsReadOnly = isRunning;
+            InterpreterBox.IsReadOnly = !isRunning;
+
+            InterpreterBox.Text = "";
+
             if (isRunning)
             {
                 AnimateModeChange(ApplicationMode.Ready);
-                SourceCodeBox.IsReadOnly = true;
                 LaunchStopButton.Content = "  Стоп";
-                statusBarInfo.Content = "Отладка";
+                InterpreterBox.Focus();
             }
             else
             {
                 AnimateModeChange(ApplicationMode.Running);
-                SourceCodeBox.IsReadOnly = false;
                 LaunchStopButton.Content = "Запуск";
-                statusBarInfo.Content = "Готов";
+                SourceCodeBox.Focus();
             }
         }
     }

@@ -16,28 +16,6 @@ namespace Tests.WhenParsing
         private Parser parser;
 
         [Test]
-        public void TwoFacts()
-        {
-            const string code = "Likes(Alex, Miranda);" +
-                                "Hates(Miranda, Alex);";
-
-            var context = new RunContext();
-            parser.Do(code, context);
-
-            var alexLikesMiranda = context.Facts.First();
-            var mirandaHatesAlex = context.Facts.Last();
-
-            Assert.AreEqual("Likes", alexLikesMiranda.Name);
-            Assert.AreEqual("Hates", mirandaHatesAlex.Name);
-
-            Assert.AreEqual("Alex", alexLikesMiranda.Arguments.First().Name);
-            Assert.AreEqual("Miranda", alexLikesMiranda.Arguments.Last().Name);
-
-            Assert.AreEqual("Miranda", mirandaHatesAlex.Arguments.First().Name);
-            Assert.AreEqual("Alex", mirandaHatesAlex.Arguments.Last().Name);
-        }
-
-        [Test]
         public void WithOneArgument()
         {
             const string code = "Human(Mark);";
@@ -64,6 +42,28 @@ namespace Tests.WhenParsing
             Assert.AreEqual("Likes", fact.Name);
             Assert.AreEqual("Alex", fact.Arguments.First().Name);
             Assert.AreEqual("Miranda", fact.Arguments.Last().Name);
+        }
+
+        [Test]
+        public void TwoFacts()
+        {
+            const string code = "Likes(Alex, Miranda);" +
+                                "Hates(Miranda, Alex);";
+
+            var context = new RunContext();
+            parser.Do(code, context);
+
+            var alexLikesMiranda = context.Facts.First();
+            var mirandaHatesAlex = context.Facts.Last();
+
+            Assert.AreEqual("Likes", alexLikesMiranda.Name);
+            Assert.AreEqual("Hates", mirandaHatesAlex.Name);
+
+            Assert.AreEqual("Alex", alexLikesMiranda.Arguments.First().Name);
+            Assert.AreEqual("Miranda", alexLikesMiranda.Arguments.Last().Name);
+
+            Assert.AreEqual("Miranda", mirandaHatesAlex.Arguments.First().Name);
+            Assert.AreEqual("Alex", mirandaHatesAlex.Arguments.Last().Name);
         }
     }
 }

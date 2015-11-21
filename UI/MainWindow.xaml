@@ -30,19 +30,16 @@
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="444*" />
-            <ColumnDefinition Width="3" />
-            <ColumnDefinition Width="269*" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
-            <RowDefinition Height="267*" />
+            <RowDefinition Height="219*" />
             <RowDefinition Height="3" />
-            <RowDefinition Height="180*" />
-            <RowDefinition Height="24" />
+            <RowDefinition Height="172*" />
         </Grid.RowDefinitions>
-        <GridSplitter HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Grid.Row="2" />
-        <Grid x:Name="Menu" Grid.ColumnSpan="3" Background="#FF404040">
+        <GridSplitter HorizontalAlignment="Stretch" Grid.Row="2" />
+        <Grid x:Name="Menu" Background="#FF404040">
             <Grid.Resources>
                 <Style x:Key="MenuLabelStyle" TargetType="{x:Type Label}">
                     <Style.Triggers>
@@ -72,63 +69,39 @@
                        VerticalAlignment="Center" HorizontalAlignment="Center" Width="48" />
             </Border>
         </Grid>
-        <Grid x:Name="DebugWindow" Grid.ColumnSpan="3" Grid.Row="3" Margin="0,0,0,22" Grid.RowSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="429*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="260*"/>
-            </Grid.ColumnDefinitions>
-            <Grid x:Name="OutputWindow" Background="#FF404040">
-                <RichTextBox x:Name="OutputBox" Background="#FF1D1D1D" BorderBrush="{x:Null}"
-        			Foreground="#FF595959" FontSize="13.333" BorderThickness="0"
-        			VerticalScrollBarVisibility="Auto" IsReadOnly="True">
-                    <RichTextBox.Resources>
-                        <Style TargetType="{x:Type Paragraph}">
-                            <Setter Property="Margin" Value="0" />
-                        </Style>
-                    </RichTextBox.Resources>
-                    <FlowDocument>
-                        <Paragraph>
-                            <Run Text="Это окно вывода." />
-                        </Paragraph>
-                        <Paragraph>
-                            <Run Text="Тут будут отображаться результаты исполнения программы." />
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-            </Grid>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
-            <Grid x:Name="InterpreterWindow" Background="#FF404040" Margin="3,0,0,0" Grid.Column="1" Grid.ColumnSpan="2">
-                <RichTextBox x:Name="InterpreterOutBox" Background="#FF1D1D1D" BorderBrush="{x:Null}"
-        			Foreground="#FF595959" FontSize="13.333" BorderThickness="0"
-        			VerticalScrollBarVisibility="Auto" IsReadOnly="True" Margin="0,0,0,26">
-                    <RichTextBox.Resources>
-                        <Style TargetType="{x:Type Paragraph}">
-                            <Setter Property="Margin" Value="0" />
-                        </Style>
-                    </RichTextBox.Resources>
-                    <FlowDocument>
-                        <Paragraph>
-                            <Run Text="Это окно интерпретатора." />
-                        </Paragraph>
-                        <Paragraph>
-                            <Run
-        						Text="Во время выполнения программы тут можно вводить команды для моментального исполнения." />
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <TextBox x:Name="InterpreterInBox" Margin="15,0,0,0" TextWrapping="Wrap"
-        			FontSize="14" VerticalContentAlignment="Center" Background="#FF0F0F0F" BorderThickness="0"
-        			Foreground="White" FontFamily="Consolas" Text="Усатый(Василий)?"
-        			RenderTransformOrigin="0.647,1.894" Height="26" VerticalAlignment="Bottom" />
-                <Border HorizontalAlignment="Left" Width="17" Height="26" VerticalAlignment="Bottom"
-        			Background="#FF0F0F0F">
-                    <TextBlock TextWrapping="Wrap" Text="&gt;" FontSize="13.333" Foreground="White" Margin="0,4,0,0"
-        				HorizontalAlignment="Right" Width="12" />
-                </Border>
-            </Grid>
+        <Grid x:Name="OutputWindow" Background="#FF1D1D1D" Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="73*"/>
+                <RowDefinition Height="13*"/>
+            </Grid.RowDefinitions>
+            <RichTextBox x:Name="OutputBox" Background="{x:Null}" BorderBrush="{x:Null}"
+        		Foreground="#FF595959" FontSize="13.333" BorderThickness="0"
+        		VerticalScrollBarVisibility="Auto" IsReadOnly="True">
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0" />
+                    </Style>
+                </RichTextBox.Resources>
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="Это окно вывода." />
+                    </Paragraph>
+                    <Paragraph>
+                        <Run Text="Тут будут отображаться результаты исполнения программы." />
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+            <Border HorizontalAlignment="Left" Width="17" Height="26" VerticalAlignment="Bottom"
+        		Background="#66000000" Grid.Row="1">
+                <TextBlock TextWrapping="Wrap" Text="&gt;" FontSize="13.333" Foreground="White" Margin="0,4,0,0"
+        			HorizontalAlignment="Right" Width="12" />
+            </Border>
+            <TextBox x:Name="InterpreterBox" Margin="17,0,0,0" TextWrapping="Wrap"
+        		FontSize="14" VerticalContentAlignment="Center" Background="#66000000" BorderThickness="0"
+        		Foreground="White" FontFamily="Consolas" Text=""
+        		RenderTransformOrigin="0.647,1.894" Height="26" VerticalAlignment="Bottom" Grid.Row="1" />
         </Grid>
-        <Grid x:Name="SourceCodeWindow" Grid.Row="1" Background="#FF2B2B2B" Grid.ColumnSpan="3">
+        <Grid x:Name="SourceCodeWindow" Grid.Row="1" Background="#FF2B2B2B">
             <RichTextBox x:Name="SourceCodeBox" Background="{x:Null}" BorderBrush="{x:Null}"
                          Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0"
                          VerticalScrollBarVisibility="Auto" AcceptsTab="True"
@@ -158,11 +131,6 @@
                      BorderThickness="0" Background="{x:Null}" FontFamily="Consolas" FontSize="14" TextDecorations="{x:Null}" 
                      Foreground="#FF6280B4" SelectionOpacity="0" IsReadOnly="True" Cursor="Arrow" />
         </Grid>
-        <StatusBar x:Name="StatusBar" Foreground="White" Grid.Row="4"
-                   Grid.ColumnSpan="3" Background="#007ACC"
-                   Height="24" VerticalAlignment="Top">
-            <StatusBarItem x:Name="statusBarInfo" Content="Готов" Background="{x:Null}" />
-        </StatusBar>
         <Grid x:Name="FileMenuBox" Visibility="Collapsed" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top"
               Width="120" Grid.RowSpan="2">
             <Grid.RowDefinitions>
