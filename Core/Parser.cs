@@ -73,8 +73,8 @@ namespace Core
                         name = temp;
                         temp = "";
                         arguments = new List<ClauseArgument>();
-                        position++;
                         state = ParseState.Argument;
+                        position++;
                         break;
                     case ParseState.Argument:
                         if (IsLetter(code[position]))
@@ -98,39 +98,48 @@ namespace Core
                     case ParseState.Comma:
                         arguments.Add(new ClauseArgument(temp));
                         temp = "";
-                        position++;
                         state = ParseState.Argument;
+                        position++;
                         break;
                     case ParseState.CloseBracket:
                         arguments.Add(new ClauseArgument(temp));
                         temp = "";
-                        position++;
                         state = ParseState.Colon;
+                        position++;
                         break;
                     case ParseState.Colon:
                         if (code[position] == ';')
                         {
-                            if (arguments.Any(arg => arg.IsAtom))
-                                throw new FactAtomException(code, position);
+                            if (arguments.Any(arg => arg.IsAtom)) throw new FactAtomException(code, position);
                             var fact = new Fact(name) {Arguments = arguments};
                             context.Facts.Add(fact);
-                            position++;
                             state = ParseState.ClauseName;
+                            position++;
                             break;
                         }
                         if (code[position] == ':')
                         {
                             var rule = new Rule(name) {Arguments = arguments};
                             context.Rules.Add(rule);
-                            position++;
                             state = ParseState.ConditionName;
+                            position++;
                             break;
                         }
                         throw new MissingSemicolonException(code, position);
                     case ParseState.ConditionName:
-
-                        break;
+                        if (IsLetter(code[position]))
+                        {
+                            temp += code[position++];
+                            break;
+                        }
+                        if (code[position] == '(')
+                        {
+                            state = ParseState.ConditionOpenBracket;
+                            break;
+                        }
+                        throw new UnexpectedTokenException(code, position);
                     case ParseState.ConditionOpenBracket:
+
                         break;
                     case ParseState.ConditionArgument:
                         break;

@@ -22,7 +22,7 @@ namespace Tests.WhenParsing
 
             var ex = Assert.Throws<UnexpectedTokenException>(() => { parser.Do(code, new RunContext()); });
 
-            Assert.AreEqual("Unexpected token ';' at 3", ex.Message);
+            Assert.AreEqual("Unexpected token ';'", ex.Message);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace Tests.WhenParsing
 
             var ex = Assert.Throws<UnexpectedTokenException>(() => { parser.Do(code, new RunContext()); });
 
-            Assert.AreEqual("Unexpected token '@' at 6", ex.Message);
+            Assert.AreEqual("Unexpected token '@'", ex.Message);
         }
     }
 }
