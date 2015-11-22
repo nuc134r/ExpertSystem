@@ -50,14 +50,12 @@ namespace UI
             try
             {
                 var document = SourceCodeBox.Document;
-
                 var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
                 var linesCount = code.Lines();
 
                 if (LineNumbersBox.Text.Lines() == linesCount) return;
 
                 LineNumbersBox.Text = "";
-
                 for (var i = 0; i < linesCount - 1; i++)
                 {
                     LineNumbersBox.Text += (i + 1) + "\n";
@@ -90,7 +88,6 @@ namespace UI
             isRunning = !isRunning;
 
             SourceCodeBox.IsReadOnly = isRunning;
-            InterpreterBox.IsReadOnly = !isRunning;
 
             InterpreterBox.Text = "";
 
