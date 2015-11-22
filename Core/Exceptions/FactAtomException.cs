@@ -6,6 +6,6 @@ namespace Core.Exceptions
         {
         }
 
-        public override string Message => "Fact argument can not be atom";
+        public override string Message => "Facts can not contain atoms";
     }
 }

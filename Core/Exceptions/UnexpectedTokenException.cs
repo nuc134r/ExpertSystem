@@ -6,6 +6,6 @@ namespace Core.Exceptions
         {
         }
 
-        public override string Message => $"Unexpected token '{Code[Position]}' at {Position}";
+        public override string Message => $"Unexpected token '{Code[Position]}'";
     }
 }

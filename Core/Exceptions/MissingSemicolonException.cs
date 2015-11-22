@@ -6,6 +6,6 @@ namespace Core.Exceptions
         {
         }
 
-        public override string Message => "Semicolon exception";
+        public override string Message => "Missing semicolon";
     }
 }

@@ -5,7 +5,7 @@ namespace Core
         Start,
         ClauseName,
         OpenBracket,
-        ArgumentName,
+        Argument,
         Comma,
         CloseBracket,
         Colon,

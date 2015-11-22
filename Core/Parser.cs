@@ -74,9 +74,9 @@ namespace Core
                         temp = "";
                         arguments = new List<ClauseArgument>();
                         position++;
-                        state = ParseState.ArgumentName;
+                        state = ParseState.Argument;
                         break;
-                    case ParseState.ArgumentName:
+                    case ParseState.Argument:
                         if (IsLetter(code[position]))
                         {
                             temp += code[position++];
@@ -99,7 +99,7 @@ namespace Core
                         arguments.Add(new ClauseArgument(temp));
                         temp = "";
                         position++;
-                        state = ParseState.ArgumentName;
+                        state = ParseState.Argument;
                         break;
                     case ParseState.CloseBracket:
                         arguments.Add(new ClauseArgument(temp));
@@ -112,7 +112,7 @@ namespace Core
                         {
                             if (arguments.Any(arg => arg.IsAtom))
                                 throw new FactAtomException(code, position);
-                            var fact = new Fact(name) { Arguments = arguments };
+                            var fact = new Fact(name) {Arguments = arguments};
                             context.Facts.Add(fact);
                             position++;
                             state = ParseState.ClauseName;
