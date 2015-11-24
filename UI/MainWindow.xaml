@@ -95,7 +95,7 @@
             </Border>
             <TextBox x:Name="InterpreterBox" Margin="17,0,0,0" TextWrapping="Wrap"
     			FontSize="14" VerticalContentAlignment="Center" Background="#66000000" BorderThickness="0"
-    			Foreground="White" FontFamily="Consolas" Text="" IsReadOnly="True"
+    			Foreground="White" FontFamily="Consolas" Text=""
     			RenderTransformOrigin="0.647,1.894" Height="26" VerticalAlignment="Bottom" Grid.Row="1" />
         </Grid>
         <Grid x:Name="SourceCodeWindow" Grid.Row="1" Background="#FF2B2B2B">

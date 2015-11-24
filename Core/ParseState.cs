@@ -2,7 +2,7 @@ namespace Core
 {
     public enum ParseState
     {
-        Start,
+        Beginning,
         ClauseName,
         OpenBracket,
         Argument,

@@ -49,6 +49,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Exceptions\FactAtomException.cs" />
     <Compile Include="Interfaces\IParser.cs" />
+    <Compile Include="Language\Query.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ParseResult.cs" />
     <Compile Include="ParseState.cs" />

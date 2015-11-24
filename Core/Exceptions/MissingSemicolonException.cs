@@ -6,6 +6,6 @@ namespace Core.Exceptions
         {
         }
 
-        public override string Message => "Missing semicolon";
+        public override string Message => "Missing ';', ':' or '?'";
     }
 }

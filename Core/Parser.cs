@@ -26,7 +26,7 @@ namespace Core
     {
         private string code;
         private int position;
-        private ParseState state = ParseState.ClauseName;
+        private ParseState state = ParseState.Beginning;
 
         private string temp = "";
 
@@ -55,8 +55,18 @@ namespace Core
 
                 switch (state)
                 {
-                    case ParseState.Start:
-                        break;
+                    case ParseState.Beginning:
+                        if (IsLetter(code[position]))
+                        {
+                            temp += code[position++];
+                            state = ParseState.ClauseName;
+                            break;
+                        }
+                        if (code[position] == '/')
+                        {
+                            // comment
+                        }
+                        throw new UnexpectedTokenException(code, position);
                     case ParseState.ClauseName:
                         if (IsLetter(code[position]))
                         {
@@ -113,7 +123,7 @@ namespace Core
                             if (arguments.Any(arg => arg.IsAtom)) throw new FactAtomException(code, position);
                             var fact = new Fact(name) {Arguments = arguments};
                             context.Facts.Add(fact);
-                            state = ParseState.ClauseName;
+                            state = ParseState.Beginning;
                             position++;
                             break;
                         }
@@ -122,6 +132,14 @@ namespace Core
                             var rule = new Rule(name) {Arguments = arguments};
                             context.Rules.Add(rule);
                             state = ParseState.ConditionName;
+                            position++;
+                            break;
+                        }
+                        if (code[position] == '?')
+                        {
+                            var query = new Query(name) { Arguments = arguments };
+                            context.Queries.Add(query);
+                            state = ParseState.Beginning;
                             position++;
                             break;
                         }
@@ -139,10 +157,31 @@ namespace Core
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.ConditionOpenBracket:
-
+                        name = temp;
+                        temp = "";
+                        arguments = new List<ClauseArgument>();
+                        state = ParseState.ConditionArgument;
+                        position++;
                         break;
                     case ParseState.ConditionArgument:
-                        break;
+                        if (IsLetter(code[position]))
+                        {
+                            temp += code[position++];
+                            break;
+                        }
+                        if (code[position] == ')')
+                        {
+                            if (temp == "") throw new ArgumentNameExpectedException(code, position);
+                            state = ParseState.ConditionCloseBracket;
+                            break;
+                        }
+                        if (code[position] == ',')
+                        {
+                            if (temp == "") throw new ArgumentNameExpectedException(code, position);
+                            state = ParseState.ConditionComma;
+                            break;
+                        }
+                        throw new UnexpectedTokenException(code, position);
                     case ParseState.ConditionComma:
                         break;
                     case ParseState.ConditionCloseBracket:
@@ -165,12 +204,11 @@ namespace Core
         {
             switch (state)
             {
+                case ParseState.Beginning:
+                    // If we are here then everything is alright
+                    break;
                 case ParseState.Colon:
                     throw new MissingSemicolonException(code, position);
-                case ParseState.ClauseName:
-                    if (temp != "")
-                        throw new UnexpectedLineEndException(code, position);
-                    break;
                 default:
                     throw new UnexpectedLineEndException(code, position);
             }
