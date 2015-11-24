@@ -188,7 +188,15 @@ namespace Core
                         break;
                     case ParseState.Operator:
                         break;
-                    case ParseState.QuestionMark:
+                    case ParseState.CommentBeginSlash:
+                        break;
+                    case ParseState.CommentBeginStar:
+                        break;
+                    case ParseState.Comment:
+                        break;
+                    case ParseState.CommentEndStar:
+                        break;
+                    case ParseState.CommentEndSlash:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
