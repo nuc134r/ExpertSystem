@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Tests.WhenParsing
 {
     [TestFixture]
-    public class SuccessfullyParsesFacts
+    public class ParsesFacts
     {
         [Test]
         public void WithOneArgument()

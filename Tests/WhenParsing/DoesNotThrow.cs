@@ -7,7 +7,7 @@ namespace Tests.WhenParsing
     public class DoesNotThrow
     {
         [Test]
-        public void DoesNotThrowOnEmptyLine()
+        public void OnEmptyLine()
         {
             const string code = "";
 

@@ -19,10 +19,8 @@ namespace Core
         ConditionCloseBracket,
         Operator,
 
-        CommentBeginSlash,
-        CommentBeginStar,
+        CommentBeginning,
         Comment,
-        CommentEndStar,
-        CommentEndSlash
+        CommentEnding
     }
 }

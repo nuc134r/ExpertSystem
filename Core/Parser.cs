@@ -24,13 +24,13 @@ namespace Core
     public class Parser
     {
         private readonly string code;
-        private List<ClauseArgument> arguments;
-
-        private string name = "";
         private int position;
 
-        private ParseState state = ParseState.Beginning;
+        private string name = "";
         private string temp = "";
+
+        private List<ClauseArgument> arguments;
+        private ParseState state = ParseState.Beginning;
 
         public Parser(string code)
         {
@@ -40,41 +40,18 @@ namespace Core
         public ParseResult Do(RunContext context)
         {
             var stopwatch = Stopwatch.StartNew();
+
             Parse(context);
+
             stopwatch.Stop();
 
             return new ParseResult(stopwatch.ElapsedMilliseconds);
         }
 
-        private bool ProcessSymbol(char letter)
-        {
-            var isCorrectSymbol = (code[position] == letter);
-
-            if (!isCorrectSymbol) return false;
-
-            position++;
-            return true;
-        }
-
-        private bool ProcessLetter()
-        {
-            var isCorrectSymbol = IsLetter(code[position]);
-
-            if (!isCorrectSymbol) return false;
-
-            temp += code[position++]; 
-            return true;
-        }
-
-        private void PrepareForArguments()
-        {
-            name = temp;
-            temp = "";
-            arguments = new List<ClauseArgument>();
-        }
-
         private void Parse(RunContext context)
         {
+            if (code.Trim() == "") return;
+
             while (position != code.Length)
             {
                 if (IsWhiteSpace(code[position]))
@@ -93,7 +70,7 @@ namespace Core
                         }
                         if (ProcessSymbol('/'))
                         {
-                            state = ParseState.CommentBeginSlash;
+                            state = ParseState.CommentBeginning;
                             break;
                         }
                         throw new UnexpectedTokenException(code, position);
@@ -187,24 +164,61 @@ namespace Core
                         break;
                     case ParseState.Operator:
                         break;
-                    case ParseState.CommentBeginSlash:
-                        break;
-                    case ParseState.CommentBeginStar:
-                        break;
+                    case ParseState.CommentBeginning:
+                        if (ProcessSymbol('*'))
+                        {
+                            state = ParseState.Comment;
+                            break;
+                        }
+                        throw new UnexpectedTokenException(code, position);
                     case ParseState.Comment:
+                        if (ProcessSymbol('*'))
+                        {
+                            state = ParseState.CommentEnding;
+                            break;
+                        }
+                        position++;
                         break;
-                    case ParseState.CommentEndStar:
-                        break;
-                    case ParseState.CommentEndSlash:
-                        break;
+                    case ParseState.CommentEnding:
+                        if (ProcessSymbol('/'))
+                        {
+                            state = ParseState.Beginning;
+                            break;
+                        }
+                        throw new UnexpectedTokenException(code, position); 
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
 
-            if (code.Length == 0) return;
-
             CheckFinishState();
+        }
+
+        private bool ProcessLetter()
+        {
+            var isCorrectSymbol = IsLetter(code[position]);
+
+            if (!isCorrectSymbol) return false;
+
+            temp += code[position++]; 
+            return true;
+        }
+
+        private bool ProcessSymbol(char letter)
+        {
+            var isCorrectSymbol = (code[position] == letter);
+
+            if (!isCorrectSymbol) return false;
+
+            position++;
+            return true;
+        }
+
+        private void PrepareForArguments()
+        {
+            name = temp;
+            temp = "";
+            arguments = new List<ClauseArgument>();
         }
 
         private void CheckForAtoms()

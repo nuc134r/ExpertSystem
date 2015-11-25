@@ -44,7 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WhenParsing\SuccessfullyParsesFacts.cs" />
+    <Compile Include="WhenParsing\Comments.cs" />
+    <Compile Include="WhenParsing\ParsesFacts.cs" />
     <Compile Include="WhenParsing\ThrowsMissingSemicolonException.cs" />
     <Compile Include="WhenParsing\ThrowsUnexpectedLineEndException.cs" />
     <Compile Include="WhenParsing\ThrowsFactAtomException.cs" />
