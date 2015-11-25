@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.AccessControl;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -70,7 +71,7 @@ namespace UI
 
         private void AnimateModeChange(ApplicationMode mode)
         {
-            var isReversed = (mode == ApplicationMode.Ready);
+            var isReversed = (mode == ApplicationMode.Running);
 
             var accentAnimation = ColorUtils.CreateColorAnimation(AppColors.ReadyAccent, AppColors.RunningAccent, "accentBrush", isReversed);
             var sourceAnimation = ColorUtils.CreateColorAnimation(AppColors.ActiveBoxBg, AppColors.InactiveBoxBg, "sourceBrush", isReversed);
@@ -84,33 +85,51 @@ namespace UI
             sb.Begin(this);
         }
 
+        private void AnimateErrorsOccurence()
+        {
+            var animation = ColorUtils.CreateColorAnimation(AppColors.InactiveBoxBg, Color.FromRgb(149, 0, 0), "outputBrush", true, autoreverse: true);
+
+            var sb = new Storyboard();
+            sb.Children.Add(animation);
+
+            sb.Begin(this);
+        }
+
         private void LaunchStopButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            isRunning = !isRunning;
-
-            SourceCodeBox.IsReadOnly = isRunning;
             InterpreterBox.Text = "";
 
-            if (isRunning)
+            if (!isRunning)
             {
-                AnimateModeChange(ApplicationMode.Ready);
-                LaunchStopButton.Content = "  Стоп";
-                InterpreterBox.Focus();
-
                 OutputBox.Document.Blocks.Clear();
                 OutputBox.Foreground = new SolidColorBrush(Colors.White);
 
-                Run();
+                if (Run())
+                {
+                    AnimateModeChange(ApplicationMode.Running);
+                    LaunchStopButton.Content = "  Стоп";
+                    InterpreterBox.Focus();
+
+                    isRunning = true;
+                }
+                else
+                {
+                    AnimateErrorsOccurence();
+                }
             }
             else
             {
-                AnimateModeChange(ApplicationMode.Running);
+                AnimateModeChange(ApplicationMode.Ready);
                 LaunchStopButton.Content = "Запуск";
                 SourceCodeBox.Focus();
+                isRunning = false;
             }
+
+            SourceCodeBox.IsReadOnly = isRunning;
+            InterpreterBox.IsReadOnly = !isRunning;
         }
 
-        private void Run()
+        private bool Run()
         {
             var document = SourceCodeBox.Document;
             var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
@@ -125,16 +144,18 @@ namespace UI
             }
             catch (ParsingException ex)
             {
-                OutputBox.AppendText("Errors occured while parsing", Colors.DimGray);
+                OutputBox.AppendText("Errors occured", Colors.OrangeRed);
                 OutputBox.AppendText($"\n{ex.Position} ", Colors.Gray);
                 OutputBox.AppendText($"{ex.Message}", Colors.White);
-                return;
+                return false;
             }
-            
-            OutputBox.AppendText($"({result.ElapsedTime} ms)", Colors.DimGray);
+
+            OutputBox.AppendText($"{result.ElapsedTime} ms", Colors.LawnGreen);
             OutputBox.AppendText($"\nRules: {context.Rules.Count}", Colors.DimGray);
             OutputBox.AppendText($"\nFacts: {context.Facts.Count}", Colors.DimGray);
             OutputBox.AppendText($"\nQueries: {context.Queries.Count}", Colors.DimGray);
+
+            return true;
         }
     }
 }

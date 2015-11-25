@@ -111,7 +111,7 @@
                 </RichTextBox.Resources>
                 <FlowDocument>
                     <Paragraph>
-                        <Run Text="Кот(X) : Усатый(X) И Пушистый(X);" />
+                        <Run Text="/* Кот(X) : Усатый(X) И Пушистый(X); */" />
                         <LineBreak />
                         <LineBreak />
                         <Run Text="Усатый(Василий);" />
