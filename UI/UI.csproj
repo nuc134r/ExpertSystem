@@ -70,6 +70,7 @@
     <Compile Include="AppColors.cs" />
     <Compile Include="ApplicationMode.cs" />
     <Compile Include="ColorUtils.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

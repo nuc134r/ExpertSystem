@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Core;
+using Core.Exceptions;
 
 namespace UI
 {
@@ -88,7 +89,6 @@ namespace UI
             isRunning = !isRunning;
 
             SourceCodeBox.IsReadOnly = isRunning;
-
             InterpreterBox.Text = "";
 
             if (isRunning)
@@ -96,6 +96,11 @@ namespace UI
                 AnimateModeChange(ApplicationMode.Ready);
                 LaunchStopButton.Content = "  Стоп";
                 InterpreterBox.Focus();
+
+                OutputBox.Document.Blocks.Clear();
+                OutputBox.Foreground = new SolidColorBrush(Colors.White);
+
+                Run();
             }
             else
             {
@@ -103,6 +108,33 @@ namespace UI
                 LaunchStopButton.Content = "Запуск";
                 SourceCodeBox.Focus();
             }
+        }
+
+        private void Run()
+        {
+            var document = SourceCodeBox.Document;
+            var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
+
+            var parser = new Parser(code);
+            var context = new RunContext();
+
+            ParseResult result = null;
+            try
+            {
+                result = parser.Do(context);
+            }
+            catch (ParsingException ex)
+            {
+                OutputBox.AppendText("Errors occured while parsing", Colors.DimGray);
+                OutputBox.AppendText($"\n{ex.Position} ", Colors.Gray);
+                OutputBox.AppendText($"{ex.Message}", Colors.White);
+                return;
+            }
+            
+            OutputBox.AppendText($"({result.ElapsedTime} ms)", Colors.DimGray);
+            OutputBox.AppendText($"\nRules: {context.Rules.Count}", Colors.DimGray);
+            OutputBox.AppendText($"\nFacts: {context.Facts.Count}", Colors.DimGray);
+            OutputBox.AppendText($"\nQueries: {context.Queries.Count}", Colors.DimGray);
         }
     }
 }
