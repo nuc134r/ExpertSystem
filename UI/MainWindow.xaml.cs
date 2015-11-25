@@ -28,25 +28,6 @@ namespace UI
             InitailizeAnimationBrushes();
         }
 
-        private void InitailizeAnimationBrushes()
-        {
-            accentBrush = new SolidColorBrush();
-            sourceBrush = new SolidColorBrush();
-            outputBrush = new SolidColorBrush();
-
-            accentBrush.Color = AppColors.ReadyAccent;
-            sourceBrush.Color = AppColors.ActiveBoxBg;
-            outputBrush.Color = AppColors.InactiveBoxBg;
-
-            LaunchStopBox.Background = accentBrush;
-            SourceCodeWindow.Background = sourceBrush;
-            OutputWindow.Background = outputBrush;
-
-            RegisterName("accentBrush", accentBrush);
-            RegisterName("sourceBrush", sourceBrush);
-            RegisterName("outputBrush", outputBrush);
-        }
-
         private void SourceCodeBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -67,32 +48,6 @@ namespace UI
             {
                 // ignored
             }
-        }
-
-        private void AnimateModeChange(ApplicationMode mode)
-        {
-            var isReversed = (mode == ApplicationMode.Running);
-
-            var accentAnimation = ColorUtils.CreateColorAnimation(AppColors.ReadyAccent, AppColors.RunningAccent, "accentBrush", isReversed);
-            var sourceAnimation = ColorUtils.CreateColorAnimation(AppColors.ActiveBoxBg, AppColors.InactiveBoxBg, "sourceBrush", isReversed);
-            var outputAnimation = ColorUtils.CreateColorAnimation(AppColors.InactiveBoxBg, AppColors.ActiveBoxBg, "outputBrush", isReversed);
-
-            var sb = new Storyboard();
-            sb.Children.Add(accentAnimation);
-            sb.Children.Add(sourceAnimation);
-            sb.Children.Add(outputAnimation);
-
-            sb.Begin(this);
-        }
-
-        private void AnimateErrorsOccurence()
-        {
-            var animation = ColorUtils.CreateColorAnimation(AppColors.InactiveBoxBg, Color.FromRgb(149, 0, 0), "outputBrush", true, autoreverse: true);
-
-            var sb = new Storyboard();
-            sb.Children.Add(animation);
-
-            sb.Begin(this);
         }
 
         private void LaunchStopButton_MouseDown(object sender, MouseButtonEventArgs e)
