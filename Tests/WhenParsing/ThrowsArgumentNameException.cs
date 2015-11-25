@@ -7,20 +7,14 @@ namespace Tests.WhenParsing
     [TestFixture]
     public class ThrowsArgumentNameException
     {
-        [SetUp]
-        public void Initialize()
-        {
-            parser = new Parser();
-        }
-
-        private Parser parser;
-
         [Test]
         public void OnEmptyArguments()
         {
             const string code = "Human() : Minded()";
 
-            Assert.Throws<ArgumentNameExpectedException>(() => { parser.Do(code, new RunContext()); });
+            var parser = new Parser(code);
+
+            Assert.Throws<ArgumentNameExpectedException>(() => { parser.Do(new RunContext()); });
         }
 
         [Test]
@@ -28,7 +22,9 @@ namespace Tests.WhenParsing
         {
             const string code = "Rule(, B) : Condition(A, B)";
 
-            Assert.Throws<ArgumentNameExpectedException>(() => { parser.Do(code, new RunContext()); });
+            var parser = new Parser(code);
+
+            Assert.Throws<ArgumentNameExpectedException>(() => { parser.Do(new RunContext()); });
         }
 
         [Test]
@@ -36,7 +32,9 @@ namespace Tests.WhenParsing
         {
             const string code = "Rule(A, ) : Condition(A, B)";
 
-            Assert.Throws<ArgumentNameExpectedException>(() => { parser.Do(code, new RunContext()); });
+            var parser = new Parser(code);
+
+            Assert.Throws<ArgumentNameExpectedException>(() => { parser.Do(new RunContext()); });
         }
     }
 }

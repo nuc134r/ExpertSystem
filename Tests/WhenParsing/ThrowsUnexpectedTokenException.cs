@@ -7,20 +7,13 @@ namespace Tests.WhenParsing
     [TestFixture]
     public class ThrowsUnexpectedTokenException
     {
-        [SetUp]
-        public void Initialize()
-        {
-            parser = new Parser();
-        }
-
-        private Parser parser;
-
         [Test]
         public void OnAccidentialSemicolon()
         {
             const string code = "Hum;an(X) : Minded(X)";
+            var parser = new Parser(code);
 
-            var ex = Assert.Throws<UnexpectedTokenException>(() => { parser.Do(code, new RunContext()); });
+            var ex = Assert.Throws<UnexpectedTokenException>(() => { parser.Do(new RunContext()); });
 
             Assert.AreEqual("Unexpected token ';'", ex.Message);
         }
@@ -29,8 +22,9 @@ namespace Tests.WhenParsing
         public void OnEmailSymbolInArgument()
         {
             const string code = "Human(@X) : Minded(X)";
+            var parser = new Parser(code);
 
-            var ex = Assert.Throws<UnexpectedTokenException>(() => { parser.Do(code, new RunContext()); });
+            var ex = Assert.Throws<UnexpectedTokenException>(() => { parser.Do(new RunContext()); });
 
             Assert.AreEqual("Unexpected token '@'", ex.Message);
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Core.Exceptions;
-using Core.Interfaces;
 using Core.Language;
 using static System.Char;
 
@@ -22,17 +21,24 @@ namespace Core
     **  Kitty(Tom)?
     */
 
-    public class Parser : IParser
+    public class Parser
     {
-        private string code;
-        private int position;
-        private ParseState state = ParseState.Beginning;
+        private readonly string code;
+        private List<ClauseArgument> arguments;
 
+        private string name = "";
+        private int position;
+
+        private ParseState state = ParseState.Beginning;
         private string temp = "";
 
-        public ParseResult Do(string code, RunContext context)
+        public Parser(string code)
         {
             this.code = code;
+        }
+
+        public ParseResult Do(RunContext context)
+        {
             var stopwatch = Stopwatch.StartNew();
             Parse(context);
             stopwatch.Stop();
@@ -40,11 +46,35 @@ namespace Core
             return new ParseResult(stopwatch.ElapsedMilliseconds);
         }
 
+        private bool ProcessSymbol(char letter)
+        {
+            var isCorrectSymbol = (code[position] == letter);
+
+            if (!isCorrectSymbol) return false;
+
+            position++;
+            return true;
+        }
+
+        private bool ProcessLetter()
+        {
+            var isCorrectSymbol = IsLetter(code[position]);
+
+            if (!isCorrectSymbol) return false;
+
+            temp += code[position++]; 
+            return true;
+        }
+
+        private void PrepareForArguments()
+        {
+            name = temp;
+            temp = "";
+            arguments = new List<ClauseArgument>();
+        }
+
         private void Parse(RunContext context)
         {
-            var name = "";
-            var arguments = new List<ClauseArgument>();
-
             while (position != code.Length)
             {
                 if (IsWhiteSpace(code[position]))
@@ -56,128 +86,97 @@ namespace Core
                 switch (state)
                 {
                     case ParseState.Beginning:
-                        if (IsLetter(code[position]))
+                        if (ProcessLetter())
                         {
-                            temp += code[position++];
                             state = ParseState.ClauseName;
                             break;
                         }
-                        if (code[position] == '/')
+                        if (ProcessSymbol('/'))
                         {
-                            // comment
+                            state = ParseState.CommentBeginSlash;
+                            break;
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.ClauseName:
-                        if (IsLetter(code[position]))
-                        {
-                            temp += code[position++];
-                            break;
-                        }
-                        if (code[position] == '(')
+                        if (ProcessLetter()) break;
+                        if (ProcessSymbol('('))
                         {
                             state = ParseState.OpenBracket;
                             break;
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.OpenBracket:
-                        name = temp;
-                        temp = "";
-                        arguments = new List<ClauseArgument>();
+                        PrepareForArguments();
                         state = ParseState.Argument;
-                        position++;
                         break;
                     case ParseState.Argument:
-                        if (IsLetter(code[position]))
+                        if (ProcessLetter()) break;
+                        if (ProcessSymbol(')'))
                         {
-                            temp += code[position++];
-                            break;
-                        }
-                        if (code[position] == ')')
-                        {
-                            if (temp == "") throw new ArgumentNameExpectedException(code, position);
+                            CheckForEmptyArgument();
                             state = ParseState.CloseBracket;
                             break;
                         }
-                        if (code[position] == ',')
+                        if (ProcessSymbol(','))
                         {
-                            if (temp == "") throw new ArgumentNameExpectedException(code, position);
+                            CheckForEmptyArgument();
                             state = ParseState.Comma;
                             break;
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.Comma:
-                        arguments.Add(new ClauseArgument(temp));
-                        temp = "";
-                        state = ParseState.Argument;
-                        position++;
+                        AddArgumentAndChangeStateTo(ParseState.Argument);
                         break;
                     case ParseState.CloseBracket:
-                        arguments.Add(new ClauseArgument(temp));
-                        temp = "";
-                        state = ParseState.Colon;
-                        position++;
+                        AddArgumentAndChangeStateTo(ParseState.Colon);
                         break;
                     case ParseState.Colon:
-                        if (code[position] == ';')
+                        if (ProcessSymbol(';'))
                         {
-                            if (arguments.Any(arg => arg.IsAtom)) throw new FactAtomException(code, position);
-                            var fact = new Fact(name) {Arguments = arguments};
+                            CheckForAtoms();
+                            var fact = new Fact(name) { Arguments = arguments };
                             context.Facts.Add(fact);
                             state = ParseState.Beginning;
-                            position++;
                             break;
                         }
-                        if (code[position] == ':')
+                        if (ProcessSymbol(':'))
                         {
                             var rule = new Rule(name) {Arguments = arguments};
                             context.Rules.Add(rule);
                             state = ParseState.ConditionName;
-                            position++;
                             break;
                         }
-                        if (code[position] == '?')
+                        if (ProcessSymbol('?'))
                         {
-                            var query = new Query(name) { Arguments = arguments };
+                            var query = new Query(name) {Arguments = arguments};
                             context.Queries.Add(query);
                             state = ParseState.Beginning;
-                            position++;
                             break;
                         }
                         throw new MissingSemicolonException(code, position);
                     case ParseState.ConditionName:
-                        if (IsLetter(code[position]))
-                        {
-                            temp += code[position++];
-                            break;
-                        }
-                        if (code[position] == '(')
+                        if (ProcessLetter()) break;
+                        if (ProcessSymbol('('))
                         {
                             state = ParseState.ConditionOpenBracket;
                             break;
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.ConditionOpenBracket:
-                        name = temp;
-                        temp = "";
-                        arguments = new List<ClauseArgument>();
+                        PrepareForArguments();
                         state = ParseState.ConditionArgument;
-                        position++;
                         break;
                     case ParseState.ConditionArgument:
-                        if (IsLetter(code[position]))
+                        if (ProcessLetter()) break;
+                        if (ProcessSymbol(')'))
                         {
-                            temp += code[position++];
-                            break;
-                        }
-                        if (code[position] == ')')
-                        {
-                            if (temp == "") throw new ArgumentNameExpectedException(code, position);
+                            CheckForEmptyArgument();
                             state = ParseState.ConditionCloseBracket;
                             break;
                         }
-                        if (code[position] == ',')
+                        if (ProcessSymbol(','))
                         {
-                            if (temp == "") throw new ArgumentNameExpectedException(code, position);
+                            CheckForEmptyArgument();
                             state = ParseState.ConditionComma;
                             break;
                         }
@@ -208,6 +207,23 @@ namespace Core
             CheckFinishState();
         }
 
+        private void CheckForAtoms()
+        {
+            if (arguments.Any(arg => arg.IsAtom)) throw new FactAtomException(code, position);
+        }
+
+        private void AddArgumentAndChangeStateTo(ParseState nextState)
+        {
+            arguments.Add(new ClauseArgument(temp));
+            temp = "";
+            state = nextState;
+        }
+
+        private void CheckForEmptyArgument()
+        {
+            if (temp == "") throw new ArgumentNameExpectedException(code, position);
+        }
+
         private void CheckFinishState()
         {
             switch (state)
@@ -215,19 +231,12 @@ namespace Core
                 case ParseState.Beginning:
                     // If we are here then everything is alright
                     break;
-                case ParseState.Colon:
+                case ParseState.CloseBracket:
+                case ParseState.ConditionCloseBracket:
                     throw new MissingSemicolonException(code, position);
                 default:
                     throw new UnexpectedLineEndException(code, position);
             }
-        }
-
-        private void ParseRule()
-        {
-        }
-
-        private void ParseRuleCondition()
-        {
         }
     }
 }

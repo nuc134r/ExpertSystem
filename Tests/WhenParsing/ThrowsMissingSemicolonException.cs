@@ -7,20 +7,14 @@ namespace Tests.WhenParsing
     [TestFixture]
     public class ThrowsMissingSemicolonException
     {
-        [SetUp]
-        public void Initialize()
-        {
-            parser = new Parser();
-        }
-
-        private Parser parser;
-
         [Test]
         public void OnMissedSemicolon()
         {
             const string code = "Human(X)";
 
-            Assert.Throws<MissingSemicolonException>(() => { parser.Do(code, new RunContext()); });
+            var parser = new Parser(code);
+
+            Assert.Throws<MissingSemicolonException>(() => { parser.Do(new RunContext()); });
         }
     }
 }

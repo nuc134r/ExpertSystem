@@ -7,21 +7,15 @@ namespace Tests.WhenParsing
     [TestFixture]
     public class SuccessfullyParsesFacts
     {
-        [SetUp]
-        public void Initialize()
-        {
-            parser = new Parser();
-        }
-
-        private Parser parser;
-
         [Test]
         public void WithOneArgument()
         {
             const string code = "Human(Mark);";
 
+            var parser = new Parser(code);
             var context = new RunContext();
-            parser.Do(code, context);
+
+            parser.Do(context);
 
             var fact = context.Facts.First();
 
@@ -34,8 +28,9 @@ namespace Tests.WhenParsing
         {
             const string code = "Likes(Alex, Miranda);";
 
+            var parser = new Parser(code);
             var context = new RunContext();
-            parser.Do(code, context);
+            parser.Do(context);
 
             var fact = context.Facts.First();
 
@@ -50,8 +45,9 @@ namespace Tests.WhenParsing
             const string code = "Likes(Alex, Miranda);" +
                                 "Hates(Miranda, Alex);";
 
+            var parser = new Parser(code);
             var context = new RunContext();
-            parser.Do(code, context);
+            parser.Do(context);
 
             var alexLikesMiranda = context.Facts.First();
             var mirandaHatesAlex = context.Facts.Last();

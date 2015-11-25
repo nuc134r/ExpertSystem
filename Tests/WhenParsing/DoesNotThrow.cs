@@ -6,20 +6,14 @@ namespace Tests.WhenParsing
     [TestFixture]
     public class DoesNotThrow
     {
-        [SetUp]
-        public void Initialize()
-        {
-            parser = new Parser();
-        }
-
-        private Parser parser;
-
         [Test]
         public void DoesNotThrowOnEmptyLine()
         {
             const string code = "";
 
-            Assert.DoesNotThrow(() => { parser.Do(code, new RunContext()); });
+            var parser = new Parser(code);
+ 
+            Assert.DoesNotThrow(() => { parser.Do(new RunContext()); });
         }
     }
 }

@@ -7,20 +7,24 @@ namespace Tests.WhenParsing
     [TestFixture]
     public class ThrowsFactAtomException
     {
-        [SetUp]
-        public void Initialize()
+        [Test]
+        public void OnAtomAsOnlyArgument()
         {
-            parser = new Parser();
-        }
+            const string code = "Human(X);";
 
-        private Parser parser;
+            var parser = new Parser(code);
+
+            Assert.Throws<FactAtomException>(() => { parser.Do(new RunContext()); });
+        }
 
         [Test]
         public void OnAtomAsFirstArgument()
         {
             const string code = "Likes(X, Mark);";
 
-            Assert.Throws<FactAtomException>(() => { parser.Do(code, new RunContext()); });
+            var parser = new Parser(code);
+
+            Assert.Throws<FactAtomException>(() => { parser.Do(new RunContext()); });
         }
 
         [Test]
@@ -28,7 +32,9 @@ namespace Tests.WhenParsing
         {
             const string code = "Likes(Maria, X, Mark);";
 
-            Assert.Throws<FactAtomException>(() => { parser.Do(code, new RunContext()); });
+            var parser = new Parser(code);
+
+            Assert.Throws<FactAtomException>(() => { parser.Do(new RunContext()); });
         }
 
         [Test]
@@ -36,7 +42,9 @@ namespace Tests.WhenParsing
         {
             const string code = "Likes(Maria, X);";
 
-            Assert.Throws<FactAtomException>(() => { parser.Do(code, new RunContext()); });
+            var parser = new Parser(code);
+
+            Assert.Throws<FactAtomException>(() => { parser.Do(new RunContext()); });
         }
     }
 }
