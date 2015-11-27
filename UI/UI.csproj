@@ -109,6 +109,10 @@
       <Project>{4C0E17E1-0C45-484D-93FC-C55C9CA61BF3}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EasterEggs\EasterEggs.csproj">
+      <Project>{f39fd93d-655f-406b-a27a-ce5060a6aee8}</Project>
+      <Name>EasterEggs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Security.AccessControl;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using Core;
 using Core.Exceptions;
+using EasterEggs;
 
 namespace UI
 {
@@ -21,6 +21,8 @@ namespace UI
         private SolidColorBrush accentBrush;
         private SolidColorBrush outputBrush;
         private SolidColorBrush sourceBrush;
+
+        private RichSnake snakey;
 
         public MainWindow()
         {
@@ -64,8 +66,6 @@ namespace UI
                     AnimateModeChange(ApplicationMode.Running);
                     LaunchStopButton.Content = "  Стоп";
                     InterpreterBox.Focus();
-
-                    isRunning = true;
                 }
                 else
                 {
@@ -77,6 +77,7 @@ namespace UI
                 AnimateModeChange(ApplicationMode.Ready);
                 LaunchStopButton.Content = "Запуск";
                 SourceCodeBox.Focus();
+
                 isRunning = false;
             }
 
@@ -102,15 +103,23 @@ namespace UI
                 OutputBox.AppendText("Errors occured", Colors.OrangeRed);
                 OutputBox.AppendText($"\n{ex.Position} ", Colors.Gray);
                 OutputBox.AppendText($"{ex.Message}", Colors.White);
-                return false;
+                isRunning = false;
+                return isRunning;
             }
 
-            OutputBox.AppendText($"{result.ElapsedTime} ms", Colors.LawnGreen);
-            OutputBox.AppendText($"\nRules: {context.Rules.Count}", Colors.DimGray);
+            if (context.Facts.First().Name.ToLower() == "play" &&
+                context.Facts.First().Arguments.First().Name.ToLower() == "snake")
+            {
+                snakey = new RichSnake(OutputBox);
+                return true;
+            }
+
+            OutputBox.AppendText($"Rules: {context.Rules.Count}", Colors.DimGray);
             OutputBox.AppendText($"\nFacts: {context.Facts.Count}", Colors.DimGray);
             OutputBox.AppendText($"\nQueries: {context.Queries.Count}", Colors.DimGray);
 
-            return true;
+            isRunning = true;
+            return isRunning;
         }
     }
 }
