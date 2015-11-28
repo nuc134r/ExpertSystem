@@ -22,26 +22,55 @@ namespace EasterEggs
 
     public class RichSnake
     {
-        private readonly int length = 4;
+        private const char boneSym = '@';
+        private const char foodSym = '$';
+
+        private int length = 4;
+
         private int ax = +1;
-        private int ay;
+        private int ay = 0;
 
         private SnakeBone[] body;
 
-        private readonly char bone = '@';
-        private char[,] field;
+        private int width;
         private int height;
+
+        private char[,] field;
+        private SnakeBone food;
+
         private TextPointer pointer;
 
         private DispatcherTimer timer;
-        private int width;
+
+        private SnakeBone head => body[0];
+        private SnakeBone tail => body[length - 1];
 
         public RichSnake(RichTextBox box)
         {
             InitializeField(box);
             InitializeBody();
+            GenerateFood();
 
             Run();
+        }
+
+        private void GenerateFood()
+        {
+            var rnd = new Random(DateTime.Now.Millisecond);
+
+            var x = rnd.Next(2, width - 2);
+            var y = rnd.Next(2, height - 2);
+
+            for (var i = 0; i < length; i++)
+            {
+                if (body[i].x != x && body[i].y != y) continue;
+                GenerateFood();
+                return;
+            }
+
+            food = new SnakeBone(x, y);
+
+            SetSymbol(foodSym, food.x, food.y);
         }
 
         public void SetDirection(int dir)
@@ -77,7 +106,7 @@ namespace EasterEggs
             body[3] = new SnakeBone(1, 1);
 
             for (var i = 0; i < length; i++)
-                SetSymbol(bone, body[i].x, body[i].y);
+                SetSymbol(boneSym, body[i].x, body[i].y);
         }
 
         private void Run()
@@ -93,7 +122,14 @@ namespace EasterEggs
 
         private void Tick(object sender, EventArgs e)
         {
-            SetSymbol(' ', body[length - 1].x, body[length - 1].y);
+            if (head.x == food.x && head.y == food.y)
+            {
+                body[length] = new SnakeBone(tail.x, tail.y);
+                length++;
+                GenerateFood();
+            }
+            else
+                SetSymbol(' ', tail.x, tail.y);
 
             for (var i = length - 1; i > 0; i--)
             {
@@ -101,10 +137,16 @@ namespace EasterEggs
                 body[i].y = body[i - 1].y;
             }
 
-            body[0].x += ax;
-            body[0].y += ay;
-
-            SetSymbol(bone, body[0].x, body[0].y);
+            head.x += ax;
+            head.y += ay;
+            try
+            {
+                SetSymbol(boneSym, head.x, head.y);
+            }
+            catch (Exception)
+            {
+                timer.Stop();
+            }
         }
 
         private void SetSymbol(char symbol, int x, int y)
@@ -113,16 +155,6 @@ namespace EasterEggs
             var pos2 = pointer.GetPositionAtOffset(width*(y - 1) + x);
 
             new TextRange(pos1, pos2).Text = symbol.ToString();
-        }
-
-        private void SetSymbol(char symbol, int x, int y, Color color)
-        {
-            var pos1 = pointer.GetPositionAtOffset(width*(y - 1) + x - 1);
-            var pos2 = pointer.GetPositionAtOffset(width*(y - 1) + x);
-
-            var text = new TextRange(pos1, pos2) {Text = symbol.ToString()};
-
-            text.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
         }
 
         private void InitializeField(RichTextBox box)
@@ -142,8 +174,7 @@ namespace EasterEggs
 
             var buff = "";
 
-            for (var i = 0; i < width*height; i++)
-                buff += " ";
+            for (var i = 0; i < width*height; i++) buff += " ";
 
             box.AppendText(buff);
 

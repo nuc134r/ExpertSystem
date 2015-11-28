@@ -128,29 +128,7 @@ namespace UI
             isRunning = true;
             return isRunning;
         }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            //switch (e.Key)
-            //{
-            //    case Key.F5:
-            //        StartStop();
-            //        return;
-            //    case Key.Up:
-            //        snakey?.SetDirection(1);
-            //        return;
-            //    case Key.Right:
-            //        snakey?.SetDirection(2);
-            //        return;
-            //    case Key.Down:
-            //        snakey?.SetDirection(3);
-            //        return;
-            //    case Key.Left:
-            //        snakey?.SetDirection(4);
-            //        return;
-            //}
-        }
-
+        
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
