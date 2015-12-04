@@ -55,6 +55,10 @@ namespace UI
         private void LaunchStopButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             StartStop();
+
+            //var test = new Test();
+
+            //int i = 5;
         }
 
         private void StartStop()

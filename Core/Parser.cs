@@ -136,6 +136,7 @@ namespace Core
                         if (ProcessLetter()) break;
                         if (ProcessSymbol('('))
                         {
+                            CreateCondition();
                             state = ParseState.ConditionOpenBracket;
                             break;
                         }
@@ -217,6 +218,11 @@ namespace Core
             }
 
             CheckFinishState();
+        }
+
+        private void CreateCondition()
+        {
+            condition = new SimpleCondition(temp);
         }
 
         private bool ProcessLetter()

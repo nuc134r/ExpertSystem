@@ -61,6 +61,7 @@
     <Compile Include="Language\RuleCondition.cs" />
     <Compile Include="Language\RuleOperator.cs" />
     <Compile Include="RunContext.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="UniParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
