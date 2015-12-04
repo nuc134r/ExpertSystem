@@ -45,8 +45,12 @@ namespace EasterEggs
         private SnakeBone head => body[0];
         private SnakeBone tail => body[length - 1];
 
+        private RichTextBox box;
+
         public RichSnake(RichTextBox box)
         {
+            this.box = box;
+
             InitializeField(box);
             InitializeBody();
             GenerateFood();
@@ -146,6 +150,8 @@ namespace EasterEggs
             catch (Exception)
             {
                 timer.Stop();
+                box.Document.Blocks.Clear();
+                box.AppendText($"Score: {length}");
             }
         }
 
@@ -167,7 +173,7 @@ namespace EasterEggs
                 box.FontSize,
                 Brushes.Black);
 
-            width = (int) (box.ActualWidth/typicalSymbol.WidthIncludingTrailingWhitespace) - 1;
+            width = (int) (box.ActualWidth/typicalSymbol.WidthIncludingTrailingWhitespace);
             height = (int) (box.ActualHeight/typicalSymbol.Height);
 
             field = new char[width, height];
@@ -175,6 +181,11 @@ namespace EasterEggs
             var buff = "";
 
             for (var i = 0; i < width*height; i++) buff += " ";
+
+            box.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            box.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+
+            box.Document.PageWidth = 1000;
 
             box.AppendText(buff);
 

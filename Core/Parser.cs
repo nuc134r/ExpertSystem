@@ -30,6 +30,7 @@ namespace Core
         private string temp = "";
 
         private List<ClauseArgument> arguments;
+        private RuleCondition condition;
         private ParseState state = ParseState.Beginning;
 
         public Parser(string code)
@@ -159,10 +160,34 @@ namespace Core
                         }
                         throw new UnexpectedTokenException(code, position);
                     case ParseState.ConditionComma:
+                        AddArgumentAndChangeStateTo(ParseState.ConditionArgument);
                         break;
                     case ParseState.ConditionCloseBracket:
-                        break;
+                        arguments.Add(new ClauseArgument(temp));
+                        temp = "";
+                        if (ProcessLetter())
+                        {
+                            state = ParseState.Operator;
+                            break;
+                        }
+                        if (ProcessSymbol(';'))
+                        {
+                            //var rule = context.Rules.Last();
+                            //rule.Condition = new 
+                            state = ParseState.Beginning;
+                            break;
+                        }
+                        throw new UnexpectedTokenException(code, position);
                     case ParseState.Operator:
+                        if (ProcessLetter())
+                        {
+                            RuleOperator ruleOperator;
+                            if (Enum.TryParse(temp, out ruleOperator))
+                            {
+                                state = ParseState.ConditionName;
+                                break;
+                            }
+                        }
                         break;
                     case ParseState.CommentBeginning:
                         if (ProcessSymbol('*'))
@@ -235,7 +260,8 @@ namespace Core
 
         private void CheckForEmptyArgument()
         {
-            if (temp == "") throw new ArgumentNameExpectedException(code, position);
+            if (temp == "")
+                throw new ArgumentNameExpectedException(code, position);
         }
 
         private void CheckFinishState()

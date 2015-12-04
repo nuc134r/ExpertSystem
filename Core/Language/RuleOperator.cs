@@ -3,6 +3,7 @@ namespace Core.Language
     public enum RuleOperator
     {
         And,
-        Or
+        Or,
+        Not
     }
 }

@@ -61,5 +61,21 @@ namespace Tests.WhenParsing
             Assert.AreEqual("Miranda", mirandaHatesAlex.Arguments.First().Name);
             Assert.AreEqual("Alex", mirandaHatesAlex.Arguments.Last().Name);
         }
+
+        [Test]
+        public void WithSpaces()
+        {
+            const string code = "Likes   (   Alex  , Miranda   )   ;";
+
+            var parser = new Parser(code);
+            var context = new RunContext();
+            parser.Do(context);
+
+            var fact = context.Facts.First();
+
+            Assert.AreEqual("Likes", fact.Name);
+            Assert.AreEqual("Alex", fact.Arguments.First().Name);
+            Assert.AreEqual("Miranda", fact.Arguments.Last().Name);
+        }
     }
 }
