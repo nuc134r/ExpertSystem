@@ -1,33 +1,64 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Core.Exceptions;
 
 namespace Core.Parsing
 {
     public class Parser
     {
-        private int line;
-        private int position;
-
         private readonly string[] code;
 
-        private string currLine;
+        private int lineCounter;
 
-        private GrammarNode grammarNode;
-        private List<ParseTreeNode> parseTree;
+        private readonly GrammarNode grammarRoot;
+
+        private readonly GrammarNode grammarNode;
+        private readonly List<ParseTreeNode> tree;
 
         public Parser(string[] code, Grammar grammar)
         {
             this.code = code;
-            currLine = code.Length > 0 ? code[0] : null;
 
             grammarNode = grammar.Tree;
-            parseTree = new List<ParseTreeNode>();
+            grammarRoot = grammar.Tree;
+            tree = new List<ParseTreeNode>();
         }
 
-        public ParseTreeNode Do()
-        {
-            var tree = new ParseTreeNode();
+        //private string currLine
+        //{
+        //    get { return code[line]; }
+        //    set { code[line] = value; }
+        //}
 
-            return tree;
+        public ParseResult Do()
+        {
+            var errors = new List<ParsingException>();
+
+            foreach (var line in code)
+            {
+                try
+                {
+                    Parse(line, lineCounter);
+                }
+                catch (ParsingException ex)
+                {
+                    errors.Add(ex);
+                }
+                finally
+                {
+                    lineCounter++;
+                }
+            }
+
+            return new ParseResult(tree, errors);
+        }
+
+        private void Parse(string code, int line)
+        {
+            var position = 0;
+
+            var node = new ParseTreeNode();
         }
     }
 }

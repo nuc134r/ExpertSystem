@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Core
 {
-    [DebuggerDisplay("{Token?.Description}, {Type.ToString()}, chld:{ChildNodes.Count}")]
+    [DebuggerDisplay("{Type.ToString()}, {Token?.Description}, chld:{ChildNodes.Count}")]
     public class GrammarNode
     {
         public GrammarToken Token;

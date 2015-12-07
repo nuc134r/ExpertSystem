@@ -53,6 +53,7 @@
     <Compile Include="Grammar\GrammarNodeType.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parser.old.cs" />
+    <Compile Include="Parsing\ParseResult.cs" />
     <Compile Include="Parsing\ParseTreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Grammar\GrammarNode.cs" />

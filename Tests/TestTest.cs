@@ -7,9 +7,11 @@ namespace Tests
     public class TestTest
     {
         [Test]
-        public void OnEmptyLine()
+        public void Test()
         {
-            
+            var a = Logikek.Grammar.Get();
+
+            int i = 5;
         }
     }
 }
