@@ -44,15 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WhenParsing\Comments.cs" />
-    <Compile Include="WhenParsing\ParsesFacts.cs" />
-    <Compile Include="WhenParsing\ThrowsMissingSemicolonException.cs" />
-    <Compile Include="WhenParsing\ThrowsUnexpectedLineEndException.cs" />
-    <Compile Include="WhenParsing\ThrowsFactAtomException.cs" />
-    <Compile Include="WhenParsing\ThrowsUnexpectedTokenException.cs" />
-    <Compile Include="WhenParsing\ThrowsArgumentNameException.cs" />
-    <Compile Include="WhenParsing\DoesNotThrow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

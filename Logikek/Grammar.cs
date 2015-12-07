@@ -1,14 +1,24 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using Core;
 
-namespace Core
+namespace Logikek
 {
-    public class Test
+    public class Grammar
     {
-        private readonly Grammar tree;
+        private static Core.Grammar _grammar;
 
-        public GrammarNode Tree => tree.GrammarTree;
+        public static Core.Grammar Get()
+        {
+            if (_grammar == null) CreateGrammar();
+            return _grammar;
+        }
 
-        public Test()
+        private static void CreateGrammar()
         {
             const string englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
             const string russianAlphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
@@ -18,23 +28,23 @@ namespace Core
                                       + russianAlphabet
                                       + russianAlphabet.ToUpper();
 
-            var identiferName = new Lexeme(identiferNameAlphabet, "clause name");
-            var openBracket   = new Lexeme("(");
-            var closeBracket  = new Lexeme(")");
-            var semicolon     = new Lexeme(";");
-            var questionMark  = new Lexeme("?");
-            var comma         = new Lexeme(",");
-            var colon         = new Lexeme(":");
+            var identiferName = new GrammarToken(identiferNameAlphabet, "clause name");
+            var openBracket = new GrammarToken("(");
+            var closeBracket = new GrammarToken(")");
+            var semicolon = new GrammarToken(";");
+            var questionMark = new GrammarToken("?");
+            var comma = new GrammarToken(",");
+            var colon = new GrammarToken(":");
 
-            var notOperator       = new Lexeme("not", constant: true);
-            var conditionOperator = new Lexeme(new[] {"or", "and", ","});
+            var notOperator = new GrammarToken("not", constant: true);
+            var conditionOperator = new GrammarToken(new[] { "or", "and", "," });
 
-            var commentBeginning  = new Lexeme("/*", constant: true);
-            var commentEnd        = new Lexeme("*/", constant: true);
+            var commentBeginning = new GrammarToken("/*", constant: true);
+            var commentEnd = new GrammarToken("*/", constant: true);
 
-            var commentText = new Lexeme("*");
+            var commentText = new GrammarToken("*");
 
-            tree = new Grammar()
+            _grammar = new Core.Grammar()
                 .Determine()
                     /* Commentary */
                     .Way()
@@ -103,8 +113,8 @@ namespace Core
                                 .OptionalEnd()
                                 .Then(semicolon)
                             .WayEnd()
-                        .DetermineEnd().
-                DetermineEnd();
+                        .DetermineEnd()
+                .DetermineEnd();
         }
     }
 }

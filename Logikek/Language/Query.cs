@@ -1,4 +1,4 @@
-namespace Core.Language
+namespace Logikek.Language
 {
     public class Query : Clause
     {

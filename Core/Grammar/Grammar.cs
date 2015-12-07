@@ -1,43 +1,19 @@
-﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core
 {
-    [DebuggerDisplay("{Lexeme?.Description}, loop:{Looped}, opt:{Optional}, chld:{ChildNodes.Count}")]
-    public class GrammarNode
-    {
-        public Lexeme Lexeme;
-        public bool Looped;
-        public bool Optional;
-
-        public List<GrammarNode> ChildNodes;
-        public GrammarNode Parent;
-
-        public GrammarNode(GrammarNode parentNode)
-        {
-            ChildNodes = new List<GrammarNode>();
-            Parent = parentNode;
-        }
-    }
-
     public class Grammar
     {
-        public GrammarNode GrammarTree;
+        public GrammarNode Tree;
 
         private readonly List<GrammarNode> decicionsList;
         private GrammarNode current;
 
         public Grammar()
         {
-            GrammarTree = new GrammarNode(null);
-            current = GrammarTree;
+            Tree = new GrammarNode(null);
+            current = Tree;
 
             decicionsList = new List<GrammarNode>();
         }
@@ -78,7 +54,7 @@ namespace Core
 
             current.ChildNodes.Add(new GrammarNode(current));
             current = current.ChildNodes.Last();
-            current.Optional = true;
+            current.Type = GrammarNodeType.Optional;
 
             return this;
         }
@@ -91,23 +67,23 @@ namespace Core
             return this;
         }
 
-        public Grammar Then(Lexeme lexeme)
+        public Grammar Then(GrammarToken grammarToken)
         {
-            if (current.Looped)
+            if (current.Type == GrammarNodeType.Loop)
             {
-                var node = new GrammarNode(current) {Lexeme = lexeme};
+                var node = new GrammarNode(current) {Token = grammarToken};
                 current.ChildNodes.Add(node);
 
                 return this;
             }
 
-            if (current.Lexeme != null || current.Optional)
+            if (current.Token != null || current.Type == GrammarNodeType.Optional)
             {
                 current.ChildNodes.Add(new GrammarNode(current));
                 current = current.ChildNodes.Last();
             }
 
-            current.Lexeme = lexeme;
+            current.Token = grammarToken;
 
             return this;
         }
@@ -116,7 +92,7 @@ namespace Core
         {
             current.ChildNodes.Add(new GrammarNode(current));
             current = current.ChildNodes.Last();
-            current.Looped = true;
+            current.Type = GrammarNodeType.Loop;
 
             return this;
         }
@@ -126,33 +102,6 @@ namespace Core
             current = current.Parent;
 
             return this;
-        }
-    }
-
-    [DebuggerDisplay("{Description}")]
-    public class Lexeme
-    {
-        public readonly bool Optional;
-        public readonly string[] Options;
-
-        public readonly bool Constant;
-
-        public readonly string Alphabet;
-        public readonly string Description;
-
-        public Lexeme(string alphabet, string description = null, bool constant = false)
-        {
-            description = description ?? $"'{alphabet}'";
-
-            Alphabet = alphabet;
-            Description = description;
-            Constant = constant;
-        }
-
-        public Lexeme(string[] options)
-        {
-            Optional = true;
-            Options = options;
         }
     }
 }

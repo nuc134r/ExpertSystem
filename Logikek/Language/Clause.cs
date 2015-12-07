@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Core.Language
+namespace Logikek.Language
 {
     public class Clause
     {

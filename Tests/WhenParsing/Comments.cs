@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Core;
 using Core.Exceptions;
+using Core.Parsing;
 using NUnit.Framework;
 
 namespace Tests.WhenParsing

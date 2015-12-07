@@ -7,7 +7,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Core;
 using Core.Exceptions;
+using Core.Parsing;
 using EasterEggs;
+using Grammar = Logikek.Grammar;
 
 namespace UI
 {
@@ -54,11 +56,11 @@ namespace UI
 
         private void LaunchStopButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            StartStop();
-
-            //var test = new Test();
+            //var test = new LogikekGrammar();
 
             //int i = 5;
+
+            StartStop();
         }
 
         private void StartStop()
@@ -100,34 +102,36 @@ namespace UI
             var document = SourceCodeBox.Document;
             var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
 
-            var parser = new Parser(code);
-            var context = new RunContext();
+            var lines = code.Split('\n');
 
-            ParseResult result = null;
-            try
-            {
-                result = parser.Do(context);
-            }
-            catch (ParsingException ex)
-            {
-                OutputBox.AppendText("Errors occured", Colors.OrangeRed);
-                OutputBox.AppendText($"\n{ex.Position} ", Colors.Gray);
-                OutputBox.AppendText($"{ex.Message}", Colors.White);
-                isRunning = false;
-                return isRunning;
-            }
+            //var parser = new Parser(lines, Logikek.Grammar.Get());
+            //var context = new RunContext();
 
-            if (context.Facts.First().Name.ToLower() == "play" &&
-                context.Facts.First().Arguments.First().Name.ToLower() == "snake")
-            {
-                snakey = new RichSnake(OutputBox);
-                isRunning = true;
-                return true;
-            }
+            //ParseResult result = null;
+            //try
+            //{
+            //    parser.Do();
+            //}
+            //catch (ParsingException ex)
+            //{
+            //    OutputBox.AppendText("Errors occured", Colors.OrangeRed);
+            //    OutputBox.AppendText($"\n{ex.Position} ", Colors.Gray);
+            //    OutputBox.AppendText($"{ex.Message}", Colors.White);
+            //    isRunning = false;
+            //    return isRunning;
+            //}
 
-            OutputBox.AppendText($"Rules: {context.Rules.Count}", Colors.DimGray);
-            OutputBox.AppendText($"\nFacts: {context.Facts.Count}", Colors.DimGray);
-            OutputBox.AppendText($"\nQueries: {context.Queries.Count}", Colors.DimGray);
+            //if (context.Facts.First().Name.ToLower() == "play" &&
+            //    context.Facts.First().Arguments.First().Name.ToLower() == "snake")
+            //{
+            //    snakey = new RichSnake(OutputBox);
+            //    isRunning = true;
+            //    return true;
+            //}
+
+            //OutputBox.AppendText($"Rules: {context.Rules.Count}", Colors.DimGray);
+            //OutputBox.AppendText($"\nFacts: {context.Facts.Count}", Colors.DimGray);
+            //OutputBox.AppendText($"\nQueries: {context.Queries.Count}", Colors.DimGray);
 
             isRunning = true;
             return isRunning;
@@ -137,9 +141,12 @@ namespace UI
         {
             switch (e.Key)
             {
+                // Launch or stop execution
                 case Key.F5:
                     StartStop();
                     return;
+
+                // You haven't seen this
                 case Key.Up:
                     snakey?.SetDirection(1);
                     return;

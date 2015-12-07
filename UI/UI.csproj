@@ -113,6 +113,14 @@
       <Project>{f39fd93d-655f-406b-a27a-ce5060a6aee8}</Project>
       <Name>EasterEggs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Logikek\Logikek.csproj">
+      <Project>{98b572c2-a232-40f5-9ef6-2eed5bf8da87}</Project>
+      <Name>Logikek</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{6a47e439-1f54-4314-bad2-6e0571f61d8a}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,5 @@
 ﻿using Core;
+using Core.Parsing;
 using NUnit.Framework;
 
 namespace Tests.WhenParsing
