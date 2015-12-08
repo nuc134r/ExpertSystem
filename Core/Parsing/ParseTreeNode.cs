@@ -4,11 +4,11 @@ namespace Core.Parsing
 {
     public class ParseTreeNode
     {
-        public List<string> TokenList;
+        public List<string> Tokens;
 
         public ParseTreeNode()
         {
-            TokenList = new List<string>();
+            Tokens = new List<string>();
         }
     }
 }

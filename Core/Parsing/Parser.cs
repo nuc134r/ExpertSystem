@@ -2,47 +2,43 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Core.Exceptions;
+using static System.Char;
 
 namespace Core.Parsing
 {
     public class Parser
     {
-        private readonly string[] code;
+        private readonly string[] lines;
 
         private int lineCounter;
 
-        private readonly GrammarNode grammarRoot;
+        private readonly GrammarNode grmrRoot;
 
-        private readonly GrammarNode grammarNode;
+        private readonly GrammarNode grmrNode;
         private readonly List<ParseTreeNode> tree;
 
-        public Parser(string[] code, Grammar grammar)
+        public Parser(string[] lines, Grammar grammar)
         {
-            this.code = code;
+            this.lines = lines;
 
-            grammarNode = grammar.Tree;
-            grammarRoot = grammar.Tree;
+            grmrNode = grmrRoot = grammar.Tree;
             tree = new List<ParseTreeNode>();
         }
-
-        //private string currLine
-        //{
-        //    get { return code[line]; }
-        //    set { code[line] = value; }
-        //}
 
         public ParseResult Do()
         {
             var errors = new List<ParsingException>();
+            lineCounter = 1;
 
-            foreach (var line in code)
+            foreach (var line in lines)
             {
                 try
                 {
-                    Parse(line, lineCounter);
+                    Parse(line);
                 }
                 catch (ParsingException ex)
                 {
+                    ex.Line = lineCounter;
                     errors.Add(ex);
                 }
                 finally
@@ -54,11 +50,59 @@ namespace Core.Parsing
             return new ParseResult(tree, errors);
         }
 
-        private void Parse(string code, int line)
+        private void Parse(string code)
         {
+            code = code.Trim();
+
             var position = 0;
+            var temp = "";
+            var skippingWhiteSpace = false;
 
             var node = new ParseTreeNode();
+
+            while (position != code.Length)
+            {
+                if (IsWhiteSpace(code[position]))
+                {
+                    skippingWhiteSpace = true;
+                    position++;
+                    continue;
+                }
+
+                if (skippingWhiteSpace)
+                {
+                    skippingWhiteSpace = false;
+                    ChooseNextGrammarToken(code[position]);
+                }
+
+                if (InCurrentAlphabet(code[position]))
+                {
+                    temp += code[position++];
+                }
+                else
+                {
+                    if (!grmrNode.Token.IsLegal(temp))
+                        throw new UnknownWordException(code, position, temp);
+
+                    node.Tokens.Add(temp);
+                    temp = "";
+                    ChooseNextGrammarToken(code[position]);
+                }
+            }
+
+            // If we're finished parsing not in a last grammar tree node
+            if (grmrNode.ChildNodes.Count != 0)
+                throw new UnexpectedLineEndException(code, position);
+        }
+
+        private void ChooseNextGrammarToken(char c)
+        {
+            
+        }
+
+        private bool InCurrentAlphabet(char c)
+        {
+            return grmrNode.Token.Alphabet.IndexOf(c) != -1;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Core.Exceptions
             this.position = position;
         }
 
-        public int Line { get; }
+        public int Line { get; set; }
         public string Code { get; }
         public int Position { get; }
     }

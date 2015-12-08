@@ -23,10 +23,7 @@ namespace Logikek
             const string englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
             const string russianAlphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 
-            var identiferNameAlphabet = englishAlphabet
-                                      + englishAlphabet.ToUpper()
-                                      + russianAlphabet
-                                      + russianAlphabet.ToUpper();
+            const string identiferNameAlphabet = englishAlphabet + russianAlphabet;
 
             var identiferName = new GrammarToken(identiferNameAlphabet, "clause name");
             var openBracket = new GrammarToken("(");
@@ -36,11 +33,11 @@ namespace Logikek
             var comma = new GrammarToken(",");
             var colon = new GrammarToken(":");
 
-            var notOperator = new GrammarToken("not", constant: true);
+            var notOperator = new GrammarToken("not", fixedWord: true);
             var conditionOperator = new GrammarToken(new[] { "or", "and", "," });
 
-            var commentBeginning = new GrammarToken("/*", constant: true);
-            var commentEnd = new GrammarToken("*/", constant: true);
+            var commentBeginning = new GrammarToken("/*", fixedWord: true);
+            var commentEnd = new GrammarToken("*/", fixedWord: true);
 
             var commentText = new GrammarToken("*");
 

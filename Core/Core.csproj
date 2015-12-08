@@ -55,6 +55,7 @@
     <Compile Include="Parser.old.cs" />
     <Compile Include="Parsing\ParseResult.cs" />
     <Compile Include="Parsing\ParseTreeNode.cs" />
+    <Compile Include="Exceptions\UnknownWordException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Grammar\GrammarNode.cs" />
   </ItemGroup>
