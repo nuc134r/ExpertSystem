@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
 using Logikek.Language;
 using Sprache;
 
@@ -12,11 +9,18 @@ namespace Logikek
         public static readonly Parser<string> Identifier =
             Parse.Letter.AtLeastOnce().Text().Token();
 
+        public static readonly Parser<IEnumerable<char>> Whitespace =
+            Parse.Char(' ').Many();
+
         public static readonly Parser<IEnumerable<ClauseArgument>> Arguments =
             from openBracket in Parse.Char('(')
+            from ws1 in Whitespace.Optional()
             from arguments in Identifier.XDelimitedBy(Parse.Char(','))
+            from ws2 in Whitespace.Optional()
             from closeBracket in Parse.Char(')')
-            select ClauseArgument.FromStrings(arguments);
+            select ClauseArgument.FromStringList(arguments);
+
+        #region Operators
 
         public static readonly Parser<ConditionOperator> NotOperator =
             Parse.String("~")
@@ -41,8 +45,9 @@ namespace Logikek
             OrOperator
                 .Or(AndOperator);
 
-        public static readonly Parser<IEnumerable<char>> Whitespace =
-            Parse.Char(' ').Many();
+        #endregion
+
+        #region Rule conditions
 
         public static readonly Parser<SimpleCondition> RuleCondition =
             from notOperator in NotOperator.Optional()
@@ -58,6 +63,8 @@ namespace Logikek
             from ws2 in Whitespace.Optional()
             from condition in RuleCondition
             select new ComplexCondition(_operator, condition);
+
+        #endregion
 
         public static readonly Parser<Rule> Rule =
             from name in Identifier
@@ -75,5 +82,16 @@ namespace Logikek
             from arguments in Arguments
             from semicolon in Parse.Char(';').End()
             select new Fact(identifier, arguments);
+
+        public static readonly Parser<Query> Query =
+            from identifier in Identifier
+            from arguments in Arguments
+            from semicolon in Parse.Char('?').End()
+            select new Query(identifier, arguments);
+
+        public static readonly Parser<Clause> Clause =
+            Query
+                .Or<Clause>(Fact)
+                .Or(Rule);
     }
 }

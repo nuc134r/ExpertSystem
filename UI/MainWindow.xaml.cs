@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,9 +7,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using Core;
-using Core.Exceptions;
-using Core.Parsing;
 using EasterEggs;
+using Sprache;
 using Grammar = Logikek.Grammar;
 
 namespace UI
@@ -18,13 +18,12 @@ namespace UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isRunning;
-
         private SolidColorBrush accentBrush;
+        private bool isRunning;
         private SolidColorBrush outputBrush;
-        private SolidColorBrush sourceBrush;
 
-        //private RichSnake snakey;
+        private RichSnake snakey;
+        private SolidColorBrush sourceBrush;
 
         public MainWindow()
         {
@@ -45,7 +44,7 @@ namespace UI
                 LineNumbersBox.Text = "";
                 for (var i = 0; i < linesCount - 1; i++)
                 {
-                    LineNumbersBox.Text += (i + 1) + "\n";
+                    LineNumbersBox.Text += i + 1 + "\n";
                 }
             }
             catch (Exception)
@@ -103,40 +102,45 @@ namespace UI
             var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
 
             var lines = code.Split('\n');
+            var errors = new List<Exception>();
 
-            //var parser = new Parser(lines, Logikek.Grammar.Get());
-            //var context = new RunContext();
+            var counter = 0;
 
-            //ParseResult result = null;
-            //try
-            //{
-            //    parser.Do();
-            //}
-            //catch (ParsingException ex)
-            //{
-            //    OutputBox.AppendText("Errors occured", Colors.OrangeRed);
-            //    OutputBox.AppendText($"\n{ex.Position} ", Colors.Gray);
-            //    OutputBox.AppendText($"{ex.Message}", Colors.White);
-            //    isRunning = false;
-            //    return isRunning;
-            //}
+            foreach (var line in lines)
+            {
+                try
+                {
+                    counter++;
+                    var preprocessed = line.Trim();
 
-            //if (context.Facts.First().Name.ToLower() == "play" &&
-            //    context.Facts.First().Arguments.First().Name.ToLower() == "snake")
-            //{
-            //    snakey = new RichSnake(OutputBox);
-            //    isRunning = true;
-            //    return true;
-            //}
+                    if (string.IsNullOrEmpty(preprocessed)) continue;
 
-            //OutputBox.AppendText($"Rules: {context.Rules.Count}", Colors.DimGray);
-            //OutputBox.AppendText($"\nFacts: {context.Facts.Count}", Colors.DimGray);
-            //OutputBox.AppendText($"\nQueries: {context.Queries.Count}", Colors.DimGray);
+                    var result = Grammar.Clause.Parse(preprocessed);
+                }
+                catch (ParseException ex)
+                {
+                    errors.Add(new ParseException(ex.Message.Replace("Line 1", $"Line {counter}")));
+                }
+            }
+
+            if (!errors.Any())
+            {
+                OutputBox.AppendText("Success!", Colors.Green);
+            }
+            else
+            {
+                foreach (var error in errors)
+                {
+                    OutputBox.AppendText($"{error.Message}\n", Colors.Gray);
+                }
+                isRunning = false;
+                return isRunning;
+            }
 
             isRunning = true;
             return isRunning;
         }
-        
+
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
