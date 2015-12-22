@@ -9,7 +9,7 @@ namespace Core.Parsing
 {
     public class Parser
     {
-        private readonly string[] lines;
+        /*private readonly string[] lines;
 
         private int lineCounter;
 
@@ -162,7 +162,7 @@ namespace Core.Parsing
         private bool InCurrentAlphabet(char c)
         {
             return grmrNode.Token.Alphabet.IndexOf(c) != -1;
-        }
+        }*/
     }
 
     internal enum ParseState

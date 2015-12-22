@@ -1,6 +1,6 @@
 namespace Logikek.Language
 {
-    public enum RuleOperator
+    public enum ConditionOperator
     {
         And,
         Or,

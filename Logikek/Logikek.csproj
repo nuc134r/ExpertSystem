@@ -51,7 +51,7 @@
     <Compile Include="Language\Query.cs" />
     <Compile Include="Language\Rule.cs" />
     <Compile Include="Language\RuleCondition.cs" />
-    <Compile Include="Language\RuleOperator.cs" />
+    <Compile Include="Language\ConditionOperator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -48,8 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Grammar\Rules.cs" />
+    <Compile Include="Grammar\RuleConditions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GrammarTests.cs" />
+    <Compile Include="Grammar\General.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

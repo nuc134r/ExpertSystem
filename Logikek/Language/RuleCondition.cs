@@ -1,27 +1,35 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Logikek.Language
 {
     public class RuleCondition
     {
-        public bool IsNegated { get; set; }
     }
 
     public class SimpleCondition : RuleCondition
     {
-        public SimpleCondition(string name)
+        public SimpleCondition(string name, IEnumerable<ClauseArgument> arguments, bool isNegated)
         {
             Name = name;
+            Arguments = arguments.ToList();
+            IsNegated = isNegated;
         }
 
+        public bool IsNegated { get; set; }
         public string Name { get; private set; }
-        public List<ClauseArgument> Arguments { get; set; }
+        public List<ClauseArgument> Arguments { get; private set; }
     }
 
     public class ComplexCondition : RuleCondition
     {
-        public RuleCondition FirstCondition;
-        public RuleCondition SecondCondition;
-        public RuleOperator Operator;
+        public ComplexCondition(ConditionOperator _operator, SimpleCondition condition)
+        {
+            Operator = _operator;
+            Condition = condition;
+        }
+
+        public ConditionOperator Operator { get; private set; }
+        public SimpleCondition Condition { get; private set; }
     }
 }

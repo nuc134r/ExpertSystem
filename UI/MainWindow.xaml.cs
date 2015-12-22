@@ -24,7 +24,7 @@ namespace UI
         private SolidColorBrush outputBrush;
         private SolidColorBrush sourceBrush;
 
-        private RichSnake snakey;
+        //private RichSnake snakey;
 
         public MainWindow()
         {
