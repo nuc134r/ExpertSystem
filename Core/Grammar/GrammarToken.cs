@@ -38,6 +38,8 @@ namespace Core
 
         public bool IsLegal(string token)
         {
+            if (!FixedWord && !Optional) return true;
+
             if (FixedWord)
             {
                 return token.ToLower() == Options[0].ToLower();
