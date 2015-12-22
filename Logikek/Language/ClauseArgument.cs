@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Logikek.Language
 {
+    [DebuggerDisplay("{Name}, atom: {IsAtom}")]
     public class ClauseArgument
     {
         public ClauseArgument(string name)

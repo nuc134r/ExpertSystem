@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -8,8 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Core;
 using EasterEggs;
-using Sprache;
-using Grammar = Logikek.Grammar;
+using Logikek;
 
 namespace UI
 {
@@ -55,10 +52,6 @@ namespace UI
 
         private void LaunchStopButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //var test = new LogikekGrammar();
-
-            //int i = 5;
-
             StartStop();
         }
 
@@ -73,14 +66,12 @@ namespace UI
 
                 if (Run())
                 {
+                    isRunning = true;
                     AnimateModeChange(ApplicationMode.Running);
                     LaunchStopButton.Content = "  Стоп";
-                    InterpreterBox.Focus();
                 }
                 else
-                {
                     AnimateErrorsOccurence();
-                }
             }
             else
             {
@@ -94,6 +85,11 @@ namespace UI
 
             SourceCodeBox.IsReadOnly = isRunning;
             InterpreterBox.IsReadOnly = !isRunning;
+
+            if (isRunning)
+                InterpreterBox.Focus();
+            else
+                SourceCodeBox.Focus();
         }
 
         private bool Run()
@@ -101,44 +97,22 @@ namespace UI
             var document = SourceCodeBox.Document;
             var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
 
-            var lines = code.Split('\n');
-            var errors = new List<Exception>();
+            var result = Processor.Run(code);
 
-            var counter = 0;
-
-            foreach (var line in lines)
-            {
-                try
-                {
-                    counter++;
-                    var preprocessed = line.Trim();
-
-                    if (string.IsNullOrEmpty(preprocessed)) continue;
-
-                    var result = Grammar.Clause.Parse(preprocessed);
-                }
-                catch (ParseException ex)
-                {
-                    errors.Add(new ParseException(ex.Message.Replace("Line 1", $"Line {counter}")));
-                }
-            }
-
-            if (!errors.Any())
+            if (result.Success)
             {
                 OutputBox.AppendText("Success!", Colors.Green);
             }
             else
             {
-                foreach (var error in errors)
+                foreach (var error in result.Errors)
                 {
-                    OutputBox.AppendText($"{error.Message}\n", Colors.Gray);
+                    OutputBox.AppendText($"line {error.Line}:{error.Column} ", Colors.DimGray);
+                    OutputBox.AppendText($"{error.Message}\n", Colors.LightGray);
                 }
-                isRunning = false;
-                return isRunning;
             }
 
-            isRunning = true;
-            return isRunning;
+            return result.Success;
         }
 
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)

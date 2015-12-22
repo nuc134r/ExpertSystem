@@ -48,13 +48,13 @@
     <Compile Include="Language\Rule.cs" />
     <Compile Include="Language\RuleCondition.cs" />
     <Compile Include="Language\ConditionOperator.cs" />
+    <Compile Include="ParseError.cs" />
+    <Compile Include="Processor.cs" />
+    <Compile Include="ProcessResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{4c0e17e1-0c45-484d-93fc-c55c9ca61bf3}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sprache\Sprache.csproj">
       <Project>{82cc8cf8-b770-4756-850a-95dd14dd312f}</Project>
       <Name>Sprache</Name>

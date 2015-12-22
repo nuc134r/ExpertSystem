@@ -83,7 +83,7 @@ namespace Sprache
         public override string ToString()
         {
             if (WasSuccessful)
-                return string.Format("Successful parsing of {0}.", Value);
+                return $"Successful parsing of {Value}.";
 
             var expMsg = "";
 
@@ -92,7 +92,7 @@ namespace Sprache
 
             var recentlyConsumed = CalculateRecentlyConsumed();
 
-            return string.Format("Parsing failure: {0};{1} ({2}); recently consumed: {3}", Message, expMsg, Remainder, recentlyConsumed);
+            return $"Parsing failure: {Message};{expMsg} ({Remainder}); recently consumed: {recentlyConsumed}";
         }
 
         private string CalculateRecentlyConsumed()

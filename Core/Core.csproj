@@ -48,16 +48,9 @@
     <Compile Include="Exceptions\UnexpectedLineEndException.cs" />
     <Compile Include="Exceptions\UnexpectedTokenException.cs" />
     <Compile Include="Exceptions\FactAtomException.cs" />
-    <Compile Include="Grammar\GrammarToken.cs" />
-    <Compile Include="Grammar\Grammar.cs" />
-    <Compile Include="Grammar\GrammarNodeType.cs" />
-    <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parser.old.cs" />
-    <Compile Include="Parsing\ParseResult.cs" />
-    <Compile Include="Parsing\ParseTreeNode.cs" />
     <Compile Include="Exceptions\UnknownWordException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Grammar\GrammarNode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

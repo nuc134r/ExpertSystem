@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.CodeDom;
+using System.Collections.Generic;
 using Logikek.Language;
 using Sprache;
 
@@ -66,6 +67,12 @@ namespace Logikek
 
         #endregion
 
+        public static readonly Parser<string> Comment =
+            from commentStart in Parse.String("/*")
+            from text in Parse.CharExcept( '*').Many().Text()
+            from commentEnd in Parse.String("*/")
+            select text;
+
         public static readonly Parser<Rule> Rule =
             from name in Identifier
             from arguments in Arguments
@@ -88,10 +95,5 @@ namespace Logikek
             from arguments in Arguments
             from semicolon in Parse.Char('?').End()
             select new Query(identifier, arguments);
-
-        public static readonly Parser<Clause> Clause =
-            Query
-                .Or<Clause>(Fact)
-                .Or(Rule);
     }
 }

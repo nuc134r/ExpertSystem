@@ -110,10 +110,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{4C0E17E1-0C45-484D-93FC-C55C9CA61BF3}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EasterEggs\EasterEggs.csproj">
       <Project>{f39fd93d-655f-406b-a27a-ce5060a6aee8}</Project>
       <Name>EasterEggs</Name>
