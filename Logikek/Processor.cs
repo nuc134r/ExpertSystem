@@ -33,8 +33,11 @@ namespace Logikek
                 var factResult = Grammar.Fact.TryParse(line);
                 if (factResult.WasSuccessful)
                 {
-                    // TODO atom check
-                    facts.Add(factResult.Value);
+                    if (factResult.Value.Arguments.Any(fact => fact.IsAtom))
+                        errors.Add(new ParseError("facts cannot contain atoms", counter, factResult.Remainder.Column));
+                    else
+                        facts.Add(factResult.Value);
+
                     continue;
                 }
 
@@ -58,11 +61,37 @@ namespace Logikek
                 errors.Add(new ParseError(ruleResult.Message + $", expected {ruleResult.Expectations.FirstOrDefault()}", counter, ruleResult.Remainder.Column));
             }
 
-            var queryResults = new List<QueryResult>();
-
-            // TODO Processing queries
+            var queryResults = queries.Select(ResolveQuery).ToList();
 
             return errors.Any() ? new ProcessResult(errors) : new ProcessResult(queryResults);
+        }
+
+        public static ProcessResult EvaluateQuery(string code)
+        {
+            var query = Logikek.Grammar.Query.TryParse(code.Trim());
+
+            if (query.WasSuccessful)
+            {
+                var queriesList = new List<QueryResult> {ResolveQuery(query.Value)};
+                return new ProcessResult(queriesList);
+            }
+
+            var errorList = new List<ParseError> {new ParseError(query.Message, 0, query.Remainder.Column)};
+            return new ProcessResult(errorList);
+        }
+
+        private static QueryResult ResolveQuery(Query query)
+        {
+            if (query.IsSimple)
+            {
+                var args = query.Arguments.Select(arg => arg.Name);
+
+                var result = facts.Any(fact => fact.Name == query.Name && !fact.Arguments.Select(arg => arg.Name).Except(args).Any());
+
+                return new QueryResult(query, result);
+            }
+
+            return new QueryResult(query, false);
         }
     }
 }

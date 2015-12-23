@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -7,6 +8,7 @@ using System.Windows.Media;
 using Core;
 using EasterEggs;
 using Logikek;
+using Logikek.Language;
 
 namespace UI
 {
@@ -101,18 +103,39 @@ namespace UI
 
             if (result.Success)
             {
-                OutputBox.AppendText("Success!", Colors.Green);
+                foreach (var queryResult in result.Results)
+                    PrintQueryResult(queryResult);
             }
             else
             {
                 foreach (var error in result.Errors)
-                {
-                    OutputBox.AppendText($"line {error.Line}:{error.Column} ", Colors.DimGray);
-                    OutputBox.AppendText($"{error.Message}\n", Colors.LightGray);
-                }
+                    PrintParseError(error);
             }
 
             return result.Success;
+        }
+
+        private void PrintParseError(ParseError parseError)
+        {
+            OutputBox.AppendText($"line {parseError.Line}:{parseError.Column} ", Colors.DimGray);
+            OutputBox.AppendText($"{parseError.Message}\n", Colors.LightGray);
+        }
+
+        private void PrintParseError(ParseError parseError, string code)
+        {
+            OutputBox.AppendText($"> {code}\n", Colors.DimGray);
+            OutputBox.AppendText("Error: ", Colors.DimGray);
+            OutputBox.AppendText($"{parseError.Message}\n", Colors.LightGray);
+        }
+
+        private void PrintQueryResult(QueryResult queryResult)
+        {
+            var args = queryResult.TheQuery.Arguments.Select(arg => arg.Name).ToArray();
+
+            OutputBox.AppendText("> ", Colors.DimGray);
+            OutputBox.AppendText($"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n", Colors.Gray);
+            OutputBox.AppendText("- ", Colors.DimGray);
+            OutputBox.AppendText($"{(queryResult.Result ? "Yes" : "No")}\n", Colors.White);
         }
 
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -122,6 +145,15 @@ namespace UI
                 // Launch or stop execution
                 case Key.F5:
                     StartStop();
+                    return;
+
+                case Key.Enter:
+                    var result = Logikek.Processor.EvaluateQuery(InterpreterBox.Text);
+                    if (result.Success)
+                        PrintQueryResult(result.Results.First());
+                    else
+                        PrintParseError(result.Errors.First(), InterpreterBox.Text);
+                    InterpreterBox.Text = "";
                     return;
 
                 // You haven't seen this
