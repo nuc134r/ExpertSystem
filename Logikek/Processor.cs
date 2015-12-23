@@ -58,7 +58,7 @@ namespace Logikek
                 var commentResult = Grammar.Comment.TryParse(line);
                 if (commentResult.WasSuccessful) continue;
 
-                errors.Add(new ParseError(ruleResult.Message + $", expected {ruleResult.Expectations.FirstOrDefault()}", counter, ruleResult.Remainder.Column));
+                errors.Add(new ParseError(ruleResult.Message + $", ожидалось {ruleResult.Expectations.FirstOrDefault()}", counter, ruleResult.Remainder.Column));
             }
 
             var queryResults = queries.Select(ResolveQuery).ToList();

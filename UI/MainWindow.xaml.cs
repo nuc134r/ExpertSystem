@@ -8,7 +8,6 @@ using System.Windows.Media;
 using Core;
 using EasterEggs;
 using Logikek;
-using Logikek.Language;
 
 namespace UI
 {
@@ -63,7 +62,8 @@ namespace UI
 
             if (!isRunning)
             {
-                OutputBox.Document.Blocks.Clear();
+                var document = OutputBox.Document;
+                new TextRange(document.ContentStart, document.ContentEnd).Text = "";
                 OutputBox.Foreground = new SolidColorBrush(Colors.White);
 
                 if (Run())
@@ -117,40 +117,40 @@ namespace UI
 
         private void PrintParseError(ParseError parseError)
         {
-            OutputBox.AppendText($"line {parseError.Line}:{parseError.Column} ", Colors.DimGray);
-            OutputBox.AppendText($"{parseError.Message}\n", Colors.LightGray);
+            OutputBox.AppendText(Colors.DimGray, $"Строка {parseError.Line}:{parseError.Column} ");
+            OutputBox.AppendText(Colors.White, $"{parseError.Message}\n");
         }
 
         private void PrintParseError(ParseError parseError, string code)
         {
-            OutputBox.AppendText($"> {code}\n", Colors.DimGray);
-            OutputBox.AppendText("Error: ", Colors.DimGray);
-            OutputBox.AppendText($"{parseError.Message}\n", Colors.LightGray);
+            OutputBox.AppendText(Colors.DimGray, "> ");
+            OutputBox.AppendText(Colors.LightGray , $"{code}\n");
+            OutputBox.AppendText(Colors.DimGray, "  Ошибка: ");
+            OutputBox.AppendText(Colors.White, $"{parseError.Message}\n");
         }
 
         private void PrintQueryResult(QueryResult queryResult)
         {
             var args = queryResult.TheQuery.Arguments.Select(arg => arg.Name).ToArray();
 
-            OutputBox.AppendText("> ", Colors.DimGray);
-            OutputBox.AppendText($"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n", Colors.Gray);
-            OutputBox.AppendText("- ", Colors.DimGray);
-            OutputBox.AppendText($"{(queryResult.Result ? "Yes" : "No")}\n", Colors.White);
+            OutputBox.AppendText(Colors.DimGray, "> ");
+            OutputBox.AppendText(Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
+            //OutputBox.AppendText(Colors.DimGray, "  ");
+            OutputBox.AppendText(Colors.White, $"  {(queryResult.Result ? "Истина" : "Ложь")}\n");
         }
 
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
-                // Launch or stop execution
                 case Key.F5:
                     StartStop();
                     return;
 
                 case Key.Enter:
-                    if (isRunning)
+                    if (isRunning && !string.IsNullOrEmpty(InterpreterBox.Text.Trim()))
                     {
-                        var result = Logikek.Processor.EvaluateQuery(InterpreterBox.Text);
+                        var result = Processor.EvaluateQuery(InterpreterBox.Text);
                         if (result.Success)
                             PrintQueryResult(result.Results.First());
                         else
@@ -158,10 +158,12 @@ namespace UI
                         InterpreterBox.Text = "";
                     }
                     return;
+
                 case Key.Up:
                     if (InterpreterBox.IsFocused)
                         InterpreterBox.Undo();
                     return;
+
                 case Key.Down:
                     if (InterpreterBox.IsFocused)
                         InterpreterBox.Redo();

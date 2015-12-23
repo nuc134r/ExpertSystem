@@ -102,7 +102,8 @@
     			Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0"
     			VerticalScrollBarVisibility="Auto" AcceptsTab="True"
     			ScrollViewer.ScrollChanged="SourceCodeBox_OnScrollChanged"
-    			TextChanged="SourceCodeBox_TextChanged" Margin="35,0,0,0" CaretBrush="White">
+    			TextChanged="SourceCodeBox_TextChanged" Margin="35,0,0,0" 
+                CaretBrush="White" TabIndex="0">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0" />

@@ -29,12 +29,12 @@ namespace Sprache
                         return Result.Success(i.Current, i.Advance());
 
                     return Result.Failure<char>(i,
-                        string.Format("unexpected '{0}'", i.Current),
+                        $"неожиданный символ '{i.Current}'",
                         new[] { description });
                 }
 
                 return Result.Failure<char>(i,
-                    "Unexpected end of input reached",
+                    "неожиданное окончание строки",
                     new[] { description });
             };
         }
@@ -158,7 +158,7 @@ namespace Sprache
         /// <summary>
         /// Parse a letter.
         /// </summary>
-        public static readonly Parser<char> Letter = Char(char.IsLetter, "letter");
+        public static readonly Parser<char> Letter = Char(char.IsLetter, "буква");
 
         /// <summary>
         /// Parse a letter or digit.
