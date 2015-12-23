@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Logikek.Language;
 using NUnit.Framework;
 using Sprache;
 
@@ -64,6 +65,21 @@ namespace Tests.Grammar
             const string input = "Human(X) : Minded(X) And Alive(X)";
 
             Assert.Throws<ParseException>(() => Logikek.Grammar.Fact.Parse(input));
+        }
+
+        [Test]
+        public void EqualArguments()
+        {
+            var fact = new Fact("Friends", new[] {new ClauseArgument("Alex"), new ClauseArgument("Jane")});
+
+            var query1 = new Fact("Friends", new[] {new ClauseArgument("Alex"), new ClauseArgument("Jane")});
+            var query2 = new Fact("Friends", new[] {new ClauseArgument("Jane"), new ClauseArgument("Alex")});
+
+            var result1 = query1.Arguments.SequenceEqual(fact.Arguments);
+            var result2 = query2.Arguments.SequenceEqual(fact.Arguments);
+
+            Assert.AreEqual(true, result1);
+            Assert.AreEqual(false, result2);
         }
     }
 }

@@ -135,7 +135,6 @@ namespace UI
 
             OutputBox.AppendText(Colors.DimGray, "> ");
             OutputBox.AppendText(Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
-            //OutputBox.AppendText(Colors.DimGray, "  ");
             OutputBox.AppendText(Colors.White, $"  {(queryResult.Result ? "Истина" : "Ложь")}\n");
         }
 

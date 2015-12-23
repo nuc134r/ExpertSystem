@@ -58,7 +58,9 @@ namespace Logikek
                 var commentResult = Grammar.Comment.TryParse(line);
                 if (commentResult.WasSuccessful) continue;
 
-                errors.Add(new ParseError(ruleResult.Message + $", ожидалось {ruleResult.Expectations.FirstOrDefault()}", counter, ruleResult.Remainder.Column));
+                var expected = ruleResult.Expectations.FirstOrDefault();
+                var column = ruleResult.Remainder.Column;
+                errors.Add(new ParseError(ruleResult.Message + $", ожидалось {expected}", counter, column));
             }
 
             var queryResults = queries.Select(ResolveQuery).ToList();
@@ -84,11 +86,12 @@ namespace Logikek
         {
             if (query.IsSimple)
             {
-                var args = query.Arguments.Select(arg => arg.Name);
-
-                var result = facts.Any(fact => fact.Name == query.Name && !fact.Arguments.Select(arg => arg.Name).Except(args).Any());
-
-                return new QueryResult(query, result);
+                // If there is any fact with the same name 
+                // And same set of arguments
+                if (facts.Any(fact => fact.Name == query.Name && fact.Arguments.SequenceEqual(query.Arguments)))
+                {
+                    return new QueryResult(query, true);
+                }
             }
 
             return new QueryResult(query, false);
