@@ -148,26 +148,23 @@ namespace UI
                     return;
 
                 case Key.Enter:
-                    var result = Logikek.Processor.EvaluateQuery(InterpreterBox.Text);
-                    if (result.Success)
-                        PrintQueryResult(result.Results.First());
-                    else
-                        PrintParseError(result.Errors.First(), InterpreterBox.Text);
-                    InterpreterBox.Text = "";
+                    if (isRunning)
+                    {
+                        var result = Logikek.Processor.EvaluateQuery(InterpreterBox.Text);
+                        if (result.Success)
+                            PrintQueryResult(result.Results.First());
+                        else
+                            PrintParseError(result.Errors.First(), InterpreterBox.Text);
+                        InterpreterBox.Text = "";
+                    }
                     return;
-
-                // You haven't seen this
                 case Key.Up:
-                    snakey?.SetDirection(1);
-                    return;
-                case Key.Right:
-                    snakey?.SetDirection(2);
+                    if (InterpreterBox.IsFocused)
+                        InterpreterBox.Undo();
                     return;
                 case Key.Down:
-                    snakey?.SetDirection(3);
-                    return;
-                case Key.Left:
-                    snakey?.SetDirection(4);
+                    if (InterpreterBox.IsFocused)
+                        InterpreterBox.Redo();
                     return;
             }
         }

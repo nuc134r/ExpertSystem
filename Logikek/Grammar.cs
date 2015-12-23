@@ -7,11 +7,11 @@ namespace Logikek
 {
     public class Grammar
     {
-        public static readonly Parser<string> Identifier =
-            Parse.Letter.AtLeastOnce().Text().Token();
-
         public static readonly Parser<IEnumerable<char>> Whitespace =
             Parse.Char(' ').Many();
+
+        public static readonly Parser<string> Identifier =
+            Parse.Letter.AtLeastOnce().Text().Token();
 
         public static readonly Parser<IEnumerable<ClauseArgument>> Arguments =
             from openBracket in Parse.Char('(')
@@ -68,10 +68,9 @@ namespace Logikek
         #endregion
 
         public static readonly Parser<string> Comment =
-            from commentStart in Parse.String("/*")
-            from text in Parse.CharExcept( '*').Many().Text()
-            from commentEnd in Parse.String("*/")
-            select text;
+            from commentStart in Parse.String("//")
+            from commentText in Parse.AnyChar.Many().Text().End()
+            select commentText;
 
         public static readonly Parser<Rule> Rule =
             from name in Identifier
