@@ -16,11 +16,10 @@ namespace UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SolidColorBrush accentBrush;
         private bool isRunning;
-        private SolidColorBrush outputBrush;
 
-        private RichSnake snakey;
+        private SolidColorBrush glowBrush;
+        private SolidColorBrush outputBrush;
         private SolidColorBrush sourceBrush;
 
         public MainWindow()
@@ -51,15 +50,8 @@ namespace UI
             }
         }
 
-        private void LaunchStopButton_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Launch()
         {
-            StartStop();
-        }
-
-        private void StartStop()
-        {
-            InterpreterBox.Text = "";
-
             if (!isRunning)
             {
                 var document = OutputBox.Document;
@@ -70,28 +62,32 @@ namespace UI
                 {
                     isRunning = true;
                     AnimateModeChange(ApplicationMode.Running);
-                    LaunchStopButton.Content = "  Стоп";
+                    LaunchButtonBox.Background = new SolidColorBrush(Colors.Transparent);
+                    StopButtonBox.Background = new SolidColorBrush(AppColors.RunningAccent);
+                    SourceCodeBox.IsReadOnly = true;
+                    InterpreterBox.IsReadOnly = false;
+                    InterpreterBox.Focus();
                 }
                 else
                     AnimateErrorsOccurence();
             }
-            else
+        }
+
+        private void Stop()
+        {
+            if (isRunning)
             {
+                InterpreterBox.Text = "";
+
                 AnimateModeChange(ApplicationMode.Ready);
-                LaunchStopButton.Content = "Запуск";
+                LaunchButtonBox.Background = glowBrush;
+                StopButtonBox.Background = new SolidColorBrush(Colors.Transparent);
+                InterpreterBox.IsReadOnly = true;
+                SourceCodeBox.IsReadOnly = false;
                 SourceCodeBox.Focus();
 
                 isRunning = false;
-                snakey?.Stop();
             }
-
-            SourceCodeBox.IsReadOnly = isRunning;
-            InterpreterBox.IsReadOnly = !isRunning;
-
-            if (isRunning)
-                InterpreterBox.Focus();
-            else
-                SourceCodeBox.Focus();
         }
 
         private bool Run()
@@ -143,7 +139,9 @@ namespace UI
             switch (e.Key)
             {
                 case Key.F5:
-                    StartStop();
+                    if (isRunning) Stop();
+                    else
+                        Launch();
                     return;
 
                 case Key.Enter:

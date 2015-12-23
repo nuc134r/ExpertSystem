@@ -13,75 +13,17 @@ namespace UI
         {
             LineNumbersBox.ScrollToVerticalOffset(e.VerticalOffset);
         }
-
-        #region Menu
-
-        #region File
-
-        private void FileMenuLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FileMenuBox.Visibility = Visibility.Visible;
-        }
-
-        private void FileMenuInnerLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FileMenuBox.Visibility = Visibility.Collapsed;
-        }
-
-        private void NewFileMenuLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FileMenuBox.Visibility = Visibility.Collapsed;
-            // New file
-        }
-
-        private void OpenFileMenuLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FileMenuBox.Visibility = Visibility.Collapsed;
-            // Open file
-        }
-
-        private void SaveFileMenuLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FileMenuBox.Visibility = Visibility.Collapsed;
-            // Open file
-        }
-
-        #endregion
-
-        #region View
-
-        private void ViewMenuLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            ViewMenuBox.Visibility = Visibility.Visible;
-        }
-
-        private void ViewMenuInnerLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            ViewMenuBox.Visibility = Visibility.Collapsed;
-        }
-
-        private void SimpleCodeMenuLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            ViewMenuBox.Visibility = Visibility.Collapsed;
-            // Simple code mode
-        }
-
-        #endregion
-
-        #endregion
-
+        
         #region Animations
 
         private void AnimateModeChange(ApplicationMode mode)
         {
             var isReversed = (mode == ApplicationMode.Running);
-
-            var accentAnimation = ColorUtils.CreateColorAnimation(AppColors.ReadyAccent, AppColors.RunningAccent, "accentBrush", isReversed);
+            
             var sourceAnimation = ColorUtils.CreateColorAnimation(AppColors.ActiveBoxBg, AppColors.InactiveBoxBg, "sourceBrush", isReversed);
             var outputAnimation = ColorUtils.CreateColorAnimation(AppColors.InactiveBoxBg, AppColors.ActiveBoxBg, "outputBrush", isReversed);
 
             var sb = new Storyboard();
-            sb.Children.Add(accentAnimation);
             sb.Children.Add(sourceAnimation);
             sb.Children.Add(outputAnimation);
 
@@ -100,23 +42,40 @@ namespace UI
 
         private void InitailizeAnimationBrushes()
         {
-            accentBrush = new SolidColorBrush();
+            glowBrush   = new SolidColorBrush();
             sourceBrush = new SolidColorBrush();
             outputBrush = new SolidColorBrush();
 
-            accentBrush.Color = AppColors.ReadyAccent;
+            glowBrush.Color   = AppColors.ReadyAccent;
             sourceBrush.Color = AppColors.ActiveBoxBg;
             outputBrush.Color = AppColors.InactiveBoxBg;
 
-            LaunchStopBox.Background = accentBrush;
+            LaunchButtonBox.Background = glowBrush;
             SourceCodeWindow.Background = sourceBrush;
             OutputWindow.Background = outputBrush;
 
-            RegisterName("accentBrush", accentBrush);
+            RegisterName("glowBrush", glowBrush);
             RegisterName("sourceBrush", sourceBrush);
             RegisterName("outputBrush", outputBrush);
+
+            var glowAnimation = ColorUtils.CreateColorAnimation(AppColors.ReadyAccent, AppColors.ReadyGlowAccent,
+                "glowBrush", reversed: false, autoreverse: true, repeat: true, durationMs: 1500);
+            var sb = new Storyboard();
+            sb.Children.Add(glowAnimation);
+
+            sb.Begin(this);
         }
 
         #endregion
+
+        private void LaunchButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Launch();
+        }
+
+        private void StopButton_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Stop();
+        }
     }
 }
