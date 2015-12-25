@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows.Documents;
 using System.Windows.Media;
 using Logikek;
 using UI.Interfaces;
@@ -106,6 +107,21 @@ namespace UI.MainWindow
             {
                 Stop();
             }
+        }
+
+        public void Format(FlowDocument document)
+        {
+            /*
+            Кот    FFE3E3BC
+            (      FF9C9C9C
+            Х      FFB56ED4
+            )      FF9C9C9C
+            :
+            Усатый FFBFC3F1
+            И      FFCDFFFF
+
+            Кот    FFB56ED4
+            */
         }
     }
 }

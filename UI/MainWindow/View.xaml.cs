@@ -205,5 +205,10 @@ namespace UI.MainWindow
             => ClearOutput();
 
         private delegate void HotkeyDelegate();
+
+        private void FormatCode_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            viewModel.Format(SourceCodeBox.Document);
+        }
     }
 }

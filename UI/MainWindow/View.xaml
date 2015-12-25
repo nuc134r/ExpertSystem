@@ -97,7 +97,7 @@
                 <Grid Margin="0,16,0,46" Style="{StaticResource MenuGridStyle}" Width="120" Height="22" Opacity="0.8" HorizontalAlignment="Left" >
                     <Label Content="Форматировать" Foreground="White" Margin="23,-3,0,0" Height="25" />
                     <Path Stretch="Fill" Fill="White" Data="F1M30,51L19,40 19,37 30,26 30,31 23,38 30,45 30,51z M42.9999,21.0001L37,55 33,55 39,21.0001 42.9999,21.0001z M46,51L46,45 53,38 46,31 46,26 57,37 57,40 46,51z" Margin="6.023,3.472,0,4.528" HorizontalAlignment="Left" Width="12" Height="12"/>
-                    <Label Content=""/>
+                    <Label Content="" MouseDown="FormatCode_OnMouseDown"/>
                 </Grid>
             </Grid>
         </Grid>
