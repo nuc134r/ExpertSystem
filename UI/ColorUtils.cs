@@ -9,12 +9,13 @@ namespace UI
     {
         public static Color HexColor(string str) => (Color) ColorConverter.ConvertFromString(str);
 
-        public static ColorAnimation CreateColorAnimation(Color from, Color to, string targetName, bool reversed, int durationMs = 175, bool autoreverse = false, bool repeat = false)
+        public static ColorAnimation CreateColorAnimation(Color from, Color to, string targetName, bool reversed,
+            int durationMs = 175, bool autoreverse = false, bool repeat = false)
         {
             var duration = TimeSpan.FromMilliseconds(durationMs);
             var animation = new ColorAnimation(reversed ? @from : to, reversed ? to : @from, duration)
             {
-                AutoReverse = autoreverse,
+                AutoReverse = autoreverse
             };
 
             if (repeat) animation.RepeatBehavior = RepeatBehavior.Forever;

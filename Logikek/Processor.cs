@@ -10,17 +10,17 @@ namespace Logikek
 {
     public static class Processor
     {
-        private static List<Fact> facts;
-        private static List<Query> queries;
-        private static List<Rule> rules;
+        private static List<Fact> _facts;
+        private static List<Query> _queries;
+        private static List<Rule> _rules;
 
         public static ProcessResult Run(string code)
         {
             var errors = new List<ParseError>();
 
-            facts = new List<Fact>();
-            queries = new List<Query>();
-            rules = new List<Rule>();
+            _facts = new List<Fact>();
+            _queries = new List<Query>();
+            _rules = new List<Rule>();
 
             var lines = code.Split('\n').Select(line => line.Trim());
 
@@ -34,9 +34,9 @@ namespace Logikek
                 if (factResult.WasSuccessful)
                 {
                     if (factResult.Value.Arguments.Any(fact => fact.IsAtom))
-                        errors.Add(new ParseError("facts cannot contain atoms", counter, factResult.Remainder.Column));
+                        errors.Add(new ParseError("факты не могут содержать атомы", counter, factResult.Remainder.Column));
                     else
-                        facts.Add(factResult.Value);
+                        _facts.Add(factResult.Value);
 
                     continue;
                 }
@@ -44,14 +44,14 @@ namespace Logikek
                 var queryResult = Grammar.Query.TryParse(line);
                 if (queryResult.WasSuccessful)
                 {
-                    queries.Add(queryResult.Value);
+                    _queries.Add(queryResult.Value);
                     continue;
                 }
 
                 var ruleResult = Grammar.Rule.TryParse(line);
                 if (ruleResult.WasSuccessful)
                 {
-                    rules.Add(ruleResult.Value);
+                    _rules.Add(ruleResult.Value);
                     continue;
                 }
 
@@ -63,7 +63,7 @@ namespace Logikek
                 errors.Add(new ParseError(ruleResult.Message + $", ожидалось {expected}", counter, column));
             }
 
-            var queryResults = queries.Select(ResolveQuery).ToList();
+            var queryResults = _queries.Select(ResolveQuery).ToList();
 
             return errors.Any() ? new ProcessResult(errors) : new ProcessResult(queryResults);
         }
@@ -86,15 +86,15 @@ namespace Logikek
         {
             if (query.IsSimple)
             {
-                // If there is any fact with the same name 
-                // And same set of arguments
-                if (facts.Any(fact => fact.Name == query.Name && fact.Arguments.SequenceEqual(query.Arguments)))
+                // Ищем факт с именем запроса 
+                // И таким же набором аргументов (порядок важен)
+                if (_facts.Any(fact => fact.Name == query.Name && fact.Arguments.SequenceEqual(query.Arguments)))
                 {
-                    return new QueryResult(query, true);
+                    return new QueryResult(true, query);
                 }
             }
 
-            return new QueryResult(query, false);
+            return new QueryResult(false, query);
         }
     }
 }

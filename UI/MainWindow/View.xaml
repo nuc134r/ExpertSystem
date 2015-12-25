@@ -1,11 +1,11 @@
-﻿<Window x:Class="UI.MainWindow"
+﻿<Window x:Class="UI.MainWindow.View"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         mc:Ignorable="d"
-        Title="Logikek" Height="544" Width="710" Background="Black" MinWidth="400" MinHeight="300" PreviewKeyDown="MainWindow_OnPreviewKeyDown">
+        Title="Logikek" Height="544" Width="710" Background="Black" MinWidth="400" MinHeight="300" PreviewKeyDown="MainWindow_OnPreviewKeyDown" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="LaunchButtonLabelStyle" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="Black" />
@@ -36,9 +36,9 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="82" />
-            <RowDefinition Height="161*" />
+            <RowDefinition Height="251*" />
             <RowDefinition Height="5" Name="SplitterRow" />
-            <RowDefinition Height="171*" Name="OutputRow" />
+            <RowDefinition Height="169*" Name="OutputRow" />
         </Grid.RowDefinitions>
         <GridSplitter HorizontalAlignment="Stretch" Grid.Row="2" Background="#19FFFFFF" />
         <Grid x:Name="Menu" Background="#FF404040">
@@ -128,14 +128,14 @@
                 <TextBlock TextWrapping="Wrap" Text="&gt;" FontSize="13.333" Foreground="White" Margin="0,4,0,0"
     				HorizontalAlignment="Right" Width="12" />
             </Border>
-            <TextBox x:Name="InterpreterBox" Margin="17,0,0,0" TextWrapping="Wrap"
+            <TextBox x:Name="InterpreterBox" Margin="17,0,24,0" TextWrapping="Wrap"
     			FontSize="14" VerticalContentAlignment="Center" Background="#66000000" BorderThickness="0"
     			Foreground="White" FontFamily="Consolas" Text=""
     			RenderTransformOrigin="0.647,1.894" Height="26" VerticalAlignment="Bottom" Grid.Row="1" />
-            <Grid x:Name="CleanOutputButton" HorizontalAlignment="Right" Height="24" Style="{StaticResource ResourceKey=MenuGridStyle}"
-                  VerticalAlignment="Top" Width="24" MouseDown="CleanOutputButton_OnMouseDown" Margin="0,0,20,0">
-                <Path Stretch="Fill" Fill="White" Data="F1M58.5833,45.9167L58.5833,57 19,57 19,45.9167 28.8998,45.9167C31.0306,47.2793 33.6795,48.4476 36.6434,49.2418 40.3467,50.2341 44.7079,50.4746 47.6249,50.0692L47.6249,45.9167 58.5833,45.9167z M56.2083,48.2917L53.4374,48.2917 53.4374,53.0417 56.2082,53.0417 56.2083,48.2917z M45.7433,48.2824C43.1578,48.6418 39.9938,48.0327 36.7113,47.1532 31.1866,45.6728 26.8965,42.7258 25.5163,39.7952L32.2902,33.0213 45.7433,38.0663 45.7433,48.2824z M39.2905,28.1719C39.6351,28.1719,39.9737,28.1941,40.3047,28.2368L46.0048,17.0498 49.0712,18.6122 43.5443,29.4594C45.1454,30.5622 46.1735,32.2733 46.1735,34.1946 46.1735,35.0197 45.9839,35.806 45.6407,36.5221L33.4151,31.7762C34.4796,29.6541,36.4722,28.1719,39.2905,28.1719z" Margin="4.876,5.061,5.124,4.938" HorizontalAlignment="Center" VerticalAlignment="Center" Width="14" Height="14.001"/>
-                <Label Content="" HorizontalAlignment="Left" Height="24" VerticalAlignment="Top" Width="24"/>
+            <Grid x:Name="ClearOutputButton" HorizontalAlignment="Right" Height="26" Style="{StaticResource ResourceKey=MenuGridStyle}"
+                  VerticalAlignment="Top" Width="24" MouseDown="ClearOutputButton_OnMouseDown" Grid.Row="1">
+                <Path Stretch="Fill" Fill="White" Data="F1M58.5833,45.9167L58.5833,57 19,57 19,45.9167 28.8998,45.9167C31.0306,47.2793 33.6795,48.4476 36.6434,49.2418 40.3467,50.2341 44.7079,50.4746 47.6249,50.0692L47.6249,45.9167 58.5833,45.9167z M56.2083,48.2917L53.4374,48.2917 53.4374,53.0417 56.2082,53.0417 56.2083,48.2917z M45.7433,48.2824C43.1578,48.6418 39.9938,48.0327 36.7113,47.1532 31.1866,45.6728 26.8965,42.7258 25.5163,39.7952L32.2902,33.0213 45.7433,38.0663 45.7433,48.2824z M39.2905,28.1719C39.6351,28.1719,39.9737,28.1941,40.3047,28.2368L46.0048,17.0498 49.0712,18.6122 43.5443,29.4594C45.1454,30.5622 46.1735,32.2733 46.1735,34.1946 46.1735,35.0197 45.9839,35.806 45.6407,36.5221L33.4151,31.7762C34.4796,29.6541,36.4722,28.1719,39.2905,28.1719z" Margin="4.876,5.061,5.124,4.938" HorizontalAlignment="Center" VerticalAlignment="Center" Width="14" Height="14"/>
+                <Label Content="" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="24" ToolTip="Очистить окно вывода"/>
             </Grid>
         </Grid>
         <Grid x:Name="SourceCodeWindow" Grid.Row="1" Background="#FF2B2B2B">
@@ -143,8 +143,8 @@
     			Foreground="White" FontSize="14" FontFamily="Consolas" BorderThickness="0"
     			VerticalScrollBarVisibility="Auto" AcceptsTab="True"
     			ScrollViewer.ScrollChanged="SourceCodeBox_OnScrollChanged"
-    			TextChanged="SourceCodeBox_TextChanged" Margin="35,15,0,0" 
-                CaretBrush="White" TabIndex="0" DataObject.Pasting="SourceCodeBox_OnPasting">
+    			Margin="35,15,0,0" CaretBrush="White" TabIndex="0" 
+                DataObject.Pasting="SourceCodeBox_OnPasting">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0" />

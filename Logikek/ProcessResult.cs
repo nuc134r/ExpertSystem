@@ -8,17 +8,17 @@ namespace Logikek
         {
             Results = results;
             Errors = new List<ParseError>();
-            Success = true;
+            WasSuccessful = true;
         }
 
         public ProcessResult(IEnumerable<ParseError> errors)
         {
             Errors = errors;
             Results = new List<QueryResult>();
-            Success = false;
+            WasSuccessful = false;
         }
 
-        public bool Success { get; private set; }
+        public bool WasSuccessful { get; private set; }
 
         public IEnumerable<ParseError> Errors { get; private set; }
         public IEnumerable<QueryResult> Results { get; private set; }

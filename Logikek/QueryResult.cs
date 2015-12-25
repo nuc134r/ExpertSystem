@@ -4,7 +4,7 @@ namespace Logikek
 {
     public class QueryResult
     {
-        public QueryResult(Query theQuery, bool result)
+        public QueryResult(bool result, Query theQuery)
         {
             TheQuery = theQuery;
             Result = result;
