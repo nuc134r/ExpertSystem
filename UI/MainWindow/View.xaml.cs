@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -13,6 +14,8 @@ namespace UI.MainWindow
     {
         private readonly ViewModel viewModel;
 
+        private Dictionary<Key, HotkeyDelegate> hotkeys;
+
         private SolidColorBrush glowBrush;
         private SolidColorBrush outputBrush;
         private SolidColorBrush sourceBrush;
@@ -23,6 +26,7 @@ namespace UI.MainWindow
 
             InitializeComponent();
             InitailizeAnimationBrushes();
+            RegisterHotkeys();
             WireHandlers();
         }
 
@@ -75,6 +79,37 @@ namespace UI.MainWindow
         public void PrintOutput(Color color, string text)
             => OutputBox.AppendText(color, text);
 
+        private void RegisterHotkeys()
+        {
+            hotkeys = new Dictionary<Key, HotkeyDelegate>
+            {
+                {
+                    Key.F5, () => { viewModel.StartStop(); }
+                },
+                {
+                    Key.Enter, () =>
+                    {
+                        viewModel.Evaluate(InterpreterBox.Text);
+                        InterpreterBox.Text = "";
+                    }
+                },
+                {
+                    Key.Up, () =>
+                    {
+                        if (InterpreterBox.IsFocused)
+                            InterpreterBox.Undo();
+                    }
+                },
+                {
+                    Key.Down, () =>
+                    {
+                        if (InterpreterBox.IsFocused)
+                            InterpreterBox.Redo();
+                    }
+                }
+            };
+        }
+
         private void SourceCodeBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var document = SourceCodeBox.Document;
@@ -92,24 +127,9 @@ namespace UI.MainWindow
 
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+            if (hotkeys.ContainsKey(e.Key))
             {
-                case Key.F5:
-
-                    break;
-                case Key.Enter:
-
-                    return;
-
-                case Key.Up:
-                    if (InterpreterBox.IsFocused)
-                        InterpreterBox.Undo();
-                    return;
-
-                case Key.Down:
-                    if (InterpreterBox.IsFocused)
-                        InterpreterBox.Redo();
-                    return;
+                hotkeys[e.Key].Invoke();
             }
         }
 
@@ -170,10 +190,7 @@ namespace UI.MainWindow
         }
 
         private void LaunchButton_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            ClearOutput();
-            viewModel.Launch();
-        }
+            => viewModel.Launch();
 
         private void SourceCodeBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
             => LineNumbersBox.ScrollToVerticalOffset(e.VerticalOffset);
@@ -186,5 +203,7 @@ namespace UI.MainWindow
 
         private void ClearOutputButton_OnMouseDown(object sender, MouseButtonEventArgs e)
             => ClearOutput();
+
+        private delegate void HotkeyDelegate();
     }
 }

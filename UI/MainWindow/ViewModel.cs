@@ -20,6 +20,8 @@ namespace UI.MainWindow
         {
             if (!isRunning)
             {
+                view.ClearOutput();
+
                 var code = view.SourceCode;
                 var result = Processor.Run(code);
 
@@ -94,5 +96,16 @@ namespace UI.MainWindow
             view.PrintOutput(Colors.White, $"  {(queryResult.Result ? "Истина" : "Ложь")}\n");
         }
 
+        public void StartStop()
+        {
+            if (!isRunning)
+            {
+                Launch();
+            }
+            else
+            {
+                Stop();
+            }
+        }
     }
 }
