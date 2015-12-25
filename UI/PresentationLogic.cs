@@ -77,5 +77,23 @@ namespace UI
         {
             Stop();
         }
+
+        private void OutputBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            OutputBox.ScrollToEnd();
+        }
+
+        private void CleanOutputButton_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OutputBox.Document.Blocks.Clear();
+        }
+
+        private void SourceCodeBox_OnPasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.FormatToApply == "Bitmap")
+            {
+                e.CancelCommand();
+            }
+        }
     }
 }

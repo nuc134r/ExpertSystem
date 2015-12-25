@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI"
         mc:Ignorable="d"
-        Title="Logikek" Height="508" Width="509" Background="Black" MinWidth="400" MinHeight="300" PreviewKeyDown="MainWindow_OnPreviewKeyDown">
+        Title="Logikek" Height="544" Width="710" Background="Black" MinWidth="400" MinHeight="300" PreviewKeyDown="MainWindow_OnPreviewKeyDown">
     <Window.Resources>
         <Style x:Key="LaunchButtonLabelStyle" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="Black" />
@@ -26,13 +26,6 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#26FFFFFF" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="MenuGridStyle2" TargetType="{x:Type Grid}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1AFFFFFF" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -67,14 +60,17 @@
                 <Grid Margin="0,38,0,24" Style="{StaticResource MenuGridStyle}" Width="99" Height="22" Opacity="0.8" >
                     <Label Content="Открыть" Foreground="White" Margin="23,-3,0,0" Width="76" Height="25" />
                     <Path Stretch="Fill" Fill="White" Data="F1M22,17L41.25,17 54,29.75 54,54 22,54 22,17z M26,21L26,50 50,50 50,34 37,34 37,21 26,21z M41,22.25L41,30 48.75,30 41,22.25z M38,57C39.6568,57 41,58.3431 41,60 41,61.6569 39.6568,63 38,63 36.3431,63 35,61.6569 35,60 35,58.3431 36.3431,57 38,57z M50,57C51.6568,57 53,58.3431 53,60 53,61.6569 51.6568,63 50,63 48.3431,63 47,61.6569 47,60 47,58.3431 48.3431,57 50,57z M26,57C27.6569,57 29,58.3431 29,60 29,61.6569 27.6569,63 26,63 24.3431,63 23,61.6569 23,60 23,58.3431 24.3431,57 26,57z" Margin="6.624,2.582,81.376,3.418" HorizontalAlignment="Center" VerticalAlignment="Center" Width="11" Height="16"/>
+                    <Label Content=""/>
                 </Grid>
                 <Grid Margin="0,16,0,46" Style="{StaticResource MenuGridStyle}" Width="99" Height="22" Opacity="0.8" >
                     <Label Content="Новый" Foreground="White" Margin="23,-3,0,0" Width="76" Height="25" />
                     <Path Stretch="Fill" Fill="White" Data="F1M43,30L50.75,30 43,22.25 43,30z M52,34L39,34 39,21 24,21 24,45 20,45 20,17 43.25,17 56,29.75 56,59 34,59 34,55 52,55 52,34z M28,38L33,38 33,46 41,46 41,51 33,51 33,59 28,59 28,51 20,51 20,46 28,46 28,38z M20,59L20,52 24,52 24,55 27,55 27,59 20,59z" Margin="6.047,3.5,81,4.556" HorizontalAlignment="Center" VerticalAlignment="Center" Width="12" Height="14"/>
+                    <Label Content=""/>
                 </Grid>
                 <Grid Margin="0,60,0,2" Style="{StaticResource MenuGridStyle}" Width="99" Height="22" Opacity="0.8" >
                     <Label Content="Сохранить" Foreground="White" Margin="23,-3,0,0" Width="76" Height="25" />
                     <Path Stretch="Fill" Fill="White" Data="F1M20.5833,20.5833L55.4167,20.5833 55.4167,55.4167 45.9167,55.4167 45.9167,44.3333 30.0833,44.3333 30.0833,55.4167 20.5833,55.4167 20.5833,20.5833z M33.25,55.4167L33.25,50.6667 39.5833,50.6667 39.5833,55.4167 33.25,55.4167z M26.9167,23.75L26.9167,33.25 49.0833,33.25 49.0833,23.75 26.9167,23.75z" Margin="6.624,2.582,81.376,3.418" HorizontalAlignment="Center" VerticalAlignment="Center" Width="11" Height="11"/>
+                    <Label Content=""/>
                 </Grid>
             </Grid>
             <Grid x:Name="LaunchSection" Height="84" VerticalAlignment="Top" Margin="0,0,0,-2" HorizontalAlignment="Right" Width="99">
@@ -82,14 +78,16 @@
                 <Label x:Name="LaunchHeader" Content="Запуск" FontSize="10.667" Foreground="White" Margin="0,-5,0,63" HorizontalAlignment="Center"/>
                 <Grid x:Name="StopButtonBox" Margin="0,38,0,24">
                     <Grid Style="{StaticResource MenuGridStyle}" Width="99" Height="22" Opacity="0.8" MouseDown="StopButton_OnMouseDown" >
-                        <Label Content="Остановить" Foreground="White" Margin="23,-3,0,0" Width="76" Height="25" />
+                        <Label Content="Остановить" Foreground="White" Margin="23,-3,0,0" />
                         <Path Stretch="Fill" Fill="White" Data="F1M0,0L76,0 76,76 0,76 0,0" Margin="6.624,2.582,81.376,3.418" HorizontalAlignment="Center" VerticalAlignment="Center" Width="11" Height="11"/>
+                        <Label Content=""/>
                     </Grid>
                 </Grid>
                 <Grid x:Name="LaunchButtonBox" Margin="0,16,0,46">
                     <Grid Style="{StaticResource MenuGridStyle}" Width="99" Height="22" Opacity="0.8" MouseDown="LaunchButton_MouseDown" >
                         <Label Content="Запустить" Foreground="White" Margin="23,-3,0,0" Width="76" Height="25" />
                         <Path Stretch="Fill" Fill="White" Data="F1M30.0833,22.1667L50.6665,37.6043 50.6665,38.7918 30.0833,53.8333 30.0833,22.1667z" Margin="6.023,4.639,80.976,5.361" HorizontalAlignment="Center" VerticalAlignment="Center" Width="11" Height="12"/>
+                        <Label Content=""/>
                     </Grid>
                 </Grid>
             </Grid>
@@ -99,6 +97,7 @@
                 <Grid Margin="0,16,0,46" Style="{StaticResource MenuGridStyle}" Width="120" Height="22" Opacity="0.8" HorizontalAlignment="Left" >
                     <Label Content="Форматировать" Foreground="White" Margin="23,-3,0,0" Height="25" />
                     <Path Stretch="Fill" Fill="White" Data="F1M30,51L19,40 19,37 30,26 30,31 23,38 30,45 30,51z M42.9999,21.0001L37,55 33,55 39,21.0001 42.9999,21.0001z M46,51L46,45 53,38 46,31 46,26 57,37 57,40 46,51z" Margin="6.023,3.472,0,4.528" HorizontalAlignment="Left" Width="12" Height="12"/>
+                    <Label Content=""/>
                 </Grid>
             </Grid>
         </Grid>
@@ -108,7 +107,7 @@
                 <RowDefinition Height="26"/>
             </Grid.RowDefinitions>
             <RichTextBox x:Name="OutputBox" Background="{x:Null}" BorderBrush="{x:Null}"
-    			Foreground="#FF595959" FontSize="14" BorderThickness="0"
+    			Foreground="#FF595959" FontSize="14" BorderThickness="0" TextChanged="OutputBox_OnTextChanged"
     			VerticalScrollBarVisibility="Auto" IsReadOnly="True" FontFamily="Consolas">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
@@ -133,6 +132,11 @@
     			FontSize="14" VerticalContentAlignment="Center" Background="#66000000" BorderThickness="0"
     			Foreground="White" FontFamily="Consolas" Text=""
     			RenderTransformOrigin="0.647,1.894" Height="26" VerticalAlignment="Bottom" Grid.Row="1" />
+            <Grid x:Name="CleanOutputButton" HorizontalAlignment="Right" Height="24" Style="{StaticResource ResourceKey=MenuGridStyle}"
+                  VerticalAlignment="Top" Width="24" MouseDown="CleanOutputButton_OnMouseDown" Margin="0,0,20,0">
+                <Path Stretch="Fill" Fill="White" Data="F1M58.5833,45.9167L58.5833,57 19,57 19,45.9167 28.8998,45.9167C31.0306,47.2793 33.6795,48.4476 36.6434,49.2418 40.3467,50.2341 44.7079,50.4746 47.6249,50.0692L47.6249,45.9167 58.5833,45.9167z M56.2083,48.2917L53.4374,48.2917 53.4374,53.0417 56.2082,53.0417 56.2083,48.2917z M45.7433,48.2824C43.1578,48.6418 39.9938,48.0327 36.7113,47.1532 31.1866,45.6728 26.8965,42.7258 25.5163,39.7952L32.2902,33.0213 45.7433,38.0663 45.7433,48.2824z M39.2905,28.1719C39.6351,28.1719,39.9737,28.1941,40.3047,28.2368L46.0048,17.0498 49.0712,18.6122 43.5443,29.4594C45.1454,30.5622 46.1735,32.2733 46.1735,34.1946 46.1735,35.0197 45.9839,35.806 45.6407,36.5221L33.4151,31.7762C34.4796,29.6541,36.4722,28.1719,39.2905,28.1719z" Margin="4.876,5.061,5.124,4.938" HorizontalAlignment="Center" VerticalAlignment="Center" Width="14" Height="14.001"/>
+                <Label Content="" HorizontalAlignment="Left" Height="24" VerticalAlignment="Top" Width="24"/>
+            </Grid>
         </Grid>
         <Grid x:Name="SourceCodeWindow" Grid.Row="1" Background="#FF2B2B2B">
             <RichTextBox x:Name="SourceCodeBox" Background="{x:Null}" BorderBrush="{x:Null}"
@@ -140,7 +144,7 @@
     			VerticalScrollBarVisibility="Auto" AcceptsTab="True"
     			ScrollViewer.ScrollChanged="SourceCodeBox_OnScrollChanged"
     			TextChanged="SourceCodeBox_TextChanged" Margin="35,15,0,0" 
-                CaretBrush="White" TabIndex="0">
+                CaretBrush="White" TabIndex="0" DataObject.Pasting="SourceCodeBox_OnPasting">
                 <RichTextBox.Resources>
                     <Style TargetType="{x:Type Paragraph}">
                         <Setter Property="Margin" Value="0" />

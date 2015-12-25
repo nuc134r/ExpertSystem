@@ -6,7 +6,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using Core;
-using EasterEggs;
 using Logikek;
 
 namespace UI
@@ -120,7 +119,7 @@ namespace UI
         private void PrintParseError(ParseError parseError, string code)
         {
             OutputBox.AppendText(Colors.DimGray, "> ");
-            OutputBox.AppendText(Colors.LightGray , $"{code}\n");
+            OutputBox.AppendText(Colors.LightGray, $"{code}\n");
             OutputBox.AppendText(Colors.DimGray, "  Ошибка: ");
             OutputBox.AppendText(Colors.White, $"{parseError.Message}\n");
         }
