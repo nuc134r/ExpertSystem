@@ -32,5 +32,7 @@ namespace UI
         public static Color Operator => ColorUtils.HexColor("#CDFFFF");
         public static Color Query => ColorUtils.HexColor("#B56ED4");
         public static Color Comment => ColorUtils.HexColor("#57A64A");
+        public static Color Arguments => Colors.White;
+        public static Color Semicolon => Colors.White;
     }
 }
