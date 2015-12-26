@@ -5,8 +5,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using Core;
 using UI.Interfaces;
+using Utils;
 
 namespace UI.MainWindow
 {
@@ -42,8 +42,9 @@ namespace UI.MainWindow
 
         public void IndicateLaunch()
         {
+            SourceCodeBox.Document = viewModel.Format(SourceCodeBox.Document);
             AnimateModeChange(ApplicationMode.Running);
-            LaunchButtonBox.Background = new SolidColorBrush(Colors.Transparent);
+            LaunchButtonBox.Background = new SolidColorBrush(System.Windows.Media.Colors.Transparent);
             StopButtonBox.Background = new SolidColorBrush(AppColors.RunningAccent);
             SourceCodeBox.IsReadOnly = true;
             InterpreterBox.IsReadOnly = false;
@@ -67,7 +68,7 @@ namespace UI.MainWindow
 
             AnimateModeChange(ApplicationMode.Ready);
             LaunchButtonBox.Background = glowBrush;
-            StopButtonBox.Background = new SolidColorBrush(Colors.Transparent);
+            StopButtonBox.Background = new SolidColorBrush(System.Windows.Media.Colors.Transparent);
             InterpreterBox.IsReadOnly = true;
             SourceCodeBox.IsReadOnly = false;
             SourceCodeBox.Focus();
@@ -77,7 +78,7 @@ namespace UI.MainWindow
             => OutputBox.Document.Blocks.Clear();
 
         public void PrintOutput(Color color, string text)
-            => OutputBox.AppendText(color, text);
+            => OutputBox.Document.AppendText(color, text);
 
         private void RegisterHotkeys()
         {
@@ -89,6 +90,7 @@ namespace UI.MainWindow
                 {
                     Key.Enter, () =>
                     {
+                        if (!InterpreterBox.IsFocused) return;
                         viewModel.Evaluate(InterpreterBox.Text);
                         InterpreterBox.Text = "";
                     }
@@ -204,11 +206,9 @@ namespace UI.MainWindow
         private void ClearOutputButton_OnMouseDown(object sender, MouseButtonEventArgs e)
             => ClearOutput();
 
-        private delegate void HotkeyDelegate();
-
         private void FormatCode_OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            viewModel.Format(SourceCodeBox.Document);
-        }
+            => SourceCodeBox.Document = viewModel.Format(SourceCodeBox.Document);
+
+        private delegate void HotkeyDelegate();
     }
 }

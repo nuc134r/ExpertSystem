@@ -8,11 +8,19 @@ namespace Logikek.Language
         public Rule(string name, IEnumerable<ClauseArgument> arguments,
             SimpleCondition firstCondition, IEnumerable<ComplexCondition> conditions) : base(name, arguments)
         {
-            FirstCondition = firstCondition;
-            Conditions = conditions;
+            this.firstCondition = firstCondition;
+            otherConditions = conditions;
         }
 
-        public SimpleCondition FirstCondition { get; private set; }
-        public IEnumerable<ComplexCondition> Conditions { get; private set; }
+        private readonly SimpleCondition firstCondition;
+        private readonly IEnumerable<ComplexCondition> otherConditions;
+
+        public IEnumerable<ComplexCondition> Conditions {
+            get
+            {
+                var first = new List<ComplexCondition> {new ComplexCondition(null, firstCondition)};
+                return first.Union(otherConditions);
+            }
+        }
     }
 }

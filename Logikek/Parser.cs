@@ -8,7 +8,7 @@ using Sprache;
 
 namespace Logikek
 {
-    public static class Processor
+    public static class Parser
     {
         private static List<Fact> _facts;
         private static List<Query> _queries;

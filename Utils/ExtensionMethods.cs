@@ -1,6 +1,9 @@
 using System;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 
-namespace Core
+namespace Utils
 {
     public static class ExtensionMethods
     {
@@ -32,6 +35,18 @@ namespace Core
             }
 
             return result;
+        }
+
+        public static void AppendText(this FlowDocument document, Color color, string text)
+        {
+            var tr = new TextRange(document.ContentEnd, document.ContentEnd) { Text = text };
+            tr.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
+        }
+
+        public static void AppendText(this FlowDocument document, string text)
+        {
+            var tr = new TextRange(document.ContentEnd, document.ContentEnd) { Text = text };
+            tr.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.White));
         }
     }
 }

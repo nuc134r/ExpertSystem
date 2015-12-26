@@ -49,7 +49,7 @@
     <Compile Include="Language\RuleCondition.cs" />
     <Compile Include="Language\ConditionOperator.cs" />
     <Compile Include="ParseError.cs" />
-    <Compile Include="Processor.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="ProcessResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryResult.cs" />

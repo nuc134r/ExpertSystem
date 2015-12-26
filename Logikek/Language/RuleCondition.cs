@@ -23,13 +23,13 @@ namespace Logikek.Language
 
     public class ComplexCondition : RuleCondition
     {
-        public ComplexCondition(ConditionOperator _operator, SimpleCondition condition)
+        public ComplexCondition(ConditionOperator? _operator, SimpleCondition condition)
         {
             Operator = _operator;
             Condition = condition;
         }
 
-        public ConditionOperator Operator { get; private set; }
+        public ConditionOperator? Operator { get; private set; }
         public SimpleCondition Condition { get; private set; }
     }
 }

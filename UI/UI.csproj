@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SyntaxHighlighter.cs" />
     <Page Include="MainWindow\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -67,10 +68,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AppColors.cs" />
+    <Compile Include="Colors.cs" />
     <Compile Include="ApplicationMode.cs" />
     <Compile Include="ColorUtils.cs" />
-    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Interfaces\IMainView.cs" />
     <Compile Include="Interfaces\IMainViewModel.cs" />
     <Compile Include="MainWindow\View.xaml.cs">

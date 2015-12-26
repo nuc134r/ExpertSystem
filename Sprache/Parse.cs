@@ -326,7 +326,7 @@ namespace Sprache
                     : Result.Failure<T>(
                         s.Remainder,
                         string.Format("unexpected '{0}'", s.Remainder.Current),
-                        new[] { "end of input" }));
+                        new[] { "окончание строки" }));
         }
 
         /// <summary>
