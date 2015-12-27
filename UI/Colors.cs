@@ -11,18 +11,7 @@ namespace UI
         public static Color ActiveBoxBg => ColorUtils.HexColor("#2B2B2B");
         public static Color InactiveBoxBg => ColorUtils.HexColor("#1D1D1D");
     }
-
-    /*
-    Кот    E3E3BC
-    (      9C9C9C
-    Х      B56ED4
-    )      9C9C9C
-    :
-    Усатый BFC3F1
-    И      CDFFFF
-
-    Кот    B56ED4
-    */
+    
     public static class SyntaxColors
     {
         public static Color Rule => ColorUtils.HexColor("#E3E3BC");

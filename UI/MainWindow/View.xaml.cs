@@ -10,7 +10,7 @@ using Utils;
 
 namespace UI.MainWindow
 {
-    public partial class View : Window, IMainView
+    public partial class View : IMainView
     {
         private readonly ViewModel viewModel;
 
@@ -42,9 +42,9 @@ namespace UI.MainWindow
 
         public void IndicateLaunch()
         {
-            SourceCodeBox.Document = viewModel.Format(SourceCodeBox.Document);
+            viewModel.Format(SourceCodeBox.Document);
             AnimateModeChange(ApplicationMode.Running);
-            LaunchButtonBox.Background = new SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            LaunchButtonBox.Background = new SolidColorBrush(Colors.Transparent);
             StopButtonBox.Background = new SolidColorBrush(AppColors.RunningAccent);
             SourceCodeBox.IsReadOnly = true;
             InterpreterBox.IsReadOnly = false;
@@ -68,7 +68,7 @@ namespace UI.MainWindow
 
             AnimateModeChange(ApplicationMode.Ready);
             LaunchButtonBox.Background = glowBrush;
-            StopButtonBox.Background = new SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            StopButtonBox.Background = new SolidColorBrush(Colors.Transparent);
             InterpreterBox.IsReadOnly = true;
             SourceCodeBox.IsReadOnly = false;
             SourceCodeBox.Focus();
@@ -207,7 +207,7 @@ namespace UI.MainWindow
             => ClearOutput();
 
         private void FormatCode_OnMouseDown(object sender, MouseButtonEventArgs e)
-            => SourceCodeBox.Document = viewModel.Format(SourceCodeBox.Document);
+            => viewModel.Format(SourceCodeBox.Document);
 
         private delegate void HotkeyDelegate();
     }

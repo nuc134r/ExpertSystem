@@ -76,25 +76,25 @@ namespace UI.MainWindow
         
         private void PrintParseError(ParseError parseError)
         {
-            view.PrintOutput(System.Windows.Media.Colors.DimGray, $"Строка {parseError.Line}:{parseError.Column} ");
-            view.PrintOutput(System.Windows.Media.Colors.White, $"{parseError.Message}\n");
+            view.PrintOutput(Colors.DimGray, $"Строка {parseError.Line}:{parseError.Column} ");
+            view.PrintOutput(Colors.White, $"{parseError.Message}\n");
         }
 
         private void PrintParseError(ParseError parseError, string code)
         {
-            view.PrintOutput(System.Windows.Media.Colors.DimGray, "> ");
-            view.PrintOutput(System.Windows.Media.Colors.LightGray, $"{code}\n");
-            view.PrintOutput(System.Windows.Media.Colors.DimGray, "  Ошибка: ");
-            view.PrintOutput(System.Windows.Media.Colors.White, $"{parseError.Message}\n");
+            view.PrintOutput(Colors.DimGray, "> ");
+            view.PrintOutput(Colors.LightGray, $"{code}\n");
+            view.PrintOutput(Colors.DimGray, "  Ошибка: ");
+            view.PrintOutput(Colors.White, $"{parseError.Message}\n");
         }
 
         private void PrintQueryResult(QueryResult queryResult)
         {
             var args = queryResult.TheQuery.Arguments.Select(arg => arg.Name).ToArray();
 
-            view.PrintOutput(System.Windows.Media.Colors.DimGray, "> ");
-            view.PrintOutput(System.Windows.Media.Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
-            view.PrintOutput(System.Windows.Media.Colors.White, $"  {(queryResult.Result ? "Истина" : "Ложь")}\n");
+            view.PrintOutput(Colors.DimGray, "> ");
+            view.PrintOutput(Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
+            view.PrintOutput(Colors.White, $"  {(queryResult.Result ? "Истина" : "Ложь")}\n");
         }
 
         public void StartStop()
@@ -109,15 +109,14 @@ namespace UI.MainWindow
             }
         }
 
-        public FlowDocument Format(FlowDocument document)
+        public void Format(FlowDocument document)
         {
             var result = SyntaxHighlighter.Run(document);
-            if (ReferenceEquals(result, document))
+
+            if (result == false)
             {
                 Launch();
             }
-
-            return result;
         }
     }
 }

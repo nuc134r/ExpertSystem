@@ -153,13 +153,16 @@
                 <FlowDocument>
                     <Paragraph>
                         <Run Text="Кот(X) : Усатый(X) И Пушистый(X);" />
-                        <LineBreak />
-                        <LineBreak />
+                    </Paragraph>
+                    <Paragraph/>
+                    <Paragraph>
                         <Run Text="Усатый(Василий);" />
-                        <LineBreak />
+                    </Paragraph>
+                    <Paragraph>
                         <Run Text="Пушистый(Василий);" />
-                        <LineBreak />
-                        <LineBreak />
+                    </Paragraph>
+                    <Paragraph/>
+                    <Paragraph>
                         <Run Text="Кот(Василий)?" />
                     </Paragraph>
                 </FlowDocument>
