@@ -207,7 +207,11 @@ namespace UI.MainWindow
             => ClearOutput();
 
         private void FormatCode_OnMouseDown(object sender, MouseButtonEventArgs e)
-            => viewModel.Format(SourceCodeBox.Document);
+        {
+            SourceCodeBox.BeginChange();
+            viewModel.Format(SourceCodeBox.Document);
+            SourceCodeBox.EndChange();
+        }
 
         private delegate void HotkeyDelegate();
     }

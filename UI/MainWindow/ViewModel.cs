@@ -115,6 +115,7 @@ namespace UI.MainWindow
 
             if (result == false)
             {
+                // Знаем, что есть ошибки, запускаем ещё раз, чтобы показать их
                 Launch();
             }
         }
