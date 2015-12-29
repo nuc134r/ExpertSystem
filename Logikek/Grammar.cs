@@ -80,18 +80,21 @@ namespace Logikek
             from ws2 in Whitespace.Optional()
             from firstCondition in RuleCondition
             from nextConditions in NextRuleCondition.Many().Optional()
+            from ws3 in Whitespace.Optional()
             from semicolon in Parse.Char(';').End()
             select new Rule(name, arguments, firstCondition, nextConditions.Get());
 
         public static readonly Parser<Fact> Fact =
             from identifier in Identifier
             from arguments in Arguments
+            from ws1 in Whitespace.Optional()
             from semicolon in Parse.Char(';').End()
             select new Fact(identifier, arguments);
 
         public static readonly Parser<Query> Query =
             from identifier in Identifier
             from arguments in Arguments
+            from ws1 in Whitespace.Optional()
             from semicolon in Parse.Char('?').End()
             select new Query(identifier, arguments);
     }
