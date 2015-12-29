@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Logikek.Language;
 using Sprache;
 
@@ -70,7 +67,7 @@ namespace Logikek
 
         public static ProcessResult EvaluateQuery(string code)
         {
-            var query = Logikek.Grammar.Query.TryParse(code.Trim());
+            var query = Grammar.Query.TryParse(code.Trim());
 
             if (query.WasSuccessful)
             {
@@ -82,9 +79,18 @@ namespace Logikek
             return new ProcessResult(errorList);
         }
 
+        /*
+        ** Friends(X, Y) : Likes(X, Y) AND Likes(Y, X);
+        ** 
+        ** Likes(Tom, Sandy);
+        ** Likes(Sandy, Tom);
+        **
+        ** Friends(Tom, Sandy)?
+        */
+
         private static QueryResult ResolveQuery(Query query)
         {
-            if (query.IsSimple)
+            if (!query.HasAtoms) // Если нет атомов, то запрос простой
             {
                 // Ищем факт с именем запроса 
                 // И таким же набором аргументов (порядок важен)
@@ -92,9 +98,77 @@ namespace Logikek
                 {
                     return new QueryResult(true, query);
                 }
+
+                var matchingRules = _rules.FindAll(rule => rule.Name == query.Name
+                                                           &&
+                                                           rule.Arguments.Count == query.Arguments.Count);
+
+                // Если есть правила с именем запроса, то играем в дедукцию
+                if (matchingRules.Any())
+                {
+                    foreach (var rule in matchingRules)
+                    {
+                        bool? result = null;
+                        foreach (var condition in rule.Conditions)
+                        {
+                            var conditionArgs = ConstructArguments(rule.Arguments, condition.Condition.Arguments,
+                                query.Arguments);
+
+                            var conditionQuery = new Query(condition.Condition.Name, conditionArgs);
+
+                            var queryResult = ResolveQuery(conditionQuery).Result;
+                            if (!result.HasValue)
+                            {
+                                result = queryResult;
+                            }
+                            else if (condition.Operator == ConditionOperator.And)
+                            {
+                                result = result.Value & queryResult;
+                            }
+                            else
+                            {
+                                result = result.Value | queryResult;
+                            }
+                        }
+                        if (result.HasValue && result.Value)
+                        {
+                            return new QueryResult(true, query);
+                        }
+                    }
+                }
             }
 
             return new QueryResult(false, query);
+        }
+
+        private static List<ClauseArgument> ConstructArguments(List<ClauseArgument> ruleArgs,
+            List<ClauseArgument> conditionArgs, List<ClauseArgument> queryArgs)
+        {
+            var argumentMappings = new Dictionary<string, ClauseArgument>();
+            var counter = 0;
+            foreach (var ruleArg in ruleArgs)
+            {
+                if (ruleArg.IsAtom)
+                {
+                    argumentMappings.Add(ruleArg.Name, queryArgs.ElementAt(counter));
+                    counter++;
+                }
+            }
+
+            var result = new List<ClauseArgument>();
+            conditionArgs.ForEach(result.Add);
+
+            for (var i = 0; i < result.Count; i++)
+            {
+                if (result.ElementAt(i).IsAtom && argumentMappings.ContainsKey(result.ElementAt(i).Name))
+                {
+                    var arg = argumentMappings[result.ElementAt(i).Name];
+                    result.RemoveAt(i);
+                    result.Insert(i, arg);
+                }
+            }
+
+            return result;
         }
     }
 }

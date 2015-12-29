@@ -9,6 +9,6 @@ namespace Logikek.Language
         {
         }
 
-        public bool IsSimple => Arguments.All(arg => !arg.IsAtom);
+        public bool HasAtoms => Arguments.Any(arg => arg.IsAtom);
     }
 }
