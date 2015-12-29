@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Microsoft.Win32;
 using UI.Interfaces;
 using Utils;
 
@@ -13,16 +17,26 @@ namespace UI.MainWindow
     public partial class View : IMainView
     {
         private readonly ViewModel viewModel;
+        private bool editorHasChanges;
+
+        private SolidColorBrush glowBrush;
 
         private Dictionary<Key, HotkeyDelegate> hotkeys;
 
-        private SolidColorBrush glowBrush;
+        private string fileName;
+        private string fullFileName;
+
+        private readonly OpenFileDialog openFileDialog;
         private SolidColorBrush outputBrush;
+        private readonly SaveFileDialog saveFileDialog;
         private SolidColorBrush sourceBrush;
 
         public View()
         {
             viewModel = new ViewModel(this);
+
+            openFileDialog = new OpenFileDialog();
+            saveFileDialog = new SaveFileDialog();
 
             InitializeComponent();
             InitailizeAnimationBrushes();
@@ -42,7 +56,7 @@ namespace UI.MainWindow
 
         public void IndicateLaunch()
         {
-            viewModel.Format(SourceCodeBox.Document);
+            HighlightSyntax();
             AnimateModeChange(ApplicationMode.Running);
             LaunchButtonBox.Background = new SolidColorBrush(Colors.Transparent);
             StopButtonBox.Background = new SolidColorBrush(AppColors.RunningAccent);
@@ -114,6 +128,8 @@ namespace UI.MainWindow
 
         private void SourceCodeBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            editorHasChanges = true;
+
             var document = SourceCodeBox.Document;
             var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
             var linesCount = code.Lines();
@@ -207,10 +223,124 @@ namespace UI.MainWindow
             => ClearOutput();
 
         private void FormatCode_OnMouseDown(object sender, MouseButtonEventArgs e)
+            => HighlightSyntax();
+
+        private void HighlightSyntax(bool clearHistory = false)
         {
-            SourceCodeBox.BeginChange();
-            viewModel.Format(SourceCodeBox.Document);
-            SourceCodeBox.EndChange();
+            using (SourceCodeBox.DeclareChangeBlock())
+            {
+                viewModel.Format(SourceCodeBox.Document);
+            }
+
+            if (clearHistory)
+            {
+                SourceCodeBox.IsUndoEnabled = false;
+                SourceCodeBox.IsUndoEnabled = true;
+            }
+        }
+
+        private void NewFileButton_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (PromptSavingCurrentFile())
+            {
+                fileName = null;
+                fullFileName = null;
+                ClearSourceCode();
+                ClearOutput();
+                UpdateFilename();
+                editorHasChanges = false;
+            }
+        }
+
+        private void ClearSourceCode()
+        {
+            SourceCodeBox.Document.Blocks.Clear();
+            SourceCodeBox.Document.Blocks.Add(new Paragraph());
+        }
+
+        private void UpdateFilename()
+        {
+            Title = fileName ?? "Новый файл" + " - Logikek";
+        }
+
+        private void OpenFileButton_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!PromptSavingCurrentFile()) return;
+
+            openFileDialog.FileName = "";
+            if (openFileDialog.ShowDialog(this).Value)
+            {
+                fileName = openFileDialog.SafeFileName;
+                fullFileName = openFileDialog.FileName;
+                SourceCodeBox.Document.Blocks.Clear();
+                ClearOutput();
+                UpdateFilename();
+
+                using (var reader = new StreamReader(openFileDialog.FileName, Encoding.Default))
+                {
+                    var code = reader.ReadToEnd();
+                    SourceCodeBox.Document.AppendText(code);
+                }
+
+                HighlightSyntax(true);
+                editorHasChanges = false;
+            }
+        }
+
+        private bool PromptSavingCurrentFile()
+        {
+            if (!editorHasChanges) return true;
+            var result = MessageBox.Show($"Сохранить файл {fileName}?",
+                "Сохранение",
+                MessageBoxButton.YesNoCancel);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    return SaveFile();
+                case MessageBoxResult.Cancel:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
+        private void SaveFileButton_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SaveFile();
+        }
+
+        private bool SaveFile()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fullFileName))
+                {
+                    saveFileDialog.FileName = "";
+                    if (saveFileDialog.ShowDialog(this).Value)
+                    {
+                        fileName = saveFileDialog.SafeFileName;
+                        fullFileName = saveFileDialog.FileName;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                using (var writer = new StreamWriter(fullFileName, false, Encoding.Default))
+                {
+                    writer.Write(SourceCode);
+                }
+
+                editorHasChanges = false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка сохранения файла");
+                return false;
+            }
         }
 
         private delegate void HotkeyDelegate();
