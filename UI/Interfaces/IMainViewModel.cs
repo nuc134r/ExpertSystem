@@ -4,6 +4,7 @@ namespace UI.Interfaces
 {
     public interface IMainViewModel
     {
+        bool EditorHasChanges { get; }
         void Evaluate(string code);
         void Format(FlowDocument document);
         void Launch();
@@ -12,6 +13,5 @@ namespace UI.Interfaces
         bool SaveFile();
         void StartStop();
         void Stop();
-        void NotifyTextChange();
     }
 }

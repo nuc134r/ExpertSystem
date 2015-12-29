@@ -10,6 +10,8 @@ namespace UI
         public static Color ReadyGlowAccent => ColorUtils.HexColor("#006BB3");
         public static Color ActiveBoxBg => ColorUtils.HexColor("#2B2B2B");
         public static Color InactiveBoxBg => ColorUtils.HexColor("#1D1D1D");
+        public static Color SaveAccent => ColorUtils.HexColor("#7D8844");
+        public static Color SaveGlowAccent => ColorUtils.HexColor("#657127");
     }
     
     public static class SyntaxColors

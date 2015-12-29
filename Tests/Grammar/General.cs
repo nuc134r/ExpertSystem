@@ -21,11 +21,11 @@ namespace Tests.Grammar
         [Test]
         public void Comment()
         {
-            const string input = "/* Sample text */";
+            const string input = "// Sample text";
 
             var comment = Logikek.Grammar.Comment.Parse(input);
 
-            Assert.AreEqual(" Sample text ", comment);
+            Assert.AreEqual(" Sample text", comment);
         }
 
         [Test]

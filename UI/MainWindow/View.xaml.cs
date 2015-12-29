@@ -14,19 +14,18 @@ namespace UI.MainWindow
     {
         private readonly IMainViewModel viewModel;
 
-        private SolidColorBrush glowBrush;
-
         private Dictionary<Key, HotkeyDelegate> hotkeys;
 
-
+        private SolidColorBrush launchGlowBrush;
         private SolidColorBrush outputBrush;
         private SolidColorBrush sourceBrush;
 
         public View()
         {
+            InitializeComponent();
+
             viewModel = new ViewModel(this, this);
 
-            InitializeComponent();
             InitailizeAnimationBrushes();
             RegisterHotkeys();
             WireHandlers();
@@ -74,7 +73,7 @@ namespace UI.MainWindow
             InterpreterBox.Text = "";
 
             AnimateModeChange(ApplicationMode.Ready);
-            LaunchButtonBox.Background = glowBrush;
+            LaunchButtonBox.Background = launchGlowBrush;
             StopButtonBox.Background = new SolidColorBrush(Colors.Transparent);
             InterpreterBox.IsReadOnly = true;
             SourceCodeBox.IsReadOnly = false;
@@ -105,9 +104,8 @@ namespace UI.MainWindow
         {
             using (SourceCodeBox.DeclareChangeBlock())
             {
-                SourceCodeBox.TextChanged -= SourceCodeBox_TextChanged;
                 viewModel.Format(SourceCodeBox.Document);
-                SourceCodeBox.TextChanged += SourceCodeBox_TextChanged;
+                viewModel.SaveFile();
             }
 
             if (clearHistory)
@@ -151,8 +149,6 @@ namespace UI.MainWindow
 
         private void SourceCodeBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            viewModel.NotifyTextChange();
-
             var document = SourceCodeBox.Document;
             var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
             var linesCount = code.Lines();
@@ -206,26 +202,26 @@ namespace UI.MainWindow
 
         private void InitailizeAnimationBrushes()
         {
-            glowBrush = new SolidColorBrush();
+            launchGlowBrush = new SolidColorBrush();
             sourceBrush = new SolidColorBrush();
             outputBrush = new SolidColorBrush();
 
-            glowBrush.Color = AppColors.ReadyAccent;
+            launchGlowBrush.Color = AppColors.ReadyAccent;
             sourceBrush.Color = AppColors.ActiveBoxBg;
             outputBrush.Color = AppColors.InactiveBoxBg;
 
-            LaunchButtonBox.Background = glowBrush;
+            LaunchButtonBox.Background = launchGlowBrush;
             SourceCodeWindow.Background = sourceBrush;
             OutputWindow.Background = outputBrush;
 
-            RegisterName("glowBrush", glowBrush);
+            RegisterName("launchGlowBrush", launchGlowBrush);
             RegisterName("sourceBrush", sourceBrush);
             RegisterName("outputBrush", outputBrush);
 
-            var glowAnimation = ColorUtils.CreateColorAnimation(AppColors.ReadyAccent, AppColors.ReadyGlowAccent,
-                "glowBrush", false, autoreverse: true, repeat: true, durationMs: 1500);
+            var launchGlowAnimation = ColorUtils.CreateColorAnimation(AppColors.ReadyAccent, AppColors.ReadyGlowAccent,
+                "launchGlowBrush", false, autoreverse: true, repeat: true, durationMs: 1500);
             var sb = new Storyboard();
-            sb.Children.Add(glowAnimation);
+            sb.Children.Add(launchGlowAnimation);
 
             sb.Begin(this);
         }
@@ -253,7 +249,7 @@ namespace UI.MainWindow
 
         private void OpenFileButton_OnMouseDown(object sender, MouseButtonEventArgs e)
             => viewModel.OpenFile();
-        
+
         private void SaveFileButton_OnMouseDown(object sender, MouseButtonEventArgs e)
             => viewModel.SaveFile();
 

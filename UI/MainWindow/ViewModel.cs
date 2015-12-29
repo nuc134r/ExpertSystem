@@ -20,7 +20,9 @@ namespace UI.MainWindow
 
         private string fileName;
         private string fullFileName;
-        private bool editorHasChanges;
+        private string originalCode;
+
+        public bool EditorHasChanges => view.SourceCodeText != originalCode;
 
         private readonly OpenFileDialog openFileDialog;
         private readonly SaveFileDialog saveFileDialog;
@@ -29,6 +31,8 @@ namespace UI.MainWindow
         {
             this.view = view;
             this.viewWindow = viewWindow;
+
+            originalCode = view.SourceCodeText;
 
             openFileDialog = new OpenFileDialog();
             saveFileDialog = new SaveFileDialog();
@@ -91,11 +95,6 @@ namespace UI.MainWindow
             }
         }
 
-        public void NotifyTextChange()
-        {
-            editorHasChanges = true;
-        }
-
         private void PrintParseError(ParseError parseError)
         {
             view.PrintOutput(Colors.DimGray, $"Строка {parseError.Line}:{parseError.Column} ");
@@ -116,7 +115,14 @@ namespace UI.MainWindow
 
             view.PrintOutput(Colors.DimGray, "> ");
             view.PrintOutput(Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
-            view.PrintOutput(Colors.White, $"  {(queryResult.Result ? "Истина" : "Ложь")}\n");
+            if (queryResult.Result)
+            {
+                view.PrintOutput(Colors.LightGreen, $"  Истина\n");
+            }
+            else
+            {
+                view.PrintOutput(Colors.LightCoral, $"  Ложь\n");
+            }
         }
 
         public void StartStop()
@@ -162,10 +168,10 @@ namespace UI.MainWindow
 
                 using (var writer = new StreamWriter(fullFileName, false, Encoding.Default))
                 {
+                    originalCode = view.SourceCodeText;
                     writer.Write(view.SourceCodeText);
                 }
-
-                editorHasChanges = false;
+                
                 return true;
             }
             catch (Exception ex)
@@ -184,7 +190,7 @@ namespace UI.MainWindow
                 view.ClearSourceCode();
                 view.ClearOutput();
                 view.UpdateFilename(fileName);
-                editorHasChanges = false;
+                originalCode = view.SourceCodeText;
             }
         }
 
@@ -207,13 +213,13 @@ namespace UI.MainWindow
                 }
 
                 view.HighlightSyntax(true);
-                editorHasChanges = false;
+                originalCode = view.SourceCodeText;
             }
         }
 
         private bool PromptSavingCurrentFile()
         {
-            if (!editorHasChanges) return true;
+            if (!EditorHasChanges || string.IsNullOrEmpty(view.SourceCodeText.Trim())) return true;
             var result = MessageBox.Show($"Сохранить файл {fileName}?",
                 "Сохранение",
                 MessageBoxButton.YesNoCancel);
