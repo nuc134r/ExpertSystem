@@ -4,7 +4,7 @@ namespace UI.Interfaces
 {
     public interface IMainView
     {
-        string SourceCode { get; }
+        string SourceCodeText { get; set; }
 
         void IndicateErrorsOccurence();
         void ClearOutput();
@@ -12,5 +12,8 @@ namespace UI.Interfaces
         void IndicateStop();
         void InitializeComponent();
         void PrintOutput(Color color, string text);
+        void UpdateFilename(string fileName);
+        void HighlightSyntax(bool clearHistory);
+        void ClearSourceCode(bool deep = false);
     }
 }

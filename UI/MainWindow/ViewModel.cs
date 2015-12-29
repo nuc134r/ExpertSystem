@@ -1,7 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using Logikek;
+using Microsoft.Win32;
 using UI.Interfaces;
 
 namespace UI.MainWindow
@@ -9,12 +14,24 @@ namespace UI.MainWindow
     public class ViewModel : IMainViewModel
     {
         private readonly IMainView view;
+        private readonly Window viewWindow;
 
         private bool isRunning;
 
-        public ViewModel(IMainView view)
+        private string fileName;
+        private string fullFileName;
+        private bool editorHasChanges;
+
+        private readonly OpenFileDialog openFileDialog;
+        private readonly SaveFileDialog saveFileDialog;
+
+        public ViewModel(IMainView view, Window viewWindow)
         {
             this.view = view;
+            this.viewWindow = viewWindow;
+
+            openFileDialog = new OpenFileDialog();
+            saveFileDialog = new SaveFileDialog();
         }
 
         public void Launch()
@@ -23,7 +40,7 @@ namespace UI.MainWindow
             {
                 view.ClearOutput();
 
-                var code = view.SourceCode;
+                var code = view.SourceCodeText;
                 var result = Parser.Run(code);
 
                 if (result.WasSuccessful)
@@ -73,7 +90,12 @@ namespace UI.MainWindow
                 isRunning = false;
             }
         }
-        
+
+        public void NotifyTextChange()
+        {
+            editorHasChanges = true;
+        }
+
         private void PrintParseError(ParseError parseError)
         {
             view.PrintOutput(Colors.DimGray, $"Строка {parseError.Line}:{parseError.Column} ");
@@ -117,6 +139,93 @@ namespace UI.MainWindow
             {
                 // Знаем, что есть ошибки, запускаем ещё раз, чтобы показать их
                 Launch();
+            }
+        }
+
+        public bool SaveFile()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fullFileName))
+                {
+                    saveFileDialog.FileName = "";
+                    if (saveFileDialog.ShowDialog(viewWindow).Value)
+                    {
+                        fileName = saveFileDialog.SafeFileName;
+                        fullFileName = saveFileDialog.FileName;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                using (var writer = new StreamWriter(fullFileName, false, Encoding.Default))
+                {
+                    writer.Write(view.SourceCodeText);
+                }
+
+                editorHasChanges = false;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка сохранения файла");
+                return false;
+            }
+        }
+
+        public void NewFile()
+        {
+            if (PromptSavingCurrentFile())
+            {
+                fileName = null;
+                fullFileName = null;
+                view.ClearSourceCode();
+                view.ClearOutput();
+                view.UpdateFilename(fileName);
+                editorHasChanges = false;
+            }
+        }
+
+        public void OpenFile()
+        {
+            if (!PromptSavingCurrentFile()) return;
+
+            openFileDialog.FileName = "";
+            if (openFileDialog.ShowDialog(viewWindow).Value)
+            {
+                fileName = openFileDialog.SafeFileName;
+                fullFileName = openFileDialog.FileName;
+                view.SourceCodeText = "";
+                view.ClearOutput();
+                view.UpdateFilename(fileName);
+
+                using (var reader = new StreamReader(openFileDialog.FileName, Encoding.Default))
+                {
+                    view.SourceCodeText = reader.ReadToEnd();
+                }
+
+                view.HighlightSyntax(true);
+                editorHasChanges = false;
+            }
+        }
+
+        private bool PromptSavingCurrentFile()
+        {
+            if (!editorHasChanges) return true;
+            var result = MessageBox.Show($"Сохранить файл {fileName}?",
+                "Сохранение",
+                MessageBoxButton.YesNoCancel);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    return SaveFile();
+                case MessageBoxResult.Cancel:
+                    return false;
+                default:
+                    return true;
             }
         }
     }
