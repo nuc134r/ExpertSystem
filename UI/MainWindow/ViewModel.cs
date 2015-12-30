@@ -13,19 +13,16 @@ namespace UI.MainWindow
 {
     public class ViewModel : IMainViewModel
     {
+        private readonly OpenFileDialog openFileDialog;
+        private readonly SaveFileDialog saveFileDialog;
         private readonly IMainView view;
         private readonly Window viewWindow;
 
-        private bool isRunning;
-
         private string fileName;
         private string fullFileName;
+
+        private bool isRunning;
         private string originalCode;
-
-        public bool EditorHasChanges => view.SourceCodeText != originalCode;
-
-        private readonly OpenFileDialog openFileDialog;
-        private readonly SaveFileDialog saveFileDialog;
 
         public ViewModel(IMainView view, Window viewWindow)
         {
@@ -34,9 +31,17 @@ namespace UI.MainWindow
 
             originalCode = view.SourceCodeText;
 
-            openFileDialog = new OpenFileDialog();
-            saveFileDialog = new SaveFileDialog();
+            openFileDialog = new OpenFileDialog
+            {
+                Filter = "База знаний Logikek (*.kek)|*.kek"
+            };
+            saveFileDialog = new SaveFileDialog
+            {
+                Filter = "База знаний Logikek (*.kek)|*.kek"
+            };
         }
+
+        public bool EditorHasChanges => view.SourceCodeText != originalCode;
 
         public void Launch()
         {
@@ -95,36 +100,6 @@ namespace UI.MainWindow
             }
         }
 
-        private void PrintParseError(ParseError parseError)
-        {
-            view.PrintOutput(Colors.DimGray, $"Строка {parseError.Line}:{parseError.Column} ");
-            view.PrintOutput(Colors.White, $"{parseError.Message}\n");
-        }
-
-        private void PrintParseError(ParseError parseError, string code)
-        {
-            view.PrintOutput(Colors.DimGray, "> ");
-            view.PrintOutput(Colors.LightGray, $"{code}\n");
-            view.PrintOutput(Colors.DimGray, "  Ошибка: ");
-            view.PrintOutput(Colors.White, $"{parseError.Message}\n");
-        }
-
-        private void PrintQueryResult(QueryResult queryResult)
-        {
-            var args = queryResult.TheQuery.Arguments.Select(arg => arg.Name).ToArray();
-
-            view.PrintOutput(Colors.DimGray, "> ");
-            view.PrintOutput(Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
-            if (queryResult.Result)
-            {
-                view.PrintOutput(Colors.LightGreen, $"  Истина\n");
-            }
-            else
-            {
-                view.PrintOutput(Colors.LightCoral, $"  Ложь\n");
-            }
-        }
-
         public void StartStop()
         {
             if (!isRunning)
@@ -150,12 +125,20 @@ namespace UI.MainWindow
 
         public bool SaveFile()
         {
+            if (isRunning)
+            {
+                MessageBox.Show("Невозможно сохранить файл при запущенном интерпретаторе", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
             try
             {
                 if (string.IsNullOrEmpty(fullFileName))
                 {
                     saveFileDialog.FileName = "";
-                    if (saveFileDialog.ShowDialog(viewWindow).Value)
+
+                    var result = saveFileDialog.ShowDialog(viewWindow);
+                    if (result.Value)
                     {
                         fileName = saveFileDialog.SafeFileName;
                         fullFileName = saveFileDialog.FileName;
@@ -171,7 +154,7 @@ namespace UI.MainWindow
                     originalCode = view.SourceCodeText;
                     writer.Write(view.SourceCodeText);
                 }
-                
+
                 return true;
             }
             catch (Exception ex)
@@ -183,6 +166,12 @@ namespace UI.MainWindow
 
         public void NewFile()
         {
+            if (isRunning)
+            {
+                MessageBox.Show("Невозможно создать файл при запущенном интерпретаторе", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (PromptSavingCurrentFile())
             {
                 fileName = null;
@@ -196,6 +185,12 @@ namespace UI.MainWindow
 
         public void OpenFile()
         {
+            if (isRunning)
+            {
+                MessageBox.Show("Невозможно открыть файл при запущенном интерпретаторе", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (!PromptSavingCurrentFile()) return;
 
             openFileDialog.FileName = "";
@@ -214,6 +209,36 @@ namespace UI.MainWindow
 
                 view.HighlightSyntax(true);
                 originalCode = view.SourceCodeText;
+            }
+        }
+
+        private void PrintParseError(ParseError parseError)
+        {
+            view.PrintOutput(Colors.DimGray, $"Строка {parseError.Line}:{parseError.Column} ");
+            view.PrintOutput(Colors.White, $"{parseError.Message}\n");
+        }
+
+        private void PrintParseError(ParseError parseError, string code)
+        {
+            view.PrintOutput(Colors.DimGray, "> ");
+            view.PrintOutput(Colors.LightGray, $"{code}\n");
+            view.PrintOutput(Colors.DimGray, "  Ошибка: ");
+            view.PrintOutput(Colors.White, $"{parseError.Message}\n");
+        }
+
+        private void PrintQueryResult(QueryResult queryResult)
+        {
+            var args = queryResult.TheQuery.Arguments.Select(arg => arg.Name).ToArray();
+
+            view.PrintOutput(Colors.DimGray, "> ");
+            view.PrintOutput(Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
+            if (queryResult.Result)
+            {
+                view.PrintOutput(Colors.LightGreen, "  Истина\n");
+            }
+            else
+            {
+                view.PrintOutput(Colors.LightCoral, "  Ложь\n");
             }
         }
 

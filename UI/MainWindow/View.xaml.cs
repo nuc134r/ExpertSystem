@@ -97,7 +97,7 @@ namespace UI.MainWindow
 
         public void UpdateFilename(string fileName)
         {
-            Title = fileName ?? "Новый файл" + " - Logikek";
+            Title = (fileName ?? "Новый файл") + " - Logikek";
         }
 
         public void HighlightSyntax(bool clearHistory = false)
@@ -105,7 +105,6 @@ namespace UI.MainWindow
             using (SourceCodeBox.DeclareChangeBlock())
             {
                 viewModel.Format(SourceCodeBox.Document);
-                viewModel.SaveFile();
             }
 
             if (clearHistory)
