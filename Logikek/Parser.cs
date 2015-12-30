@@ -90,8 +90,9 @@ namespace Logikek
 
         private static QueryResult ResolveQuery(Query query)
         {
-            if (!query.HasAtoms) // Если нет атомов, то запрос простой
+            if (!query.HasAtoms) // Если нет атомов, то запрос простой (возвращает true или false)
             {
+                // Первый путь -- самый наивный
                 // Ищем факт с именем запроса 
                 // И таким же набором аргументов (порядок важен)
                 if (_facts.Any(fact => fact.Name == query.Name && fact.Arguments.SequenceEqual(query.Arguments)))
@@ -99,38 +100,34 @@ namespace Logikek
                     return new QueryResult(true, query);
                 }
 
+                // Второй путь -- найти все правила с именем запроса 
+                // И аналогичным количеством аргументов
                 var matchingRules = _rules.FindAll(rule => rule.Name == query.Name
                                                            &&
                                                            rule.Arguments.Count == query.Arguments.Count);
 
-                // Если есть правила с именем запроса, то играем в дедукцию
+                // Если есть такие правила, то играем в дедукцию
+                // Подставляем каждому правилу вместо атомов аргументы запроса 
+                // И рекурсивно вычисляем каждое значение
                 if (matchingRules.Any())
                 {
                     foreach (var rule in matchingRules)
                     {
-                        bool? result = null;
+                        bool? finalResult = null;
                         foreach (var condition in rule.Conditions)
                         {
+                            // Подставляем вместо атомов аргументы запроса
                             var conditionArgs = ConstructArguments(rule.Arguments, condition.Condition.Arguments,
                                 query.Arguments);
 
+                            // Вычисляем значение запроса
                             var conditionQuery = new Query(condition.Condition.Name, conditionArgs);
-
                             var queryResult = ResolveQuery(conditionQuery).Result;
-                            if (!result.HasValue)
-                            {
-                                result = queryResult;
-                            }
-                            else if (condition.Operator == ConditionOperator.And)
-                            {
-                                result = result.Value & queryResult;
-                            }
-                            else
-                            {
-                                result = result.Value | queryResult;
-                            }
+
+                            // Применяем логический оператор
+                            finalResult = ApplyLogicalOperator(finalResult, condition.Operator, queryResult);
                         }
-                        if (result.HasValue && result.Value)
+                        if (finalResult.HasValue && finalResult.Value)
                         {
                             return new QueryResult(true, query);
                         }
@@ -139,6 +136,23 @@ namespace Logikek
             }
 
             return new QueryResult(false, query);
+        }
+
+        private static bool ApplyLogicalOperator(bool? v1, ConditionOperator? @operator, bool v2)
+        {
+            if (v1 == null)
+            {
+                return v2;
+            }
+
+            if (@operator == ConditionOperator.And)
+            {
+                return v1.Value & v2;
+            }
+            else
+            {
+                return v1.Value | v2;
+            }
         }
 
         private static List<ClauseArgument> ConstructArguments(List<ClauseArgument> ruleArgs,
