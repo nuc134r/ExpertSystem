@@ -79,11 +79,22 @@ namespace Logikek
             return new ProcessResult(errorList);
         }
 
+        /*
+        **              <<  Reference  >>
+        **
+        ** Friends(X, Y) : Likes(X, Y) AND Likes(Y, X);
+        ** 
+        ** Likes(Tom, Sandy);
+        ** Likes(Sandy, Tom);
+        **
+        ** Friends(Tom, X)?
+        */
+
         private static QueryResult ResolveQuery(Query query)
         {
             if (!query.HasAtoms) // Если нет атомов, то запрос простой (возвращает true или false)
             {
-                // Первый путь -- самый наивный
+                // Попытка 1:
                 // Ищем факт с именем запроса 
                 // И таким же набором аргументов (порядок важен)
                 if (_facts.Any(fact => fact.Name == query.Name && fact.Arguments.SequenceEqual(query.Arguments)))
@@ -91,7 +102,8 @@ namespace Logikek
                     return new QueryResult(true, query);
                 }
 
-                // Второй путь -- найти все правила с именем запроса 
+                // Попытка 2:
+                // Найти все правила с именем запроса 
                 // И аналогичным количеством аргументов
                 var matchingRules = _rules.FindAll(rule => rule.Name == query.Name
                                                            &&
@@ -99,7 +111,7 @@ namespace Logikek
 
                 // Если есть такие правила, то играем в дедукцию
                 // Подставляем каждому правилу вместо атомов аргументы запроса 
-                // И рекурсивно вычисляем каждое значение
+                // И рекурсивно вычисляем каждое условие
                 if (matchingRules.Any())
                 {
                     foreach (var rule in matchingRules)
@@ -127,17 +139,13 @@ namespace Logikek
                         }
                     }
                 }
+
+                // Попытка 3:
+                // Не помогла дедукция -- не беда, пробуем индукцию
+                // Ищем все правила, в которых наш запрос содержится в качестве условия
+                // TODO
+
             }
-
-            /*
-            ** Friends(X, Y) : Likes(X, Y) AND Likes(Y, X);
-            ** 
-            ** Likes(Tom, Sandy);
-            ** Likes(Sandy, Tom);
-            **
-            ** Friends(Tom, X)?
-            */
-
             else // Атомы есть
             {
                 var solutions = new List<Dictionary<string, string>>();
@@ -147,7 +155,7 @@ namespace Logikek
                 var matchingFacts = _facts.FindAll(fact => fact.Name == query.Name
                                                            &&
                                                            fact.Arguments.Count == query.Arguments.Count)
-                    // Взять только те, у которых идентичны аргументы
+                    // И взять только те, у которых идентичны аргументы, не являющиеся атомами
                     .Where(fact => CompareArgumentsIgnoringAtoms(query.Arguments, fact.Arguments));
 
                 foreach (var fact in matchingFacts)
@@ -164,6 +172,11 @@ namespace Logikek
                     }
                 }
 
+                // Шаг 2:
+                // Пытаемся вычислить все правила с именем запроса
+                // TODO
+
+
                 return new QueryResult(solutions.Any(), query, solutions);
             }
 
@@ -172,6 +185,8 @@ namespace Logikek
 
         private static bool CompareArgumentsIgnoringAtoms(List<ClauseArgument> original, List<ClauseArgument> another)
         {
+            // Каждый элемент первого списка должен быть равен 
+            // элементу второго списка (или быть атомом)
             return !original.Where((t, i) => !original.ElementAt(i).IsAtom 
                                              && 
                                              original.ElementAt(i).Name != another.ElementAt(i).Name)
