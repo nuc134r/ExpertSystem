@@ -232,13 +232,39 @@ namespace UI.MainWindow
 
             view.PrintOutput(Colors.DimGray, "> ");
             view.PrintOutput(Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
-            if (queryResult.Result)
+            if (queryResult.Solutions != null)
             {
-                view.PrintOutput(Colors.LightGreen, "  Истина\n");
+                if (queryResult.Solutions.Any())
+                {
+                    var c = queryResult.Solutions.Count;
+                    view.PrintOutput(Colors.DimGray, $"  {c} решени{(c == 1 ? "е" : (c < 5 ? "я" : "й"))}\n");
+                    foreach (var solution in queryResult.Solutions)
+                    {
+                        view.PrintOutput(SyntaxColors.Atom, "  ");
+                        foreach (var atom in solution.Keys)
+                        {
+                            var value = solution[atom];
+                            view.PrintOutput(SyntaxColors.Atom, $"{atom}");
+                            view.PrintOutput(Colors.White, $" = {value}{(atom == solution.Keys.Last() ? "" : ", ")}");
+                        }
+                        view.PrintOutput(Colors.White, "\n");
+                    }
+                }
+                else
+                {
+                    view.PrintOutput(Colors.LightCoral, "  Решений нет\n");
+                }
             }
             else
             {
-                view.PrintOutput(Colors.LightCoral, "  Ложь\n");
+                if (queryResult.Result)
+                {
+                    view.PrintOutput(Colors.LightGreen, "  Истина\n");
+                }
+                else
+                {
+                    view.PrintOutput(Colors.LightCoral, "  Ложь\n");
+                }
             }
         }
 

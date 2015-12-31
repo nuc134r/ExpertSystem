@@ -79,15 +79,6 @@ namespace Logikek
             return new ProcessResult(errorList);
         }
 
-        /*
-        ** Friends(X, Y) : Likes(X, Y) AND Likes(Y, X);
-        ** 
-        ** Likes(Tom, Sandy);
-        ** Likes(Sandy, Tom);
-        **
-        ** Friends(Tom, Sandy)?
-        */
-
         private static QueryResult ResolveQuery(Query query)
         {
             if (!query.HasAtoms) // Если нет атомов, то запрос простой (возвращает true или false)
@@ -124,6 +115,9 @@ namespace Logikek
                             var conditionQuery = new Query(condition.Condition.Name, conditionArgs);
                             var queryResult = ResolveQuery(conditionQuery).Result;
 
+                            if (condition.Condition.IsNegated)
+                                queryResult = !queryResult;
+
                             // Применяем логический оператор
                             finalResult = ApplyLogicalOperator(finalResult, condition.Operator, queryResult);
                         }
@@ -135,7 +129,53 @@ namespace Logikek
                 }
             }
 
+            /*
+            ** Friends(X, Y) : Likes(X, Y) AND Likes(Y, X);
+            ** 
+            ** Likes(Tom, Sandy);
+            ** Likes(Sandy, Tom);
+            **
+            ** Friends(Tom, X)?
+            */
+
+            else // Атомы есть
+            {
+                var solutions = new List<Dictionary<string, string>>();
+
+                // Шаг 1:
+                // Найти все факты с именем запроса и нужным количеством аргументов
+                var matchingFacts = _facts.FindAll(fact => fact.Name == query.Name
+                                                           &&
+                                                           fact.Arguments.Count == query.Arguments.Count)
+                    // Взять только те, у которых идентичны аргументы
+                    .Where(fact => CompareArgumentsIgnoringAtoms(query.Arguments, fact.Arguments));
+
+                foreach (var fact in matchingFacts)
+                {
+                    solutions.Add(new Dictionary<string, string>());
+                    for (var i = 0; i < query.Arguments.Count; i++)
+                    {
+                        var arg = query.Arguments.ElementAt(i);
+                        if (arg.IsAtom)
+                        {
+                            var solution = fact.Arguments.ElementAt(i);
+                            solutions.Last().Add(arg.Name, solution.Name);
+                        }
+                    }
+                }
+
+                return new QueryResult(solutions.Any(), query, solutions);
+            }
+
             return new QueryResult(false, query);
+        }
+
+        private static bool CompareArgumentsIgnoringAtoms(List<ClauseArgument> original, List<ClauseArgument> another)
+        {
+            return !original.Where((t, i) => !original.ElementAt(i).IsAtom 
+                                             && 
+                                             original.ElementAt(i).Name != another.ElementAt(i).Name)
+                                             .Any();
         }
 
         private static bool ApplyLogicalOperator(bool? v1, ConditionOperator? @operator, bool v2)
@@ -149,10 +189,7 @@ namespace Logikek
             {
                 return v1.Value & v2;
             }
-            else
-            {
-                return v1.Value | v2;
-            }
+            return v1.Value | v2;
         }
 
         private static List<ClauseArgument> ConstructArguments(List<ClauseArgument> ruleArgs,
