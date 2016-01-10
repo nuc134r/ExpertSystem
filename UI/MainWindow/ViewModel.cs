@@ -50,7 +50,17 @@ namespace UI.MainWindow
                 view.ClearOutput();
 
                 var code = view.SourceCodeText;
-                var result = Parser.Run(code);
+
+                ProcessResult result;
+                try
+                {
+                    result = Parser.Run(code);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
 
                 if (result.WasSuccessful)
                 {
@@ -142,6 +152,7 @@ namespace UI.MainWindow
                     {
                         fileName = saveFileDialog.SafeFileName;
                         fullFileName = saveFileDialog.FileName;
+                        view.UpdateFilename(fileName);
                     }
                     else
                     {

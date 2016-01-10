@@ -7,6 +7,8 @@ namespace Logikek
 {
     public static class Parser
     {
+        private static List<string> _knownSymbols; 
+
         private static List<Fact> _facts;
         private static List<Query> _queries;
         private static List<Rule> _rules;
@@ -18,6 +20,7 @@ namespace Logikek
             _facts = new List<Fact>();
             _queries = new List<Query>();
             _rules = new List<Rule>();
+            _knownSymbols = new List<string>();
 
             var lines = code.Split('\n').Select(line => line.Trim());
 
@@ -79,19 +82,10 @@ namespace Logikek
             return new ProcessResult(errorList);
         }
 
-        /*
-        **              <<  Reference  >>
-        **
-        ** Friends(X, Y) : Likes(X, Y) AND Likes(Y, X);
-        ** 
-        ** Likes(Tom, Sandy);
-        ** Likes(Sandy, Tom);
-        **
-        ** Friends(Tom, X)?
-        */
-
         private static QueryResult ResolveQuery(Query query)
         {
+            //known symbol all in 1uery
+
             if (!query.HasAtoms) // Если нет атомов, то запрос простой (возвращает true или false)
             {
                 // Попытка 1:
@@ -120,8 +114,8 @@ namespace Logikek
                         foreach (var condition in rule.Conditions)
                         {
                             // Подставляем вместо атомов аргументы запроса
-                            var conditionArgs = ConstructArguments(rule.Arguments, condition.Condition.Arguments,
-                                query.Arguments);
+                            var conditionArgs = ReplaceAtomsWithNames(rule.Arguments, query.Arguments,
+                                condition.Condition.Arguments);
 
                             // Вычисляем значение запроса
                             var conditionQuery = new Query(condition.Condition.Name, conditionArgs);
@@ -140,11 +134,49 @@ namespace Logikek
                     }
                 }
 
+                /*
+                Знакомы(А, Б, В) : Знакомы(А, Б) И Знакомы(Б, В) И Знакомы(А, В);
+
+                Знакомы(Саша, Ваня, Маша);
+
+                Знакомы(Ваня, Маша)?
+                */
+
                 // Попытка 3:
                 // Не помогла дедукция -- не беда, пробуем индукцию
                 // Ищем все правила, в которых наш запрос содержится в качестве условия
-                // TODO
+                var containingRules = _rules.Where(rule => rule.Conditions.Any(cnd => cnd.Condition.Name == query.Name
+                                                                                      &&
+                                                                                      cnd.Condition.Arguments.Count ==
+                                                                                      query.Arguments.Count))
+                    // Отсеиваем правила, которые содержат условия с оператором ИЛИ
+                    .Where(rule => rule.Conditions.All(cnd => cnd.Operator != ConditionOperator.Or));
 
+                foreach (var rule in containingRules)
+                {
+                    foreach (var condition in rule.Conditions)
+                    {
+                        if (condition.Condition.Name == query.Name && condition.Condition.Arguments.Count ==
+                            query.Arguments.Count)
+                        {
+                            if (CompareArgumentsIgnoringAtoms(condition.Condition.Arguments, query.Arguments))
+                            {
+                                var nextQuery = new Query(rule.Name,
+                                    ReplaceAtomsWithNames(condition.Condition.Arguments, query.Arguments, rule.Arguments));
+
+                                //if (query.Name = query)
+
+                                var result = ResolveQuery(nextQuery);
+
+                                // Хитрота
+                                if (result.Result != condition.Condition.IsNegated)
+                                {
+                                    return new QueryResult(true, query);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             else // Атомы есть
             {
@@ -187,10 +219,10 @@ namespace Logikek
         {
             // Каждый элемент первого списка должен быть равен 
             // элементу второго списка (или быть атомом)
-            return !original.Where((t, i) => !original.ElementAt(i).IsAtom 
-                                             && 
+            return !original.Where((t, i) => !original.ElementAt(i).IsAtom
+                                             &&
                                              original.ElementAt(i).Name != another.ElementAt(i).Name)
-                                             .Any();
+                .Any();
         }
 
         private static bool ApplyLogicalOperator(bool? v1, ConditionOperator? @operator, bool v2)
@@ -207,22 +239,22 @@ namespace Logikek
             return v1.Value | v2;
         }
 
-        private static List<ClauseArgument> ConstructArguments(List<ClauseArgument> ruleArgs,
-            List<ClauseArgument> conditionArgs, List<ClauseArgument> queryArgs)
+        private static List<ClauseArgument> ReplaceAtomsWithNames(List<ClauseArgument> atoms,
+            List<ClauseArgument> names, List<ClauseArgument> @in)
         {
             var argumentMappings = new Dictionary<string, ClauseArgument>();
             var counter = 0;
-            foreach (var ruleArg in ruleArgs)
+            foreach (var ruleArg in atoms)
             {
                 if (ruleArg.IsAtom)
                 {
-                    argumentMappings.Add(ruleArg.Name, queryArgs.ElementAt(counter));
-                    counter++;
+                    argumentMappings.Add(ruleArg.Name, names.ElementAt(counter));
                 }
+                counter++;
             }
 
             var result = new List<ClauseArgument>();
-            conditionArgs.ForEach(result.Add);
+            @in.ForEach(result.Add);
 
             for (var i = 0; i < result.Count; i++)
             {
