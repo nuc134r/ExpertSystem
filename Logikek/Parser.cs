@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Logikek.Language;
 using Sprache;
@@ -8,23 +7,21 @@ namespace Logikek
 {
     public static class Parser
     {
-        private static List<string> _knownSymbols; 
-
         private static List<Fact> _facts;
         private static List<Query> _queries;
         private static List<Rule> _rules;
 
-        // Верхняя граница количества рекурсивных вызовов, после которой запрос считается неразрешимым
-        private const int max_recourse = 50;
+        private static Dictionary<Query, QueryResult> _cache;
 
         public static ProcessResult Run(string code)
         {
+            _cache = new Dictionary<Query, QueryResult>();
+
             var errors = new List<ParseError>();
 
             _facts = new List<Fact>();
             _queries = new List<Query>();
             _rules = new List<Rule>();
-            _knownSymbols = new List<string>();
 
             var lines = code.Split('\n').Select(line => line.Trim());
 
@@ -87,12 +84,20 @@ namespace Logikek
             return new ProcessResult(errorList);
         }
 
-        private static QueryResult ResolveQuery(Query query, int recoursiveness = 0)
+        private static QueryResult AddToCacheAndReturn(Query query, QueryResult result)
         {
-            if (recoursiveness > max_recourse)
+            _cache[query] = result;
+            return result;
+        }
+
+        private static QueryResult ResolveQuery(Query query)
+        {
+            if (_cache.ContainsKey(query))
             {
-                return new QueryResult(false, query);
+                return _cache[query];
             }
+
+            _cache.Add(query, null);
 
             if (!query.HasAtoms) // Если нет атомов, то запрос простой (возвращает true или false)
             {
@@ -101,7 +106,7 @@ namespace Logikek
                 // И таким же набором аргументов (порядок важен)
                 if (_facts.Any(fact => fact.Name == query.Name && fact.Arguments.SequenceEqual(query.Arguments)))
                 {
-                    return new QueryResult(true, query);
+                    return AddToCacheAndReturn(query, new QueryResult(true, query));
                 }
 
                 // Попытка 2:
@@ -127,7 +132,20 @@ namespace Logikek
 
                             // Вычисляем значение запроса
                             var conditionQuery = new Query(condition.Condition.Name, conditionArgs);
-                            var queryResult = ResolveQuery(conditionQuery, recoursiveness + 1).Result;
+
+                            bool queryResult;
+                            if (_cache.ContainsKey(conditionQuery))
+                            {
+                                if (_cache[query] == null)
+                                {
+                                    return AddToCacheAndReturn(query, new QueryResult(false, query));
+                                }
+                                queryResult = _cache[query].Result;
+                            }
+                            else
+                            {
+                                queryResult = ResolveQuery(conditionQuery).Result;
+                            }
 
                             if (condition.Condition.IsNegated)
                                 queryResult = !queryResult;
@@ -137,7 +155,7 @@ namespace Logikek
                         }
                         if (finalResult.HasValue && finalResult.Value)
                         {
-                            return new QueryResult(true, query);
+                            return AddToCacheAndReturn(query, new QueryResult(true, query));
                         }
                     }
                 }
@@ -171,12 +189,24 @@ namespace Logikek
                             {
                                 var nextQuery = new Query(rule.Name,
                                     ReplaceAtomsWithNames(condition.Condition.Arguments, query.Arguments, rule.Arguments));
-                                
-                                var result = ResolveQuery(nextQuery, recoursiveness + 1);
-                                
+
+                                QueryResult result;
+                                if (_cache.ContainsKey(nextQuery))
+                                {
+                                    if (_cache[nextQuery] == null)
+                                    {
+                                        return AddToCacheAndReturn(query, new QueryResult(false, query));
+                                    }
+                                    result = _cache[nextQuery];
+                                }
+                                else
+                                {
+                                    result = ResolveQuery(nextQuery);
+                                }
+
                                 if (result.Result != condition.Condition.IsNegated)
                                 {
-                                    return new QueryResult(true, query);
+                                    return AddToCacheAndReturn(query, new QueryResult(true, query));
                                 }
                             }
                         }
