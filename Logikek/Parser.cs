@@ -14,6 +14,9 @@ namespace Logikek
         private static List<Query> _queries;
         private static List<Rule> _rules;
 
+        // Верхняя граница количества рекурсивных вызовов, после которой запрос считается неразрешимым
+        private const int max_recourse = 50;
+
         public static ProcessResult Run(string code)
         {
             var errors = new List<ParseError>();
@@ -84,9 +87,12 @@ namespace Logikek
             return new ProcessResult(errorList);
         }
 
-        private static QueryResult ResolveQuery(Query query)
+        private static QueryResult ResolveQuery(Query query, int recoursiveness = 0)
         {
-            //known symbol all in 1uery
+            if (recoursiveness > max_recourse)
+            {
+                return new QueryResult(false, query);
+            }
 
             if (!query.HasAtoms) // Если нет атомов, то запрос простой (возвращает true или false)
             {
@@ -121,7 +127,7 @@ namespace Logikek
 
                             // Вычисляем значение запроса
                             var conditionQuery = new Query(condition.Condition.Name, conditionArgs);
-                            var queryResult = ResolveQuery(conditionQuery).Result;
+                            var queryResult = ResolveQuery(conditionQuery, recoursiveness + 1).Result;
 
                             if (condition.Condition.IsNegated)
                                 queryResult = !queryResult;
@@ -165,12 +171,9 @@ namespace Logikek
                             {
                                 var nextQuery = new Query(rule.Name,
                                     ReplaceAtomsWithNames(condition.Condition.Arguments, query.Arguments, rule.Arguments));
-
-                                //if (query.Name = query)
-
-                                var result = ResolveQuery(nextQuery);
-
-                                // Хитрота
+                                
+                                var result = ResolveQuery(nextQuery, recoursiveness + 1);
+                                
                                 if (result.Result != condition.Condition.IsNegated)
                                 {
                                     return new QueryResult(true, query);
