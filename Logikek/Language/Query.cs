@@ -9,6 +9,9 @@ namespace Logikek.Language
         {
         }
 
-        public bool HasAtoms => Arguments.Any(arg => arg.IsAtom);
+        public bool HasAtoms
+        {
+            get { return Arguments.Any(arg => arg.IsAtom); }
+        }
     }
 }

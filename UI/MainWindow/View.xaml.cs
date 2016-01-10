@@ -81,10 +81,14 @@ namespace UI.MainWindow
         }
 
         public void ClearOutput()
-            => OutputBox.Document.Blocks.Clear();
+        {
+            OutputBox.Document.Blocks.Clear();
+        }
 
         public void PrintOutput(Color color, string text)
-            => OutputBox.Document.AppendText(color, text);
+        {
+            OutputBox.Document.AppendText(color, text);
+        }
 
         public void ClearSourceCode(bool deep = false)
         {
@@ -226,31 +230,49 @@ namespace UI.MainWindow
         }
 
         private void LaunchButton_MouseDown(object sender, MouseButtonEventArgs e)
-            => viewModel.Launch();
+        {
+            viewModel.Launch();
+        }
 
         private void SourceCodeBox_OnScrollChanged(object sender, ScrollChangedEventArgs e)
-            => LineNumbersBox.ScrollToVerticalOffset(e.VerticalOffset);
+        {
+            LineNumbersBox.ScrollToVerticalOffset(e.VerticalOffset);
+        }
 
         private void StopButton_OnMouseDown(object sender, MouseButtonEventArgs e)
-            => viewModel.Stop();
+        {
+            viewModel.Stop();
+        }
 
         private void OutputBox_OnTextChanged(object sender, TextChangedEventArgs e)
-            => OutputBox.ScrollToEnd();
+        {
+            OutputBox.ScrollToEnd();
+        }
 
         private void ClearOutputButton_OnMouseDown(object sender, MouseButtonEventArgs e)
-            => ClearOutput();
+        {
+            ClearOutput();
+        }
 
         private void FormatCode_OnMouseDown(object sender, MouseButtonEventArgs e)
-            => HighlightSyntax();
+        {
+            HighlightSyntax();
+        }
 
         private void NewFileButton_OnMouseDown(object sender, MouseButtonEventArgs e)
-            => viewModel.NewFile();
+        {
+            viewModel.NewFile();
+        }
 
         private void OpenFileButton_OnMouseDown(object sender, MouseButtonEventArgs e)
-            => viewModel.OpenFile();
+        {
+            viewModel.OpenFile();
+        }
 
         private void SaveFileButton_OnMouseDown(object sender, MouseButtonEventArgs e)
-            => viewModel.SaveFile();
+        {
+            viewModel.SaveFile();
+        }
 
         private delegate void HotkeyDelegate();
     }

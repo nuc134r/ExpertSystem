@@ -1,5 +1,4 @@
-﻿using System.CodeDom;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Logikek.Language;
 using Sprache;
 
@@ -21,13 +20,24 @@ namespace Logikek
             from closeBracket in Parse.Char(')')
             select ClauseArgument.FromStringList(arguments);
 
-        #region Operators
+        public static readonly Parser<string> Comment =
+            from commentStart in Parse.String("//")
+            from commentText in Parse.AnyChar.Many().Text().End()
+            select commentText;
 
         public static readonly Parser<ConditionOperator> NotOperator =
             Parse.String("~")
                 .Or(Parse.String("NOT"))
                 .Or(Parse.String("НЕ"))
                 .Return(ConditionOperator.Not);
+
+        public static readonly Parser<SimpleCondition> RuleCondition =
+            from notOperator in NotOperator.Optional()
+            from ws1 in Whitespace
+            from name in Identifier
+            from ws2 in Whitespace.Optional()
+            from arguments in Arguments
+            select new SimpleCondition(name, arguments, notOperator.IsDefined);
 
         public static readonly Parser<ConditionOperator> AndOperator =
             Parse.String("&")
@@ -46,31 +56,12 @@ namespace Logikek
             OrOperator
                 .Or(AndOperator);
 
-        #endregion
-
-        #region Rule conditions
-
-        public static readonly Parser<SimpleCondition> RuleCondition =
-            from notOperator in NotOperator.Optional()
-            from ws1 in Whitespace
-            from name in Identifier
-            from ws2 in Whitespace.Optional()
-            from arguments in Arguments
-            select new SimpleCondition(name, arguments, notOperator.IsDefined);
-
         public static readonly Parser<ComplexCondition> NextRuleCondition =
             from ws1 in Whitespace.Optional()
             from _operator in LogicalOperator
             from ws2 in Whitespace.Optional()
             from condition in RuleCondition
             select new ComplexCondition(_operator, condition);
-
-        #endregion
-
-        public static readonly Parser<string> Comment =
-            from commentStart in Parse.String("//")
-            from commentText in Parse.AnyChar.Many().Text().End()
-            select commentText;
 
         public static readonly Parser<Rule> Rule =
             from name in Identifier

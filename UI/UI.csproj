@@ -109,10 +109,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EasterEggs\EasterEggs.csproj">
-      <Project>{f39fd93d-655f-406b-a27a-ce5060a6aee8}</Project>
-      <Name>EasterEggs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Logikek\Logikek.csproj">
       <Project>{98b572c2-a232-40f5-9ef6-2eed5bf8da87}</Project>
       <Name>Logikek</Name>

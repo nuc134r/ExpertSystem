@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -36,7 +37,7 @@ namespace UI
                 var comment = Grammar.Comment.TryParse(line);
                 if (comment.WasSuccessful)
                 {
-                    paragraph.Inlines.Add(NewRun($"//{comment.Value}", SyntaxColors.Comment));
+                    paragraph.Inlines.Add(NewRun(string.Format("//{0}", comment.Value), SyntaxColors.Comment));
                     continue;
                 }
 
@@ -84,12 +85,12 @@ namespace UI
                     {
                         if (condition.Operator != null)
                         {
-                            runsList.Add(NewRun($" {condition.Operator.Value.GetKeyword()} ", SyntaxColors.Operator));
+                            runsList.Add(NewRun(string.Format(" {0} ", condition.Operator.Value.GetKeyword()), SyntaxColors.Operator));
                         }
 
                         if (condition.Condition.IsNegated)
                         {
-                            runsList.Add(NewRun($"{ConditionOperator.Not.GetKeyword()} ", SyntaxColors.Operator));
+                            runsList.Add(NewRun(string.Format("{0} ", ConditionOperator.Not.GetKeyword()), SyntaxColors.Operator));
                         }
 
                         runsList.Add(NewRun(condition.Condition.Name, SyntaxColors.Fact));

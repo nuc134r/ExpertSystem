@@ -42,8 +42,15 @@ namespace EasterEggs
 
         private DispatcherTimer timer;
 
-        private SnakeBone head => body[0];
-        private SnakeBone tail => body[length - 1];
+        private SnakeBone head
+        {
+            get { return body[0]; }
+        }
+
+        private SnakeBone tail
+        {
+            get { return body[length - 1]; }
+        }
 
         private RichTextBox box;
 
@@ -151,7 +158,7 @@ namespace EasterEggs
             {
                 timer.Stop();
                 box.Document.Blocks.Clear();
-                box.AppendText($"Score: {length}");
+                box.AppendText(string.Format("Score: {0}", length));
             }
         }
 
@@ -192,7 +199,7 @@ namespace EasterEggs
             var document = box.Document;
 
             pointer = document.ContentStart;
-            while (pointer?.GetPointerContext(LogicalDirection.Forward) != TextPointerContext.Text)
+            while (pointer != null && pointer.GetPointerContext(LogicalDirection.Forward) != TextPointerContext.Text)
             {
                 pointer = pointer?.GetNextContextPosition(LogicalDirection.Forward);
             }

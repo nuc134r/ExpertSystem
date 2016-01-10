@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Logikek.Language;
 using Sprache;
@@ -60,7 +61,8 @@ namespace Logikek
 
                 var expected = ruleResult.Expectations.FirstOrDefault();
                 var column = ruleResult.Remainder.Column;
-                errors.Add(new ParseError(ruleResult.Message + $", ожидалось {expected}", counter, column));
+                errors.Add(new ParseError(string.Format("{0}{1}", ruleResult.Message,
+                    string.Format(", ожидалось {0}", expected)), counter, column));
             }
 
             var queryResults = _queries.Select(ResolveQuery).ToList();

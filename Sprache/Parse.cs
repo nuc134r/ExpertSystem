@@ -29,7 +29,7 @@ namespace Sprache
                         return Result.Success(i.Current, i.Advance());
 
                     return Result.Failure<char>(i,
-                        $"неожиданный символ '{i.Current}'",
+                        string.Format("неожиданный символ '{0}'", i.Current),
                         new[] { description });
                 }
 

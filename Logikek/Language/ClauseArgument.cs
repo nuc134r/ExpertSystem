@@ -19,8 +19,11 @@ namespace Logikek.Language
             return names.Select(name => new ClauseArgument(name));
         }
 
-        public string Name { get; }
-        public bool IsAtom => (Name.Length == 1);
+        public string Name { get; private set; }
+        public bool IsAtom
+        {
+            get { return (Name.Length == 1); }
+        }
 
         public override bool Equals(object o)
         {
@@ -30,8 +33,8 @@ namespace Logikek.Language
 
         public override int GetHashCode()
         {
-            var hash = this.Name?.GetHashCode() ?? 0;
-
+            if (Name == null) return 0;
+            var hash = Name.GetHashCode();
             return hash;
         }
     }
@@ -48,7 +51,7 @@ namespace Logikek.Language
 
         public int GetHashCode(ClauseArgument obj)
         {
-            var hash = obj.Name?.GetHashCode() ?? 0;
+            var hash = obj.Name != null ? obj.Name.GetHashCode() : 0;
 
             return hash;
         }

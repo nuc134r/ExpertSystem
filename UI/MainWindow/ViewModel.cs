@@ -41,7 +41,10 @@ namespace UI.MainWindow
             };
         }
 
-        public bool EditorHasChanges => view.SourceCodeText != originalCode;
+        public bool EditorHasChanges
+        {
+            get { return view.SourceCodeText != originalCode; }
+        }
 
         public void Launch()
         {
@@ -225,16 +228,16 @@ namespace UI.MainWindow
 
         private void PrintParseError(ParseError parseError)
         {
-            view.PrintOutput(Colors.DimGray, $"Строка {parseError.Line}:{parseError.Column} ");
-            view.PrintOutput(Colors.White, $"{parseError.Message}\n");
+            view.PrintOutput(Colors.DimGray, string.Format("Строка {0}:{1} ", parseError.Line, parseError.Column));
+            view.PrintOutput(Colors.White, string.Format("{0}\n", parseError.Message));
         }
 
         private void PrintParseError(ParseError parseError, string code)
         {
             view.PrintOutput(Colors.DimGray, "> ");
-            view.PrintOutput(Colors.LightGray, $"{code}\n");
+            view.PrintOutput(Colors.LightGray, string.Format("{0}\n", code));
             view.PrintOutput(Colors.DimGray, "  Ошибка: ");
-            view.PrintOutput(Colors.White, $"{parseError.Message}\n");
+            view.PrintOutput(Colors.White, string.Format("{0}\n", parseError.Message));
         }
 
         private void PrintQueryResult(QueryResult queryResult)
@@ -242,21 +245,24 @@ namespace UI.MainWindow
             var args = queryResult.TheQuery.Arguments.Select(arg => arg.Name).ToArray();
 
             view.PrintOutput(Colors.DimGray, "> ");
-            view.PrintOutput(Colors.LightGray, $"{queryResult.TheQuery.Name}({string.Join(", ", args)})?\n");
+            view.PrintOutput(Colors.LightGray,
+                string.Format("{0}({1})?\n", queryResult.TheQuery.Name, string.Join(", ", args)));
             if (queryResult.Solutions != null)
             {
                 if (queryResult.Solutions.Any())
                 {
                     var c = queryResult.Solutions.Count;
-                    view.PrintOutput(Colors.DimGray, $"  {c} решени{(c == 1 ? "е" : (c < 5 ? "я" : "й"))}\n");
+                    view.PrintOutput(Colors.DimGray,
+                        string.Format("  {0} решени{1}\n", c, c == 1 ? "е" : (c < 5 ? "я" : "й")));
                     foreach (var solution in queryResult.Solutions)
                     {
                         view.PrintOutput(SyntaxColors.Atom, "  ");
                         foreach (var atom in solution.Keys)
                         {
                             var value = solution[atom];
-                            view.PrintOutput(SyntaxColors.Atom, $"{atom}");
-                            view.PrintOutput(Colors.White, $" = {value}{(atom == solution.Keys.Last() ? "" : ", ")}");
+                            view.PrintOutput(SyntaxColors.Atom, string.Format("{0}", atom));
+                            view.PrintOutput(Colors.White,
+                                string.Format(" = {0}{1}", value, atom == solution.Keys.Last() ? "" : ", "));
                         }
                         view.PrintOutput(Colors.White, "\n");
                     }
@@ -282,7 +288,7 @@ namespace UI.MainWindow
         private bool PromptSavingCurrentFile()
         {
             if (!EditorHasChanges || string.IsNullOrEmpty(view.SourceCodeText.Trim())) return true;
-            var result = MessageBox.Show($"Сохранить файл {fileName}?",
+            var result = MessageBox.Show(string.Format("Сохранить файл {0}?", fileName),
                 "Сохранение",
                 MessageBoxButton.YesNoCancel);
 

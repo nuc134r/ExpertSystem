@@ -22,7 +22,7 @@ namespace Logikek.Language
                 case ConditionOperator.Not:
                     return "ме";
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(@operator), @operator, null);
+                    throw new ArgumentOutOfRangeException(@operator.ToString(), @operator, null);
             }
         }
     }
