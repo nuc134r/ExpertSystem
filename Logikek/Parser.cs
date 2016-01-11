@@ -160,14 +160,6 @@ namespace Logikek
                     }
                 }
 
-                /*
-                Знакомы(А, Б, В) : Знакомы(А, Б) И Знакомы(Б, В) И Знакомы(А, В);
-
-                Знакомы(Саша, Ваня, Маша);
-
-                Знакомы(Ваня, Маша)?
-                */
-
                 // Попытка 3:
                 // Не помогла дедукция -- не беда, пробуем индукцию
                 // Ищем все правила, в которых наш запрос содержится в качестве условия
@@ -239,15 +231,30 @@ namespace Logikek
                     }
                 }
 
+                /*
+                Friends(X, Y) : Likes(X, Y) AND Knows(X, Y);
+
+                Likes(Max, Jane);
+                Knows(Max, Jane);
+
+                Friends(X, Y)?
+                */
+
                 // Шаг 2:
                 // Пытаемся вычислить все правила с именем запроса
-                // TODO
+                var matchingRules = _rules.Where(rule => rule.Name == query.Name
+                                                         &&
+                                                         rule.Arguments.Count == query.Arguments.Count);
 
+                foreach (var rule in matchingRules)
+                {
+                    
+                }
 
-                return new QueryResult(solutions.Any(), query, solutions);
+                return AddToCacheAndReturn(query, new QueryResult(solutions.Any(), query, solutions));
             }
 
-            return new QueryResult(false, query);
+            return AddToCacheAndReturn(query, new QueryResult(false, query));
         }
 
         private static bool CompareArgumentsIgnoringAtoms(List<ClauseArgument> original, List<ClauseArgument> another)
