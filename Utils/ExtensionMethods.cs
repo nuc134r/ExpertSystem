@@ -26,6 +26,12 @@ namespace Utils
             return count;
         }
 
+        /// <summary>
+        /// Удаление всех вхождений строки
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="value">Подстрока</param>
+        /// <returns></returns>
         public static string RemoveAllEntriesOf(this string s, string value)
         {
             var result = s;
@@ -38,12 +44,23 @@ namespace Utils
             return result;
         }
 
+        /// <summary>
+        /// Добавить текст в FlowDocument
+        /// </summary>
+        /// <param name="document">FlowDocument</param>
+        /// <param name="color">Цвет</param>
+        /// <param name="text">Текст</param>
         public static void AppendText(this FlowDocument document, Color color, string text)
         {
             var tr = new TextRange(document.ContentEnd, document.ContentEnd) { Text = text };
             tr.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
         }
 
+        /// <summary>
+        /// Добавить текст в FlowDocument
+        /// </summary>
+        /// <param name="document">FlowDocument</param>
+        /// <param name="text">Текст</param>
         public static void AppendText(this FlowDocument document, string text)
         {
             var tr = new TextRange(document.ContentEnd, document.ContentEnd) { Text = text };

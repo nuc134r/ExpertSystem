@@ -13,6 +13,11 @@ namespace Logikek
 
         private static Dictionary<Query, QueryResult> _cache;
 
+        /// <summary>
+        /// Анализирует строку исходного кода Logikek и возвращает объект с результатами
+        /// </summary>
+        /// <param name="code">Исходный код</param>
+        /// <returns></returns>
         public static ProcessResult Run(string code)
         {
             _cache = new Dictionary<Query, QueryResult>();
@@ -70,6 +75,11 @@ namespace Logikek
             return errors.Any() ? new ProcessResult(errors) : new ProcessResult(queryResults);
         }
 
+        /// <summary>
+        /// Вычисляет запрос и возвращает результат
+        /// </summary>
+        /// <param name="code">Строка с запросом</param>
+        /// <returns></returns>
         public static ProcessResult EvaluateQuery(string code)
         {
             var query = Grammar.Query.TryParse(code.Trim());

@@ -31,6 +31,9 @@ namespace UI.MainWindow
             WireHandlers();
         }
 
+        /// <summary>
+        /// Текст из поля для ввода исходного кода
+        /// </summary>
         public string SourceCodeText
         {
             get
@@ -46,6 +49,9 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Индикация успешного запуска
+        /// </summary>
         public void IndicateLaunch()
         {
             HighlightSyntax();
@@ -57,6 +63,9 @@ namespace UI.MainWindow
             InterpreterBox.Focus();
         }
 
+        /// <summary>
+        /// Индикация возникновения ошибок
+        /// </summary>
         public void IndicateErrorsOccurence()
         {
             var animation = ColorUtils.CreateColorAnimation(AppColors.InactiveBoxBg, Color.FromRgb(149, 0, 0),
@@ -68,6 +77,9 @@ namespace UI.MainWindow
             sb.Begin(this);
         }
 
+        /// <summary>
+        /// Индикация остановки выполнения
+        /// </summary>
         public void IndicateStop()
         {
             InterpreterBox.Text = "";
@@ -80,16 +92,28 @@ namespace UI.MainWindow
             SourceCodeBox.Focus();
         }
 
+        /// <summary>
+        /// Очищение поля вывода
+        /// </summary>
         public void ClearOutput()
         {
             OutputBox.Document.Blocks.Clear();
         }
 
+        /// <summary>
+        /// Вывод строки текста в поле вывода
+        /// </summary>
+        /// <param name="color">Цвет</param>
+        /// <param name="text">Текст</param>
         public void PrintOutput(Color color, string text)
         {
             OutputBox.Document.AppendText(color, text);
         }
 
+        /// <summary>
+        /// Очистка поля ввода исходного кода
+        /// </summary>
+        /// <param name="deep">Полное очищение (без переносов строк)</param>
         public void ClearSourceCode(bool deep = false)
         {
             SourceCodeBox.Document.Blocks.Clear();
@@ -99,11 +123,19 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Обновление имени файла
+        /// </summary>
+        /// <param name="fileName"></param>
         public void UpdateFilename(string fileName)
         {
             Title = (fileName ?? "Новый файл") + " - Logikek";
         }
 
+        /// <summary>
+        /// Подсветка синтаксиса
+        /// </summary>
+        /// <param name="clearHistory">Очистка истории изменений</param>
         public void HighlightSyntax(bool clearHistory = false)
         {
             using (SourceCodeBox.DeclareChangeBlock())

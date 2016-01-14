@@ -41,11 +41,17 @@ namespace UI.MainWindow
             };
         }
 
+        /// <summary>
+        /// Есть ли изменения в файле
+        /// </summary>
         public bool EditorHasChanges
         {
             get { return view.SourceCodeText != originalCode; }
         }
 
+        /// <summary>
+        /// Запуск выполнения
+        /// </summary>
         public void Launch()
         {
             if (!isRunning)
@@ -86,6 +92,10 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Вычислить запрос
+        /// </summary>
+        /// <param name="code"></param>
         public void Evaluate(string code)
         {
             code = code.Trim();
@@ -104,6 +114,9 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Остановка выполнения
+        /// </summary>
         public void Stop()
         {
             if (isRunning)
@@ -113,6 +126,9 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Запуск/остановка выполнения
+        /// </summary>
         public void StartStop()
         {
             if (!isRunning)
@@ -125,6 +141,10 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Форматирование кода в FlowDocument
+        /// </summary>
+        /// <param name="document">Объект с кодом</param>
         public void Format(FlowDocument document)
         {
             var result = SyntaxHighlighter.Run(document);
@@ -136,6 +156,10 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Сохранение в файл
+        /// </summary>
+        /// <returns></returns>
         public bool SaveFile()
         {
             if (isRunning)
@@ -178,6 +202,9 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Новый файл
+        /// </summary>
         public void NewFile()
         {
             if (isRunning)
@@ -197,6 +224,9 @@ namespace UI.MainWindow
             }
         }
 
+        /// <summary>
+        /// Открыть файл
+        /// </summary>
         public void OpenFile()
         {
             if (isRunning)

@@ -11,6 +11,11 @@ namespace UI
 {
     public static class SyntaxHighlighter
     {
+        /// <summary>
+        /// Форматирование кода в FlowDocument
+        /// </summary>
+        /// <param name="document">Объект с кодом</param>
+        /// <returns></returns>
         public static bool Run(FlowDocument document)
         {
             var code = new TextRange(document.ContentStart, document.ContentEnd).Text;
