@@ -123,7 +123,7 @@ namespace Logikek
                 {
                     foreach (var rule in matchingRules)
                     {
-                        bool? finalResult = null;
+                        QueryResult finalResult = null;
                         foreach (var condition in rule.Conditions)
                         {
                             // Подставляем вместо атомов аргументы запроса
@@ -133,29 +133,38 @@ namespace Logikek
                             // Вычисляем значение запроса
                             var conditionQuery = new Query(condition.Condition.Name, conditionArgs);
 
-                            bool queryResult;
+                            QueryResult queryResult;
                             if (_cache.ContainsKey(conditionQuery))
                             {
                                 if (_cache[query] == null)
                                 {
                                     return AddToCacheAndReturn(query, new QueryResult(false, query));
                                 }
-                                queryResult = _cache[query].Result;
+                                queryResult = _cache[query];
                             }
                             else
                             {
-                                queryResult = ResolveQuery(conditionQuery).Result;
+                                queryResult = ResolveQuery(conditionQuery);
                             }
 
                             if (condition.Condition.IsNegated)
-                                queryResult = !queryResult;
+                            {
+                                if (queryResult.Solutions != null)
+                                {
+                                    queryResult = new QueryResult(!queryResult.Result, queryResult.TheQuery, queryResult.Solutions);
+                                }
+                                else
+                                {
+                                    queryResult = new QueryResult(!queryResult.Result, queryResult.TheQuery);
+                                }
+                            }
 
                             // Применяем логический оператор
                             finalResult = ApplyLogicalOperator(finalResult, condition.Operator, queryResult);
                         }
-                        if (finalResult.HasValue && finalResult.Value)
+                        if (finalResult != null && finalResult.Result)
                         {
-                            return AddToCacheAndReturn(query, new QueryResult(true, query));
+                            return AddToCacheAndReturn(query, new QueryResult(finalResult.Result, query));
                         }
                     }
                 }
@@ -267,7 +276,12 @@ namespace Logikek
                 .Any();
         }
 
-        private static bool ApplyLogicalOperator(bool? v1, ConditionOperator? @operator, bool v2)
+        private static string Stringify(Dictionary<string, string> d)
+        {
+            return d.Keys.Aggregate("", (current, key) => current + (key + "=" + d[key] + ";"));
+        }
+
+        private static QueryResult ApplyLogicalOperator(QueryResult v1, ConditionOperator? @operator, QueryResult v2)
         {
             if (v1 == null)
             {
@@ -276,9 +290,45 @@ namespace Logikek
 
             if (@operator == ConditionOperator.And)
             {
-                return v1.Value & v2;
+                IEnumerable<Dictionary<string, string>> solutions;
+                bool includeSolutions = true;
+                if (v1.Solutions != null)
+                {
+                    if (v2.Solutions != null)
+                    {
+                        var v2solutions = new List<string>();
+                        v2.Solutions.ForEach(solution => v2solutions.Add(Stringify(solution)));
+
+                        solutions = v1.Solutions.Where(s => v2solutions.Contains(Stringify(s)));
+                    }
+                    else
+                    {
+                        solutions = v1.Solutions;
+                    }
+                }
+                else
+                {
+                    if (v2.Solutions != null)
+                    {
+                        solutions = v2.Solutions;
+                    }
+                    else
+                    {
+                        includeSolutions = false;
+                        solutions = new List<Dictionary<string, string>>();
+                    }
+                }
+
+                if (includeSolutions)
+                {
+                    var solutionList = solutions.ToList();
+                    return new QueryResult(solutionList.Any(), v2.TheQuery, solutionList);
+                }
+                return new QueryResult(v1.Result & v2.Result, v2.TheQuery);
             }
-            return v1.Value | v2;
+            if (v1.Result) return v1;
+            if (v2.Result) return v2;
+            return new QueryResult(false, v2.TheQuery);
         }
 
         private static List<ClauseArgument> ReplaceAtomsWithNames(List<ClauseArgument> atoms,

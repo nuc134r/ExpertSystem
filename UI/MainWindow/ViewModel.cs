@@ -247,7 +247,7 @@ namespace UI.MainWindow
             view.PrintOutput(Colors.DimGray, "> ");
             view.PrintOutput(Colors.LightGray,
                 string.Format("{0}({1})?\n", queryResult.TheQuery.Name, string.Join(", ", args)));
-            if (queryResult.Solutions != null)
+            if (queryResult.Solutions != null && (queryResult.Solutions.Any() == queryResult.Result))
             {
                 if (queryResult.Solutions.Any())
                 {
