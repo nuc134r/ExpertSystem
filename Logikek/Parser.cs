@@ -94,6 +94,17 @@ namespace Logikek
         {
             if (_cache.ContainsKey(query))
             {
+                if (_cache[query] == null)
+                {
+                    if (query.HasAtoms)
+                    {
+                        _cache[query] = new QueryResult(false, query, new List<Dictionary<string, string>>());
+                    }
+                    else
+                    {
+                        _cache[query] = new QueryResult(false, query);
+                    }
+                }
                 return _cache[query];
             }
 
@@ -257,7 +268,22 @@ namespace Logikek
 
                 foreach (var rule in matchingRules)
                 {
-                    
+                    var ruleQuery = new Query(rule.Name, ReplaceAtomsWithNames(rule.Arguments, query.Arguments, rule.Arguments));
+
+                    var queryResult = ResolveQuery(ruleQuery);
+                    if (queryResult.Result)
+                    {
+                        solutions.Add(new Dictionary<string, string>());
+                        for (var i = 0; i < query.Arguments.Count; i++)
+                        {
+                            var arg = query.Arguments.ElementAt(i);
+                            if (arg.IsAtom)
+                            {
+                                var solution = ruleQuery.Arguments.ElementAt(i);
+                                solutions.Last().Add(arg.Name, solution.Name);
+                            }
+                        }
+                    }
                 }
 
                 return AddToCacheAndReturn(query, new QueryResult(solutions.Any(), query, solutions));
@@ -296,10 +322,10 @@ namespace Logikek
                 {
                     if (v2.Solutions != null)
                     {
-                        var v2solutions = new List<string>();
-                        v2.Solutions.ForEach(solution => v2solutions.Add(Stringify(solution)));
+                        var v2Solutions = new List<string>();
+                        v2.Solutions.ForEach(solution => v2Solutions.Add(Stringify(solution)));
 
-                        solutions = v1.Solutions.Where(s => v2solutions.Contains(Stringify(s)));
+                        solutions = v1.Solutions.Where(s => v2Solutions.Contains(Stringify(s)));
                     }
                     else
                     {

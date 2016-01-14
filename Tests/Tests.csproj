@@ -35,6 +35,10 @@
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Sprache, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Sprache.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,10 +65,6 @@
     <ProjectReference Include="..\Logikek\Logikek.csproj">
       <Project>{98b572c2-a232-40f5-9ef6-2eed5bf8da87}</Project>
       <Name>Logikek</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sprache\Sprache.csproj">
-      <Project>{82cc8cf8-b770-4756-850a-95dd14dd312f}</Project>
-      <Name>Sprache</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
