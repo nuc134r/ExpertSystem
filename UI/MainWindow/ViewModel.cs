@@ -95,7 +95,7 @@ namespace UI.MainWindow
         /// <summary>
         /// Вычислить запрос
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="code">Исходный код</param>
         public void Evaluate(string code)
         {
             code = code.Trim();
