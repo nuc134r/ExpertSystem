@@ -307,5 +307,26 @@ namespace UI.MainWindow
         }
 
         private delegate void HotkeyDelegate();
+
+        private void FontSmaller_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            LineNumbersBox.FontSize -= 2;
+            OutputBox.FontSize -= 2;
+            SourceCodeBox.FontSize -= 2;
+        }
+
+        private void FontDefault_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            LineNumbersBox.FontSize = 14;
+            OutputBox.FontSize = 14;
+            SourceCodeBox.FontSize = 14;
+        }
+
+        private void FontBigger_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            LineNumbersBox.FontSize += 2;
+            OutputBox.FontSize += 2;
+            SourceCodeBox.FontSize += 2;
+        }
     }
 }

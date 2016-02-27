@@ -101,6 +101,18 @@
                     <Path Stretch="Fill" Fill="White" Data="F1M30,51L19,40 19,37 30,26 30,31 23,38 30,45 30,51z M42.9999,21.0001L37,55 33,55 39,21.0001 42.9999,21.0001z M46,51L46,45 53,38 46,31 46,26 57,37 57,40 46,51z" Margin="6.023,3.472,0,4.528" HorizontalAlignment="Left" Width="12" Height="12"/>
                     <Label Content="" MouseDown="FormatCode_OnMouseDown"/>
                 </Grid>
+                <Grid Margin="0,38,97,24" Style="{StaticResource MenuGridStyle}" Height="22" Opacity="0.8" >
+                    <Label Content="-" Foreground="White" Margin="3,-7,-10,-2" FontSize="16" />
+                    <Label Content="" MouseDown="FontSmaller_OnMouseDown" RenderTransformOrigin="0.5,0.5" />
+                </Grid>
+                <Grid Margin="97,38,1,24" Style="{StaticResource MenuGridStyle}" Height="22" Opacity="0.8" Width="23" >
+                    <Label Content="+" Foreground="White" Margin="1,-6,-9,-3" FontSize="16" />
+                    <Label Content="" MouseDown="FontBigger_OnMouseDown" RenderTransformOrigin="0.5,0.5" />
+                </Grid>
+                <Grid Margin="23,38,23,24" Style="{StaticResource MenuGridStyle}" Height="22" Opacity="0.8" >
+                    <Label Content="Шрифт" Foreground="White" Margin="12,-3,8,0" Height="25" />
+                    <Label Content="" MouseDown="FontDefault_OnMouseDown"/>
+                </Grid>
             </Grid>
         </Grid>
         <Grid x:Name="OutputWindow" Background="#FF1D1D1D" Grid.Row="3">
