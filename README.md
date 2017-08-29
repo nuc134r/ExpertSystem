@@ -1,7 +1,5 @@
 A basic IDE for a Prolog-inspired logic programming language. Semester project.
 
-Project is unit tested. It would be hard to implement language logic without unit testing.
-
 User interface was made to look like Visual Studio's dark skin.
 
 ![123](https://user-images.githubusercontent.com/13202642/29819324-e75a805e-8cc8-11e7-9fa5-7bc7927dc826.gif)
