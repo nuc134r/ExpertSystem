@@ -2,7 +2,7 @@ A basic IDE for a Prolog-inspired logic programming language. Semester project.
 
 # UI
 
-User interface was made to look like Visual Studio's dark skin. Also check out blue glowing launch button and animation when launching.
+User interface was made to look like Visual Studio's dark skin. Check out animations:
 
 ![123](https://user-images.githubusercontent.com/13202642/29819828-f71ccebe-8cca-11e7-9253-cec6ff70f198.gif)
 
