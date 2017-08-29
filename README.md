@@ -1,8 +1,10 @@
 A basic IDE for a Prolog-inspired logic programming language. Semester project.
 
-User interface was made to look like Visual Studio's dark skin.
+# UI
 
-![123](https://user-images.githubusercontent.com/13202642/29819324-e75a805e-8cc8-11e7-9fa5-7bc7927dc826.gif)
+User interface was made to look like Visual Studio's dark skin. Also check out blue glowing launch button and animation when launching.
+
+![123](https://user-images.githubusercontent.com/13202642/29819828-f71ccebe-8cca-11e7-9253-cec6ff70f198.gif)
 
 # Logikek language
 
