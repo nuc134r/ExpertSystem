@@ -1,5 +1,7 @@
 A basic IDE for a Prolog-inspired logic programming language. Semester project.
 
+Of course it's can't be used for anything serious. Partly due to the same reasons Prolog can't be used for something serious and partly due to it's very weak `if`-powered core logic. And I'm not proud of that.
+
 # UI
 
 User interface was made to look like Visual Studio's dark skin. Check out animations:
