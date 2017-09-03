@@ -20,7 +20,7 @@ For example we want to create a rule which declares that **a good hobbie** is th
 GoodHobbie(X) : Fun(X);
 ```
 
-`X` stands for an atom (like atom in Prolog). Atom is like a variable in math formula. Atoms must be one-letter.
+`X` stands for an atom (like atom in Prolog). Atom is like a placeholder or a variable. Atoms must be one-letter.
 
 ### Fact
 
@@ -30,7 +30,7 @@ Let's declare the fact that coding is fun.
 Fun(Coding);
 ```
 
-In the rule above we had an identical condition `Fun(X)`.
+In the rule above we had an identical condition `Fun(X)`. We also introduce a variable `Coding` and it's relation to `Fun()` clause.
 
 ### Query
 
@@ -40,4 +40,6 @@ Now computer knows that a good hobbie is something fun and that coding is fun. S
 
 Here is more complex example:
 
-![image](https://user-images.githubusercontent.com/13202642/29819112-e4d87846-8cc7-11e7-95b6-9156892825d7.png)
+![image](https://user-images.githubusercontent.com/13202642/30006215-2fd5b10a-90fc-11e7-95dc-f560e6bbe84c.png)
+
+Just like Prolog Logikek can find solutions if you leave an atom in a query statement.
