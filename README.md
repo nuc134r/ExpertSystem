@@ -44,4 +44,4 @@ Here is more complex example:
 
 ![image](https://user-images.githubusercontent.com/13202642/30006215-2fd5b10a-90fc-11e7-95dc-f560e6bbe84c.png)
 
-Just like Prolog Logikek can find solutions if you leave an atom in a query statement.
+Put your attention to the output of the screenshot above. Logikek can find solutions if you leave an atom in a query statement just like Prolog.
