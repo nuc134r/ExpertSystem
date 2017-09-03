@@ -40,8 +40,8 @@ Now computer knows that a good hobbie is something fun and that coding is fun. S
 
 ![image](https://user-images.githubusercontent.com/13202642/29818746-68eb824c-8cc6-11e7-933e-edd1d2bc5bce.png)
 
-Here is more complex example:
+Here is a more complex example:
 
 ![image](https://user-images.githubusercontent.com/13202642/30006215-2fd5b10a-90fc-11e7-95dc-f560e6bbe84c.png)
 
-Put your attention to the output of the screenshot above. Logikek can find solutions if you leave an atom in a query statement just like Prolog.
+Put your attention to the output on the screenshot above. Logikek can find solutions if you leave an atom in a query statement just like Prolog.
